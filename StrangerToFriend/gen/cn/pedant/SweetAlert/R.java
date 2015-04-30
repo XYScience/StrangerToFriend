@@ -16,21 +16,21 @@ public final class R {
 		public static final int success_mask_layout = 0x7f04000d;
 	}
 	public static final class attr {
-		public static final int barColor = 0x7f010001;
-		public static final int barSpinCycleTime = 0x7f010005;
-		public static final int barWidth = 0x7f010008;
-		public static final int circleRadius = 0x7f010006;
-		public static final int fillRadius = 0x7f010007;
-		public static final int fromDeg = 0x7f01000b;
-		public static final int linearProgress = 0x7f010009;
-		public static final int pivotX = 0x7f01000d;
-		public static final int pivotY = 0x7f01000e;
-		public static final int progressIndeterminate = 0x7f010000;
-		public static final int rimColor = 0x7f010002;
-		public static final int rimWidth = 0x7f010003;
-		public static final int rollType = 0x7f01000a;
-		public static final int spinSpeed = 0x7f010004;
-		public static final int toDeg = 0x7f01000c;
+		public static final int barColor = 0x7f010003;
+		public static final int barSpinCycleTime = 0x7f010007;
+		public static final int barWidth = 0x7f01000a;
+		public static final int circleRadius = 0x7f010008;
+		public static final int fillRadius = 0x7f010009;
+		public static final int fromDeg = 0x7f01000d;
+		public static final int linearProgress = 0x7f01000b;
+		public static final int pivotX = 0x7f01000f;
+		public static final int pivotY = 0x7f010010;
+		public static final int progressIndeterminate = 0x7f010002;
+		public static final int rimColor = 0x7f010004;
+		public static final int rimWidth = 0x7f010005;
+		public static final int rollType = 0x7f01000c;
+		public static final int spinSpeed = 0x7f010006;
+		public static final int toDeg = 0x7f01000e;
 	}
 	public static final class color {
 		public static final int blue_btn_bg_color = 0x7f060005;
@@ -106,7 +106,7 @@ public final class R {
 		public static final int dialog_blue_button = 0x7f080001;
 	}
 	public static final class styleable {
-		public static final int[] ProgressWheel = { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009 };
+		public static final int[] ProgressWheel = { 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b };
 		public static final int ProgressWheel_barColor = 1;
 		public static final int ProgressWheel_barSpinCycleTime = 5;
 		public static final int ProgressWheel_barWidth = 8;
@@ -117,7 +117,7 @@ public final class R {
 		public static final int ProgressWheel_rimColor = 2;
 		public static final int ProgressWheel_rimWidth = 3;
 		public static final int ProgressWheel_spinSpeed = 4;
-		public static final int[] Rotate3dAnimation = { 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d, 0x7f01000e };
+		public static final int[] Rotate3dAnimation = { 0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f, 0x7f010010 };
 		public static final int Rotate3dAnimation_fromDeg = 1;
 		public static final int Rotate3dAnimation_pivotX = 3;
 		public static final int Rotate3dAnimation_pivotY = 4;

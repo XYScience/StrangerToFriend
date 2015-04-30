@@ -25,7 +25,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.science.strangertofriend.ui.RegisterActivity"
+            android:name="com.science.strangertofriend.ui.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,11 @@
         </activity>
         <activity android:name="com.science.strangertofriend.ui.BaseActivity" >
         </activity>
-        <activity android:name="com.science.strangertofriend.ui.LoginActivity" >
+        <activity android:name="com.science.strangertofriend.ui.RegisterActivity" >
+        </activity>
+        <activity
+            android:name="com.science.strangertofriend.ui.ForgetPasswordActivity"
+            android:windowSoftInputMode="stateAlwaysVisible|stateVisible" >
         </activity>
     </application>
 

@@ -26,6 +26,7 @@ public class AppContext extends Application {
 		AVOSCloud.initialize(getApplicationContext(),
 				"naxbv0f9j653brj453n6yzcvlwx44oeuuw1uve2bvzipd3gu",
 				"hf1nu0zrbbwupc18c363kwuluu00gf7ujaku0bfr5boapqbc");
+
 	}
 
 	/**
@@ -38,4 +39,5 @@ public class AppContext extends Application {
 		NetworkInfo ni = cm.getActiveNetworkInfo();
 		return ni != null && ni.isConnectedOrConnecting();
 	}
+
 }

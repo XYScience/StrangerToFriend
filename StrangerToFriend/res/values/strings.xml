@@ -8,21 +8,26 @@
     <string name="drawer_close">Close</string>
     <string name="network_not_connected">网络连接失败，请检查网络设置</string>
     <string name="username">昵称</string>
-    <string name="email">邮箱</string>
+    <string name="email">昵称/邮箱</string>
     <string name="password">密码</string>
     <string name="password_again">确认密码</string>
     <string name="register">立即注册</string>
     <string name="login">立即登陆</string>
     <string name="forget_password">忘记密码?</string>
+    <string name="find_password">立即找回 </string>
+    <string name="emailforfind">请输入注册邮箱地址</string>
+    <string name="forget_password_send_email">已发送邮件</string>
+    <string name="forget_password_email_error">请确认您的邮件地址</string>
     <string name="error_register_email_address_null">E-mail地址不可空</string>
     <string name="error_register_user_name_null">用户名不可空</string>
     <string name="error_register_password_null">密码不可为空</string>
+    <string name="error_register_gender_null">请选择性别</string>
     <string name="error_register_user_name_repeat">用户名已被注册，请重新填写</string>
     <string name="error_register_email_repeat">邮箱已被注册，请更换邮箱</string>
     <string name="dialog_message_title">提示</string>
     <string name="dialog_text_wait">请等待</string>
     <string name="success_register_success">注册成功</string>
     <string name="dialog_error_title">错误</string>
-    <string name="error_login_error">登陆失败，请确认网络和用户名密码后重试</string>
+    <string name="error_login_error">请确认网络和用户名密码后重试</string>
 
 </resources>

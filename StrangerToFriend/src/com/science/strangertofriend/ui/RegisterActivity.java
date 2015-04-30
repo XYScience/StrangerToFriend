@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -48,11 +49,13 @@ public class RegisterActivity extends BaseActivity {
 	private MyDialog mMyDialog;
 	private int i = -1;
 	private String mUsernameString, mPasswordString, mEmailString;
+	private Boolean mBoyflag = false, mGirlFlag = false;
 
 	private static final String IMAGE_FILE_NAME = "avatar.jpg";// 头像文件名称
 	private String urlpath; // 图片本地路径
 	private static final int REQUESTCODE_TAKE = 1; // 相机拍照标记
 	private static final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
+	private Bitmap genderBitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class RegisterActivity extends BaseActivity {
 		mPassword = (EditText) findViewById(R.id.password);
 		mRegisterButton = (Button) findViewById(R.id.register);
 		mMyDialog = new MyDialog(RegisterActivity.this);
+
 	}
 
 	// 注册按钮监听
@@ -87,6 +91,24 @@ public class RegisterActivity extends BaseActivity {
 			}
 		});
 
+		mGenderBoy.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mBoyflag = true;
+				mGirlFlag = false;
+			}
+		});
+
+		mGenderGirl.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mBoyflag = false;
+				mGirlFlag = true;
+			}
+		});
+
 		mRegisterButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -97,7 +119,17 @@ public class RegisterActivity extends BaseActivity {
 				if (!mPasswordString.isEmpty()) {
 					if (!mUsernameString.isEmpty()) {
 						if (!mEmailString.isEmpty()) {
-							progressDialog();
+							if (mBoyflag || mGirlFlag) {
+								if (mBoyflag) {
+									progressDialog("男");
+								} else {
+									progressDialog("女");
+								}
+							} else {
+								Toast.makeText(RegisterActivity.this,
+										R.string.error_register_gender_null,
+										Toast.LENGTH_LONG).show();
+							}
 						} else {
 							Toast.makeText(RegisterActivity.this,
 									R.string.error_register_email_address_null,
@@ -118,7 +150,7 @@ public class RegisterActivity extends BaseActivity {
 		});
 	}
 
-	public void register() {
+	public void register(String gender) {
 		SignUpCallback signUpCallback = new SignUpCallback() {
 			public void done(AVException e) {
 				if (e == null) {
@@ -152,14 +184,16 @@ public class RegisterActivity extends BaseActivity {
 		};
 
 		AVService.signUp(mUsernameString, mPasswordString, mEmailString,
-				signUpCallback);
+				gender, signUpCallback);
+
+		AVService.uploadImage(mUsernameString, mEmailString, genderBitmap);
+
 	}
 
-	// 加载提示框
-	public void progressDialog() {
-
-		final SweetAlertDialog pDialog = new SweetAlertDialog(this,
-				SweetAlertDialog.PROGRESS_TYPE).setTitleText("拼命加载中、、");
+	private void progressDialog(final String gender) {
+		final SweetAlertDialog pDialog = new SweetAlertDialog(
+				RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE)
+				.setTitleText("拼命加载中、、");
 		pDialog.show();
 		pDialog.setCancelable(false);
 		new CountDownTimer(800 * 4, 800) {
@@ -171,35 +205,10 @@ public class RegisterActivity extends BaseActivity {
 
 			public void onFinish() {
 				i = -1;
-				register();
+				register(gender);
 				pDialog.dismiss();
 			}
 		}.start();
-	}
-
-	// 进度条颜色
-	private void colorProgress(SweetAlertDialog pDialog) {
-		i++;
-		switch (i) {
-		case 0:
-			pDialog.getProgressHelper().setBarColor(
-					getResources().getColor(android.R.color.holo_blue_bright));
-			break;
-
-		case 1:
-			pDialog.getProgressHelper().setBarColor(
-					getResources().getColor(android.R.color.holo_green_light));
-			break;
-		case 2:
-			pDialog.getProgressHelper().setBarColor(
-					getResources().getColor(android.R.color.holo_orange_light));
-			break;
-
-		case 3:
-			pDialog.getProgressHelper().setBarColor(
-					getResources().getColor(android.R.color.holo_red_light));
-			break;
-		}
 	}
 
 	// 确认打开相机
@@ -336,10 +345,10 @@ public class RegisterActivity extends BaseActivity {
 		Bundle extras = picdata.getExtras();
 		if (extras != null) {
 			// 取得SDCard图片路径做显示
-			Bitmap photo = extras.getParcelable("data");
-			Drawable drawable = new BitmapDrawable(null, photo);
+			genderBitmap = extras.getParcelable("data");
+			Drawable drawable = new BitmapDrawable(null, genderBitmap);
 			urlpath = FileUtil.saveFile(RegisterActivity.this, IMAGE_FILE_NAME,
-					photo);
+					genderBitmap);
 			mCameraAvatar.setImageDrawable(drawable);
 
 			Toast.makeText(RegisterActivity.this,
@@ -351,5 +360,14 @@ public class RegisterActivity extends BaseActivity {
 			// "正在上传图片，请稍候...");
 			// new Thread(uploadImageRunnable).start();
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			RegisterActivity.this.finish();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

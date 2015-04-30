@@ -262,7 +262,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int barColor=0x7f010001;
+        public static final int barColor=0x7f010003;
         /**  The size of the bars when they are parallel to each other 
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
@@ -281,7 +281,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int barSpinCycleTime=0x7f010005;
+        public static final int barSpinCycleTime=0x7f010007;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -291,7 +291,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int barWidth=0x7f010008;
+        public static final int barWidth=0x7f01000a;
         /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -300,7 +300,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int border_color=0x7f010010;
+        public static final int border_color=0x7f010001;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -310,7 +310,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int border_width=0x7f01000f;
+        public static final int border_width=0x7f010000;
         /**  A style that may be applied to Buttons placed within a
              LinearLayout with the style buttonBarStyle to form a button bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -332,7 +332,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int circleRadius=0x7f010006;
+        public static final int circleRadius=0x7f010008;
         /**  Close button icon 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -632,7 +632,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int fillRadius=0x7f010007;
+        public static final int fillRadius=0x7f010009;
         /** <p>Must be a floating point value, such as "<code>1.2</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -640,7 +640,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int fromDeg=0x7f01000b;
+        public static final int fromDeg=0x7f01000d;
         /**  The max gap between the bars when they are parallel to each other 
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
@@ -748,7 +748,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int linearProgress=0x7f010009;
+        public static final int linearProgress=0x7f01000b;
         /**  Drawable used as a background for selected list items. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -940,7 +940,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int pivotX=0x7f01000d;
+        public static final int pivotX=0x7f01000f;
         /** <p>Must be a fractional value, which is a floating point number appended with either % or %p, such as "<code>14.5%</code>".
 The % suffix always means a percentage of the base size; the optional %p suffix provides a size relative to
 some parent container.
@@ -950,7 +950,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int pivotY=0x7f01000e;
+        public static final int pivotY=0x7f010010;
         /**  Default PopupMenu style. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1006,7 +1006,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int progressIndeterminate=0x7f010000;
+        public static final int progressIndeterminate=0x7f010002;
         /**  The prompt to display when the spinner's dialog is shown. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1034,7 +1034,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int rimColor=0x7f010002;
+        public static final int rimColor=0x7f010004;
         /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
 Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
 in (inches), mm (millimeters).
@@ -1044,7 +1044,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int rimWidth=0x7f010003;
+        public static final int rimWidth=0x7f010005;
         /** <p>Must be one of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -1056,7 +1056,7 @@ containing a value of this type.
 <tr><td><code>z</code></td><td>2</td><td></td></tr>
 </table>
          */
-        public static final int rollType=0x7f01000a;
+        public static final int rollType=0x7f01000c;
         /** <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -1229,7 +1229,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int spinSpeed=0x7f010004;
+        public static final int spinSpeed=0x7f010006;
         /**  Default Spinner style. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1478,7 +1478,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int toDeg=0x7f01000c;
+        public static final int toDeg=0x7f01000e;
         /**  Default Toolar NavigationButtonStyle 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
@@ -1995,17 +1995,17 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0b0034;
         public static final int action_mode_bar_stub=0x7f0b0033;
         public static final int action_mode_close_button=0x7f0b0026;
-        public static final int action_settings=0x7f0b0072;
+        public static final int action_settings=0x7f0b0077;
         public static final int activity_chooser_view_content=0x7f0b0027;
         public static final int address_container=0x7f0b004c;
         public static final int always=0x7f0b0017;
         public static final int beginning=0x7f0b001e;
-        public static final int boy=0x7f0b006c;
-        public static final int boy_rippleView_layout=0x7f0b006b;
-        public static final int camera_avatar=0x7f0b005d;
-        public static final int camera_avatar_rippleView=0x7f0b0069;
+        public static final int boy=0x7f0b0070;
+        public static final int boy_rippleView_layout=0x7f0b006f;
+        public static final int camera_avatar=0x7f0b0060;
+        public static final int camera_avatar_rippleView=0x7f0b006d;
         public static final int cancel_button=0x7f0b005b;
-        public static final int center_layout=0x7f0b005e;
+        public static final int center_layout=0x7f0b0061;
         public static final int checkbox=0x7f0b002f;
         public static final int collapseActionView=0x7f0b0018;
         public static final int confirm_button=0x7f0b005c;
@@ -2022,17 +2022,20 @@ containing a value of this type.
         public static final int drawer_layout=0x7f0b0046;
         public static final int dropdown=0x7f0b001d;
         public static final int edit_query=0x7f0b0039;
-        public static final int email=0x7f0b006f;
+        public static final int email=0x7f0b0073;
+        public static final int email_for_find=0x7f0b005d;
         public static final int end=0x7f0b001f;
         public static final int error_frame=0x7f0b0050;
         public static final int error_x=0x7f0b0051;
         public static final int expand_activities_button=0x7f0b0028;
         public static final int expanded_menu=0x7f0b002e;
-        public static final int forget_login_layout=0x7f0b0063;
-        public static final int forget_password=0x7f0b0064;
-        public static final int gender_layout=0x7f0b006a;
-        public static final int girl=0x7f0b006e;
-        public static final int girl_rippleView_layout=0x7f0b006d;
+        public static final int find_password=0x7f0b005f;
+        public static final int forget_login_layout=0x7f0b0065;
+        public static final int forget_password=0x7f0b0067;
+        public static final int forget_rippleView_layout=0x7f0b0066;
+        public static final int gender_layout=0x7f0b006e;
+        public static final int girl=0x7f0b0072;
+        public static final int girl_rippleView_layout=0x7f0b0071;
         public static final int home=0x7f0b0000;
         public static final int homeAsUp=0x7f0b0011;
         public static final int icon=0x7f0b002c;
@@ -2042,25 +2045,27 @@ containing a value of this type.
         public static final int listMode=0x7f0b000d;
         public static final int list_item=0x7f0b002b;
         public static final int loading=0x7f0b004e;
-        public static final int login=0x7f0b0065;
+        public static final int login=0x7f0b0064;
+        public static final int login_rippleView_layout=0x7f0b0068;
         public static final int mask_left=0x7f0b0054;
         public static final int mask_right=0x7f0b0053;
-        public static final int menu_item_container=0x7f0b0066;
-        public static final int menu_item_image=0x7f0b0067;
-        public static final int message_container=0x7f0b0068;
+        public static final int menu_item_container=0x7f0b006a;
+        public static final int menu_item_image=0x7f0b006b;
+        public static final int message_container=0x7f0b006c;
         public static final int middle=0x7f0b0020;
         public static final int never=0x7f0b001a;
         public static final int none=0x7f0b0012;
         public static final int normal=0x7f0b000e;
-        public static final int password=0x7f0b0060;
+        public static final int password=0x7f0b0063;
         public static final int progressWheel=0x7f0b0058;
         public static final int progress_circular=0x7f0b0007;
         public static final int progress_dialog=0x7f0b0057;
         public static final int progress_horizontal=0x7f0b0008;
         public static final int radio=0x7f0b0031;
         public static final int rectangle=0x7f0b0022;
-        public static final int register=0x7f0b0062;
-        public static final int rippleView=0x7f0b0061;
+        public static final int register=0x7f0b0074;
+        public static final int register_now=0x7f0b0069;
+        public static final int rippleView=0x7f0b005e;
         public static final int scrollView=0x7f0b004a;
         public static final int search_badge=0x7f0b003b;
         public static final int search_bar=0x7f0b003a;
@@ -2072,7 +2077,7 @@ containing a value of this type.
         public static final int search_plate=0x7f0b003f;
         public static final int search_src_text=0x7f0b0040;
         public static final int search_voice_btn=0x7f0b0044;
-        public static final int shake_container=0x7f0b0070;
+        public static final int shake_container=0x7f0b0075;
         public static final int shortcut=0x7f0b0030;
         public static final int showCustom=0x7f0b0013;
         public static final int showHome=0x7f0b0014;
@@ -2089,8 +2094,8 @@ containing a value of this type.
         public static final int toolbar=0x7f0b0045;
         public static final int up=0x7f0b0001;
         public static final int useLogo=0x7f0b0016;
-        public static final int user_container=0x7f0b0071;
-        public static final int username=0x7f0b005f;
+        public static final int user_container=0x7f0b0076;
+        public static final int username=0x7f0b0062;
         public static final int warning_frame=0x7f0b0056;
         public static final int withText=0x7f0b001b;
         public static final int wrap_content=0x7f0b000c;
@@ -2153,13 +2158,14 @@ containing a value of this type.
         public static final int activity_main=0x7f030016;
         public static final int address_list_fragment=0x7f030017;
         public static final int alert_dialog=0x7f030018;
-        public static final int login_layout=0x7f030019;
-        public static final int menu_list_item=0x7f03001a;
-        public static final int message_fragment=0x7f03001b;
-        public static final int register_layout=0x7f03001c;
-        public static final int shake_fragment=0x7f03001d;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
-        public static final int user_fragment=0x7f03001f;
+        public static final int forget_password=0x7f030019;
+        public static final int login_layout=0x7f03001a;
+        public static final int menu_list_item=0x7f03001b;
+        public static final int message_fragment=0x7f03001c;
+        public static final int register_layout=0x7f03001d;
+        public static final int shake_fragment=0x7f03001e;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
+        public static final int user_fragment=0x7f030020;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
@@ -2227,27 +2233,32 @@ containing a value of this type.
         public static final int default_progressbar=0x7f050001;
         public static final int dialog_cancel=0x7f050004;
         public static final int dialog_default_title=0x7f050002;
-        public static final int dialog_error_title=0x7f05002a;
-        public static final int dialog_message_title=0x7f050027;
+        public static final int dialog_error_title=0x7f05002f;
+        public static final int dialog_message_title=0x7f05002c;
         public static final int dialog_ok=0x7f050003;
-        public static final int dialog_text_wait=0x7f050028;
+        public static final int dialog_text_wait=0x7f05002d;
         public static final int drawer_close=0x7f050019;
         public static final int drawer_open=0x7f050018;
         public static final int email=0x7f05001c;
-        public static final int error_login_error=0x7f05002b;
-        public static final int error_register_email_address_null=0x7f050022;
-        public static final int error_register_email_repeat=0x7f050026;
-        public static final int error_register_password_null=0x7f050024;
-        public static final int error_register_user_name_null=0x7f050023;
-        public static final int error_register_user_name_repeat=0x7f050025;
+        public static final int emailforfind=0x7f050023;
+        public static final int error_login_error=0x7f050030;
+        public static final int error_register_email_address_null=0x7f050026;
+        public static final int error_register_email_repeat=0x7f05002b;
+        public static final int error_register_gender_null=0x7f050029;
+        public static final int error_register_password_null=0x7f050028;
+        public static final int error_register_user_name_null=0x7f050027;
+        public static final int error_register_user_name_repeat=0x7f05002a;
+        public static final int find_password=0x7f050022;
         public static final int forget_password=0x7f050021;
+        public static final int forget_password_email_error=0x7f050025;
+        public static final int forget_password_send_email=0x7f050024;
         public static final int hello_world=0x7f050016;
         public static final int login=0x7f050020;
         public static final int network_not_connected=0x7f05001a;
         public static final int password=0x7f05001d;
         public static final int password_again=0x7f05001e;
         public static final int register=0x7f05001f;
-        public static final int success_register_success=0x7f050029;
+        public static final int success_register_success=0x7f05002e;
         public static final int username=0x7f05001b;
     }
     public static final class style {
@@ -3320,7 +3331,7 @@ containing a value of this type.
            @see #CircleImageView_border_width
          */
         public static final int[] CircleImageView = {
-            0x7f01000f, 0x7f010010
+            0x7f010000, 0x7f010001
         };
         /**
           <p>This symbol is the offset where the {@link com.science.strangertofriend.R.attr#border_color}
@@ -4322,9 +4333,9 @@ containing a value of this type.
            @see #ProgressWheel_spinSpeed
          */
         public static final int[] ProgressWheel = {
-            0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
-            0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
-            0x7f010008, 0x7f010009
+            0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005,
+            0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009,
+            0x7f01000a, 0x7f01000b
         };
         /**
           <p>This symbol is the offset where the {@link com.science.strangertofriend.R.attr#barColor}
@@ -4673,8 +4684,8 @@ containing a value of this type.
            @see #Rotate3dAnimation_toDeg
          */
         public static final int[] Rotate3dAnimation = {
-            0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d,
-            0x7f01000e
+            0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f,
+            0x7f010010
         };
         /**
           <p>This symbol is the offset where the {@link com.science.strangertofriend.R.attr#fromDeg}

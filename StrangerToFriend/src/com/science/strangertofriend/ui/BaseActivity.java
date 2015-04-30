@@ -1,14 +1,18 @@
 package com.science.strangertofriend.ui;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AppContext;
@@ -26,6 +30,9 @@ import com.science.strangertofriend.utils.AppContext;
 public class BaseActivity extends Activity {
 
 	private AppContext appContext;// 全局Context
+	// 定义一个变量，来标识是否退出
+	private static boolean isExit = false;
+	private int i = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +60,61 @@ public class BaseActivity extends Activity {
 		}
 	}
 
+	// 进度条颜色
+	public void colorProgress(SweetAlertDialog pDialog) {
+		i++;
+		switch (i) {
+		case 0:
+			pDialog.getProgressHelper().setBarColor(
+					getResources().getColor(android.R.color.holo_blue_bright));
+			break;
+
+		case 1:
+			pDialog.getProgressHelper().setBarColor(
+					getResources().getColor(android.R.color.holo_green_light));
+			break;
+		case 2:
+			pDialog.getProgressHelper().setBarColor(
+					getResources().getColor(android.R.color.holo_orange_light));
+			break;
+
+		case 3:
+			pDialog.getProgressHelper().setBarColor(
+					getResources().getColor(android.R.color.holo_red_light));
+			break;
+		}
+	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			exit();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+
+	private void exit() {
+		if (!isExit) {
+			isExit = true;
+			Toast.makeText(getApplicationContext(), "再按一次退出程序",
+					Toast.LENGTH_SHORT).show();
+			// 利用handler延迟发送更改状态信息
+			mHandler.sendEmptyMessageDelayed(0, 2000);
+		} else {
+			finish();
+			System.exit(0);
+		}
+	}
+
+	@SuppressLint("HandlerLeak")
+	Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			isExit = false;
+		}
+	};
 
 }

@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity implements
 		// 激活导航栏设置
 		tintManager.setNavigationBarTintEnabled(true);
 		// 设置一个颜色给系统栏
-		tintManager.setTintColor(Color.parseColor("#e793c1"));
+		tintManager.setTintColor(Color.parseColor("#dd8fb9"));
 	}
 
 	private void initComponent() {
