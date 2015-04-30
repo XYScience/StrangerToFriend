@@ -27,6 +27,7 @@ public class MyDialog {
 				.setTitleText(text).show();
 	}
 
+	//  ß∞‹Ã· æøÚ
 	public void errorDialog(String title, String content) {
 		new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE)
 				.setTitleText(title).setContentText(content).show();

@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
@@ -34,11 +35,13 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.strangertofriend.fragment.AddressListFragment;
 import com.science.strangertofriend.fragment.MessageFragment;
+import com.science.strangertofriend.fragment.SetFragment;
 import com.science.strangertofriend.fragment.ShakeFragment;
 import com.science.strangertofriend.fragment.UserFragment;
 import com.science.strangertofriend.utils.AppContext;
@@ -64,11 +67,13 @@ public class MainActivity extends ActionBarActivity implements
 	private UserFragment mUserFragment;
 	private MessageFragment mMessageFragment;
 	private AddressListFragment mAddressListFragment;
+	private SetFragment mSetFragment;
 	@SuppressWarnings("rawtypes")
 	private ViewAnimator mViewAnimator;
 	private LinearLayout mLinearLayout;
 	// 定义一个变量，来标识是否退出
 	private static boolean isExit = false;
+	private int i = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +192,12 @@ public class MainActivity extends ActionBarActivity implements
 		SlideMenuItem slideMenuItemAddress = new SlideMenuItem("Address",
 				R.drawable.address);
 		mMenuList.add(slideMenuItemAddress);
+		SlideMenuItem slideMenuItemSet = new SlideMenuItem("Set",
+				R.drawable.set);
+		mMenuList.add(slideMenuItemSet);
+		SlideMenuItem slideMenuItemQuit = new SlideMenuItem("Quit",
+				R.drawable.quit);
+		mMenuList.add(slideMenuItemQuit);
 	}
 
 	// 摇一摇视图切换动画实现
@@ -241,21 +252,17 @@ public class MainActivity extends ActionBarActivity implements
 		return mAddressListFragment;
 	}
 
-	@SuppressWarnings("deprecation")
-	private void CircularRevealAnima(ScreenShotable screenShotable,
+	// 设置视图切换动画实现
+	public ScreenShotable replaceSetFragment(ScreenShotable screenShotable,
 			int topPosition) {
-		View view = findViewById(R.id.content_frame);
-		int finalRadius = Math.max(view.getWidth(), view.getHeight());
-		// 创建圆形动画
-		SupportAnimator animator = ViewAnimationUtils.createCircularReveal(
-				view, 0, topPosition, 0, finalRadius);
-		animator.setInterpolator(new AccelerateInterpolator());
-		animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
-		// 由于圆形动画是一点点的扩大的,其没有全部覆盖的部分应该为上一个视图的内容,
-		// 因此我们需要将前面的视图截图保存下来,可将下面代码屏蔽可明白其意义.
-		findViewById(R.id.content_overlay).setBackgroundDrawable(
-				new BitmapDrawable(getResources(), screenShotable.getBitmap()));
-		animator.start();
+
+		CircularRevealAnima(screenShotable, topPosition);
+
+		mSetFragment = new SetFragment();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.content_frame, mSetFragment).commit();
+
+		return mSetFragment;
 	}
 
 	@Override
@@ -271,9 +278,31 @@ public class MainActivity extends ActionBarActivity implements
 			return replaceMessageFragment(screenShotable, topPosition);
 		case "Address":
 			return replaceAddressListFragment(screenShotable, topPosition);
+		case "Set":
+			return replaceSetFragment(screenShotable, topPosition);
+		case "Quit":
+			quitApp();
+			return screenShotable;
 		default:
 			return screenShotable;
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void CircularRevealAnima(ScreenShotable screenShotable,
+			int topPosition) {
+		View view = findViewById(R.id.content_frame);
+		int finalRadius = Math.max(view.getWidth(), view.getHeight());
+		// 创建圆形动画
+		SupportAnimator animator = ViewAnimationUtils.createCircularReveal(
+				view, 0, topPosition, 0, finalRadius);
+		animator.setInterpolator(new AccelerateInterpolator());
+		animator.setDuration(ViewAnimator.CIRCULAR_REVEAL_ANIMATION_DURATION);
+		// 由于圆形动画是一点点的扩大的,其没有全部覆盖的部分应该为上一个视图的内容,
+		// 因此我们需要将前面的视图截图保存下来,可将下面代码屏蔽可明白其意义.
+		findViewById(R.id.content_overlay).setBackgroundDrawable(
+				new BitmapDrawable(getResources(), screenShotable.getBitmap()));
+		animator.start();
 	}
 
 	@Override
@@ -323,6 +352,99 @@ public class MainActivity extends ActionBarActivity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	// 退出APP
+	private void quitApp() {
+		new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+				.setTitleText("真的要退出么?")
+				.setContentText("再玩会儿啦!")
+				.setCancelText("再玩一会")
+				.setConfirmText("残忍退出")
+				.showCancelButton(true)
+				.setCancelClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								// reuse previous dialog instance, keep
+								// widget user state, reset them if you need
+								sDialog.setTitleText("已经成功取消")
+										.setConfirmText("确定")
+										.setContentText("欢迎回来")
+										.showCancelButton(false)
+										.setCancelClickListener(null)
+										.setConfirmClickListener(null)
+										.changeAlertType(
+												SweetAlertDialog.SUCCESS_TYPE);
+
+							}
+						})
+				.setConfirmClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								sDialog.dismiss();
+
+								final SweetAlertDialog nAlertDialog = new SweetAlertDialog(
+										MainActivity.this,
+										SweetAlertDialog.PROGRESS_TYPE);
+								nAlertDialog.setTitleText("正在退出..")
+										.setContentText("下次再见！记得(⊙o⊙)喔!");
+								nAlertDialog.show();
+								nAlertDialog.setCancelable(false);
+								new CountDownTimer(800 * 4, 800) {
+									public void onTick(long millisUntilFinished) {
+										// you can change the progress bar color
+										// by ProgressHelper
+										// every 800 millis
+										i++;
+										switch (i) {
+										case 0:
+											nAlertDialog
+													.getProgressHelper()
+													.setBarColor(
+															getResources()
+																	.getColor(
+																			android.R.color.holo_blue_bright));
+											break;
+
+										case 1:
+											nAlertDialog
+													.getProgressHelper()
+													.setBarColor(
+															getResources()
+																	.getColor(
+																			android.R.color.holo_green_light));
+											break;
+										case 2:
+											nAlertDialog
+													.getProgressHelper()
+													.setBarColor(
+															getResources()
+																	.getColor(
+																			android.R.color.holo_orange_light));
+											break;
+
+										case 3:
+											nAlertDialog
+													.getProgressHelper()
+													.setBarColor(
+															getResources()
+																	.getColor(
+																			android.R.color.holo_red_light));
+											break;
+										}
+									}
+
+									public void onFinish() {
+										i = -1;
+										nAlertDialog.dismiss();
+										MainActivity.this.finish();
+										System.exit(0);
+									}
+								}.start();
+							}
+						}).show();
 	}
 
 	@Override

@@ -1971,15 +1971,17 @@ containing a value of this type.
         public static final int login_bg=0x7f020046;
         public static final int menu_item_selector=0x7f020047;
         public static final int message=0x7f020048;
-        public static final int red_button_background=0x7f020049;
-        public static final int shake=0x7f02004a;
-        public static final int success_bow=0x7f02004b;
-        public static final int success_circle=0x7f02004c;
-        public static final int user=0x7f02004d;
-        public static final int user_boy=0x7f02004e;
-        public static final int user_girl=0x7f02004f;
-        public static final int warning_circle=0x7f020050;
-        public static final int warning_sigh=0x7f020051;
+        public static final int quit=0x7f020049;
+        public static final int red_button_background=0x7f02004a;
+        public static final int set=0x7f02004b;
+        public static final int shake=0x7f02004c;
+        public static final int success_bow=0x7f02004d;
+        public static final int success_circle=0x7f02004e;
+        public static final int user=0x7f02004f;
+        public static final int user_boy=0x7f020050;
+        public static final int user_girl=0x7f020051;
+        public static final int warning_circle=0x7f020052;
+        public static final int warning_sigh=0x7f020053;
     }
     public static final class id {
         public static final int action_bar=0x7f0b0037;
@@ -1995,7 +1997,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f0b0034;
         public static final int action_mode_bar_stub=0x7f0b0033;
         public static final int action_mode_close_button=0x7f0b0026;
-        public static final int action_settings=0x7f0b0077;
+        public static final int action_settings=0x7f0b0078;
         public static final int activity_chooser_view_content=0x7f0b0027;
         public static final int address_container=0x7f0b004c;
         public static final int always=0x7f0b0017;
@@ -2077,7 +2079,8 @@ containing a value of this type.
         public static final int search_plate=0x7f0b003f;
         public static final int search_src_text=0x7f0b0040;
         public static final int search_voice_btn=0x7f0b0044;
-        public static final int shake_container=0x7f0b0075;
+        public static final int set_container=0x7f0b0075;
+        public static final int shake_container=0x7f0b0076;
         public static final int shortcut=0x7f0b0030;
         public static final int showCustom=0x7f0b0013;
         public static final int showHome=0x7f0b0014;
@@ -2094,7 +2097,7 @@ containing a value of this type.
         public static final int toolbar=0x7f0b0045;
         public static final int up=0x7f0b0001;
         public static final int useLogo=0x7f0b0016;
-        public static final int user_container=0x7f0b0076;
+        public static final int user_container=0x7f0b0077;
         public static final int username=0x7f0b0062;
         public static final int warning_frame=0x7f0b0056;
         public static final int withText=0x7f0b001b;
@@ -2163,9 +2166,10 @@ containing a value of this type.
         public static final int menu_list_item=0x7f03001b;
         public static final int message_fragment=0x7f03001c;
         public static final int register_layout=0x7f03001d;
-        public static final int shake_fragment=0x7f03001e;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001f;
-        public static final int user_fragment=0x7f030020;
+        public static final int set_fragment=0x7f03001e;
+        public static final int shake_fragment=0x7f03001f;
+        public static final int support_simple_spinner_dropdown_item=0x7f030020;
+        public static final int user_fragment=0x7f030021;
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
