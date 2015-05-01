@@ -22,6 +22,7 @@
     <string name="error_register_user_name_null">用户名不可空</string>
     <string name="error_register_password_null">密码不可为空</string>
     <string name="error_register_gender_null">请选择性别</string>
+    <string name="error_register_take_gender_null">请自拍照片为头像</string>
     <string name="error_register_user_name_repeat">用户名已被注册，请重新填写</string>
     <string name="error_register_email_repeat">邮箱已被注册，请更换邮箱</string>
     <string name="dialog_message_title">提示</string>

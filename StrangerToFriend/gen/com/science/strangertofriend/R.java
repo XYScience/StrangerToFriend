@@ -2237,21 +2237,22 @@ containing a value of this type.
         public static final int default_progressbar=0x7f050001;
         public static final int dialog_cancel=0x7f050004;
         public static final int dialog_default_title=0x7f050002;
-        public static final int dialog_error_title=0x7f05002f;
-        public static final int dialog_message_title=0x7f05002c;
+        public static final int dialog_error_title=0x7f050030;
+        public static final int dialog_message_title=0x7f05002d;
         public static final int dialog_ok=0x7f050003;
-        public static final int dialog_text_wait=0x7f05002d;
+        public static final int dialog_text_wait=0x7f05002e;
         public static final int drawer_close=0x7f050019;
         public static final int drawer_open=0x7f050018;
         public static final int email=0x7f05001c;
         public static final int emailforfind=0x7f050023;
-        public static final int error_login_error=0x7f050030;
+        public static final int error_login_error=0x7f050031;
         public static final int error_register_email_address_null=0x7f050026;
-        public static final int error_register_email_repeat=0x7f05002b;
+        public static final int error_register_email_repeat=0x7f05002c;
         public static final int error_register_gender_null=0x7f050029;
         public static final int error_register_password_null=0x7f050028;
+        public static final int error_register_take_gender_null=0x7f05002a;
         public static final int error_register_user_name_null=0x7f050027;
-        public static final int error_register_user_name_repeat=0x7f05002a;
+        public static final int error_register_user_name_repeat=0x7f05002b;
         public static final int find_password=0x7f050022;
         public static final int forget_password=0x7f050021;
         public static final int forget_password_email_error=0x7f050025;
@@ -2262,7 +2263,7 @@ containing a value of this type.
         public static final int password=0x7f05001d;
         public static final int password_again=0x7f05001e;
         public static final int register=0x7f05001f;
-        public static final int success_register_success=0x7f05002e;
+        public static final int success_register_success=0x7f05002f;
         public static final int username=0x7f05001b;
     }
     public static final class style {

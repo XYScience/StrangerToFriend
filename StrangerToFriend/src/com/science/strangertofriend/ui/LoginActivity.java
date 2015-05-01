@@ -15,7 +15,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -63,16 +62,16 @@ public class LoginActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		AVUser currentUser = AVUser.getCurrentUser();
-		if (currentUser != null) {
-			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-			startActivity(intent);
-			LoginActivity.this.finish();
-		} else {
-			setContentView(R.layout.login_layout);
-			initComponent();
-			addListener();
-		}
+		// AVUser currentUser = AVUser.getCurrentUser();
+		// if (currentUser != null) {
+		// Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+		// startActivity(intent);
+		// LoginActivity.this.finish();
+		// } else {
+		setContentView(R.layout.login_layout);
+		initComponent();
+		addListener();
+		// }
 	}
 
 	private void initComponent() {
@@ -92,7 +91,7 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-
+				findGenderCallback();
 			}
 
 			@Override
@@ -103,7 +102,7 @@ public class LoginActivity extends BaseActivity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				findGenderCallback();
+
 			}
 		});
 		mForgetPassword.setOnClickListener(new ForgetPasswordListener());
@@ -114,6 +113,7 @@ public class LoginActivity extends BaseActivity {
 				Intent intent = new Intent(LoginActivity.this,
 						RegisterActivity.class);
 				startActivity(intent);
+				LoginActivity.this.finish();
 			}
 		});
 		mLoginButton.setOnClickListener(new LoginListener());
@@ -155,7 +155,6 @@ public class LoginActivity extends BaseActivity {
 				if (responseList != null && responseList.size() != 0) {
 					mObjectId = responseList.get(responseList.size() - 1)
 							.getObjectId();
-					Log.e("1111111", "11111111111:" + mObjectId);
 					byteToDrawable();
 				}
 				break;
@@ -173,7 +172,7 @@ public class LoginActivity extends BaseActivity {
 				AVQuery<AVObject> query = new AVQuery<AVObject>("Gender");
 				AVObject gender = null;
 				try {
-					gender = query.get("5541a964e4b04402f3c0c0fb");
+					gender = query.get(mObjectId);
 				} catch (AVException e) {
 					e.printStackTrace();
 				}
@@ -220,6 +219,7 @@ public class LoginActivity extends BaseActivity {
 		@Override
 		public void onClick(View v) {
 
+			mUsernameString = mUser.getText().toString();
 			mPasswordString = mPassword.getText().toString();
 			if (mUsernameString.isEmpty()) {
 				Toast.makeText(LoginActivity.this,
@@ -291,6 +291,7 @@ public class LoginActivity extends BaseActivity {
 			Intent forgetPasswordIntent = new Intent(LoginActivity.this,
 					ForgetPasswordActivity.class);
 			startActivity(forgetPasswordIntent);
+			LoginActivity.this.finish();
 		}
 
 	}

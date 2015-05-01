@@ -464,7 +464,7 @@ public class MainActivity extends ActionBarActivity implements
 			// 利用handler延迟发送更改状态信息
 			mHandler.sendEmptyMessageDelayed(0, 2000);
 		} else {
-			finish();
+			MainActivity.this.finish();
 			System.exit(0);
 		}
 	}

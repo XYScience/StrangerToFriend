@@ -56,6 +56,7 @@ public class RegisterActivity extends BaseActivity {
 	private static final int REQUESTCODE_TAKE = 1; // 相机拍照标记
 	private static final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
 	private Bitmap genderBitmap;
+	private Boolean isTakeGenderFlag = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,15 +120,23 @@ public class RegisterActivity extends BaseActivity {
 				if (!mPasswordString.isEmpty()) {
 					if (!mUsernameString.isEmpty()) {
 						if (!mEmailString.isEmpty()) {
-							if (mBoyflag || mGirlFlag) {
-								if (mBoyflag) {
-									progressDialog("男");
+							if (isTakeGenderFlag) {
+								if (mBoyflag || mGirlFlag) {
+									if (mBoyflag) {
+										progressDialog("男");
+									} else {
+										progressDialog("女");
+									}
 								} else {
-									progressDialog("女");
+									Toast.makeText(
+											RegisterActivity.this,
+											R.string.error_register_gender_null,
+											Toast.LENGTH_LONG).show();
 								}
 							} else {
-								Toast.makeText(RegisterActivity.this,
-										R.string.error_register_gender_null,
+								Toast.makeText(
+										RegisterActivity.this,
+										R.string.error_register_take_gender_null,
 										Toast.LENGTH_LONG).show();
 							}
 						} else {
@@ -354,7 +363,7 @@ public class RegisterActivity extends BaseActivity {
 			Toast.makeText(RegisterActivity.this,
 					"头像保存在:" + urlpath.replaceAll(IMAGE_FILE_NAME, ""),
 					Toast.LENGTH_LONG).show();
-
+			isTakeGenderFlag = true;
 			// 新线程后台上传服务端
 			// pd = ProgressDialog.show(RegisterActivity.this, null,
 			// "正在上传图片，请稍候...");
