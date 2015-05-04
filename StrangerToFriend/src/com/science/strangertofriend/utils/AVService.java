@@ -59,4 +59,15 @@ public class AVService {
 		po.put("gender", imageFile);
 		po.saveInBackground();
 	}
+
+	public static void myLocation(String userObjectId, String username,
+			String gender, double latitude, double longtitude) {
+		AVObject myLocation = new AVObject("MyLocation");
+		myLocation.put("userObjectId", userObjectId);
+		myLocation.put("username", username);
+		myLocation.put("gender", gender);
+		myLocation.put("latitude", latitude);
+		myLocation.put("longtitude", longtitude);
+		myLocation.saveInBackground();
+	}
 }

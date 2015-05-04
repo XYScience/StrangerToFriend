@@ -13,10 +13,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -86,25 +85,16 @@ public class LoginActivity extends BaseActivity {
 
 	public void addListener() {
 
-		mUser.addTextChangedListener(new TextWatcher() {
+		mUser.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				findGenderCallback();
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (!hasFocus) {
+					findGenderCallback();
+				}
 			}
 		});
+
 		mForgetPassword.setOnClickListener(new ForgetPasswordListener());
 		mRegisterNow.setOnClickListener(new OnClickListener() {
 
@@ -186,8 +176,22 @@ public class LoginActivity extends BaseActivity {
 							Bitmap bitmap;
 							bitmap = BitmapFactory.decodeByteArray(data, 0,
 									data.length);
+							// LayoutParams laParams = (LayoutParams)
+							// mCameraAvatar
+							// .getLayoutParams();
+							// laParams.width = (getScreenWidth() / 3) + 20;
+							// laParams.height = (getScreenHeight() / 3) + 20;
+							// mCameraAvatar.setLayoutParams(laParams);
 							mCameraAvatar.setImageDrawable(new BitmapDrawable(
 									bitmap));
+							mCameraAvatar
+									.setMaxHeight((getScreenHeight() / 3) + 20);
+							mCameraAvatar
+									.setMaxWidth((getScreenWidth() / 3) + 20);
+							mCameraAvatar
+									.setMinimumHeight((getScreenWidth() / 3) + 20);
+							mCameraAvatar
+									.setMinimumWidth((getScreenWidth() / 3) + 20);
 						} else {
 							// Failed
 						}
@@ -291,7 +295,6 @@ public class LoginActivity extends BaseActivity {
 			Intent forgetPasswordIntent = new Intent(LoginActivity.this,
 					ForgetPasswordActivity.class);
 			startActivity(forgetPasswordIntent);
-			LoginActivity.this.finish();
 		}
 
 	}

@@ -9,6 +9,7 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -83,6 +84,22 @@ public class BaseActivity extends Activity {
 					getResources().getColor(android.R.color.holo_red_light));
 			break;
 		}
+	}
+
+	// 获取屏幕的宽度
+	public int getScreenWidth() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenWidth = dm.widthPixels;
+		return screenWidth;
+	}
+
+	// 获取屏幕的高度
+	public int getScreenHeight() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int screenHeight = dm.heightPixels;
+		return screenHeight;
 	}
 
 	@Override

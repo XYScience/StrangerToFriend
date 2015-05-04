@@ -1,6 +1,7 @@
 package com.science.strangertofriend.fragment;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -8,9 +9,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.science.strangertofriend.R;
+import com.science.strangertofriend.ui.ShowNearMenMapActivity;
 
 /**
  * @description “°“ª“°ΩÁ√Ê
@@ -26,6 +30,8 @@ public class ShakeFragment extends Fragment implements ScreenShotable {
 
 	private View mContainerView;
 	private Bitmap mBitmap;
+	private Button mToNearMapButton;
+	private View mRootView;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -37,9 +43,24 @@ public class ShakeFragment extends Fragment implements ScreenShotable {
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.shake_fragment, container,
-				false);
-		return rootView;
+		mRootView = inflater.inflate(R.layout.shake_fragment, container, false);
+
+		initComponent();
+
+		return mRootView;
+	}
+
+	private void initComponent() {
+		mToNearMapButton = (Button) mRootView.findViewById(R.id.to_near_map);
+		mToNearMapButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(),
+						ShowNearMenMapActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	@Override

@@ -9,12 +9,16 @@
         android:layout_height="match_parent"
         android:background="@android:color/holo_orange_light" >
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/to_near_map"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="这是摇一摇" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/button_click"
+            android:text="摇一摇" />
     </RelativeLayout>
 
 </io.codetail.widget.RevealFrameLayout>
