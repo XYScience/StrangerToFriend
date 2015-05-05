@@ -8,9 +8,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +19,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -65,7 +66,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 	private Context context;
 	private String mUserObjectId, mUsername, mGender;
-	private String mOtherUsername, mOtherLatitude, mOtherLongtitude;
+	private int i = -1;
 
 	// 定位相关
 	private LocationClient mLocationClient;
@@ -74,6 +75,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 	private double mLatitude;
 	private double mLongtitude;
 	private ImageView mMapLocation;
+	private AVGeoPoint mMyPoint;
 
 	// 覆盖物相关
 	private BitmapDescriptor mMarkDescriptor;
@@ -186,7 +188,8 @@ public class ShowNearMenMapActivity extends BaseActivity {
 			if (isFirstIn) {
 				AVService.myLocation(mUserObjectId, mUsername, mGender,
 						location.getLatitude(), location.getLongitude());
-
+				mMyPoint = new AVGeoPoint(location.getLatitude(),
+						location.getLongitude());
 				LatLng latLng = new LatLng(location.getLatitude(),
 						location.getLongitude());
 				MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
@@ -196,38 +199,39 @@ public class ShowNearMenMapActivity extends BaseActivity {
 				Toast.makeText(context, location.getAddrStr(),
 						Toast.LENGTH_LONG).show();
 
-				findMenCallback();
-
+				// 查找附近1000米的人
+				findMenNearby();
 			}
 		}
 	}
 
-	private void findMenCallback() {
+	private void findMenNearby() {
+		new Thread(new Runnable() {
 
-		AVQuery<AVObject> query = new AVQuery<AVObject>("MyLocation");
-		query.whereEqualTo("userObjectId", mUserObjectId);
-		query.findInBackground(new FindCallback<AVObject>() {
-			public void done(List<AVObject> avObjects, AVException e) {
-				if (e == null) {
-					for (AVObject avo : avObjects) {
+			@Override
+			public void run() {
+				try {
+					AVQuery<AVObject> query = new AVQuery<>("MyLocation");
+					query.whereWithinKilometers("location", mMyPoint, 1);
+					List<AVObject> placeList = query.find();
+
+					for (AVObject avo : placeList) {
 						mLocationMenList.add(new LocationMenList(avo
 								.getString("userObjectId"), avo
-								.getString("username"), avo
-								.getDouble("latitude"), avo
-								.getDouble("longtitude")));
+								.getString("username"), avo.getAVGeoPoint(
+								"location").getLatitude(), avo.getAVGeoPoint(
+								"location").getLongitude()));
 					}
 					mMenListHandler.obtainMessage(1).sendToTarget();
-				} else {
-					Log.e("1111111", "111111111111111111:" + e.getMessage());
+				} catch (AVException e) {
+					e.printStackTrace();
 				}
 			}
-		});
-
+		}).start();
 	}
 
 	@SuppressLint("HandlerLeak")
 	private Handler mMenListHandler = new Handler() {
-		@SuppressWarnings("unchecked")
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case 1:
@@ -305,9 +309,8 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 							@Override
 							public void onInfoWindowClick() {
-								Toast.makeText(context,
-										"我在这里" + menList.getUserObjectId(),
-										Toast.LENGTH_LONG).show();
+								// 添加好友
+								addFriend();
 							}
 						});
 				mBaiduMap.showInfoWindow(infoWindow);
@@ -315,6 +318,58 @@ public class ShowNearMenMapActivity extends BaseActivity {
 				return true;
 			}
 		});
+	}
+
+	private void addFriend() {
+
+		new SweetAlertDialog(ShowNearMenMapActivity.this,
+				SweetAlertDialog.WARNING_TYPE)
+				.setTitleText("确定添加为好友?")
+				.setCancelText("取消")
+				.setConfirmText("确认")
+				.showCancelButton(true)
+				.setCancelClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								// reuse previous dialog instance, keep
+								// widget user state, reset them if you need
+								sDialog.setTitleText("已取消!")
+										.setConfirmText("OK")
+										.showCancelButton(false)
+										.setCancelClickListener(null)
+										.setConfirmClickListener(null)
+										.changeAlertType(
+												SweetAlertDialog.SUCCESS_TYPE);
+							}
+						})
+				.setConfirmClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(final SweetAlertDialog sDialog) {
+								sDialog.dismiss();
+
+								final SweetAlertDialog nAlertDialog = new SweetAlertDialog(
+										ShowNearMenMapActivity.this,
+										SweetAlertDialog.PROGRESS_TYPE)
+										.setTitleText("邂逅相遇,适我愿兮");
+								nAlertDialog.show();
+								nAlertDialog.setCancelable(false);
+								new CountDownTimer(800 * 4, 800) {
+									public void onTick(long millisUntilFinished) {
+										// you can change the progress bar color
+										// by ProgressHelper
+										// every 800 millis
+										colorProgress(nAlertDialog);
+									}
+
+									public void onFinish() {
+										i = -1;
+										nAlertDialog.dismiss();
+									}
+								}.start();
+							}
+						}).show();
 	}
 
 	/**

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestPasswordResetCallback;
@@ -61,13 +62,22 @@ public class AVService {
 	}
 
 	public static void myLocation(String userObjectId, String username,
-			String gender, double latitude, double longtitude) {
-		AVObject myLocation = new AVObject("MyLocation");
-		myLocation.put("userObjectId", userObjectId);
-		myLocation.put("username", username);
-		myLocation.put("gender", gender);
-		myLocation.put("latitude", latitude);
-		myLocation.put("longtitude", longtitude);
-		myLocation.saveInBackground();
+			String gender, double latitude, double longititude) {
+
+		AVGeoPoint point = new AVGeoPoint(latitude, longititude);
+		AVObject myPlace = new AVObject("MyLocation");
+		myPlace.put("location", point);
+		myPlace.put("userObjectId", userObjectId);
+		myPlace.put("username", username);
+		myPlace.put("gender", gender);
+		myPlace.saveInBackground();
+
+		// AVObject myLocation = new AVObject("MyLocation");
+		// myLocation.put("userObjectId", userObjectId);
+		// myLocation.put("username", username);
+		// myLocation.put("gender", gender);
+		// myLocation.put("latitude", latitude);
+		// myLocation.put("longtitude", longititude);
+		// myLocation.saveInBackground();
 	}
 }
