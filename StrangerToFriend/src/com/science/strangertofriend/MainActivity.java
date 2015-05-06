@@ -1,5 +1,6 @@
 package com.science.strangertofriend;
 
+import static android.view.Gravity.START;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
@@ -12,7 +13,7 @@ import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -24,19 +25,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.science.materialmenu.DrawerArrowDrawable;
 import com.science.strangertofriend.fragment.AddressListFragment;
 import com.science.strangertofriend.fragment.MessageFragment;
 import com.science.strangertofriend.fragment.SetFragment;
@@ -59,7 +60,12 @@ public class MainActivity extends ActionBarActivity implements
 	private AppContext appContext;// 全局Context
 
 	private DrawerLayout mDrawerLayout;
-	private ActionBarDrawerToggle mActionBarDrawerToggle;
+	// private ActionBarDrawerToggle mActionBarDrawerToggle;
+	private DrawerArrowDrawable mDrawerArrowDrawable;
+	private float offset;
+	private boolean flipped;
+	private ImageView imageView;
+
 	private List<SlideMenuItem> mMenuList = new ArrayList<>();
 	private ShakeFragment mShakeFragment;
 	private UserFragment mUserFragment;
@@ -127,6 +133,13 @@ public class MainActivity extends ActionBarActivity implements
 				.replace(R.id.content_frame, mShakeFragment).commit();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+
+		imageView = (ImageView) findViewById(R.id.drawer_indicator);
+		final Resources resources = getResources();
+		mDrawerArrowDrawable = new DrawerArrowDrawable(resources);
+		mDrawerArrowDrawable.setStrokeColor(0xffc2c7cc);
+		imageView.setImageDrawable(mDrawerArrowDrawable);
+
 		mLinearLayout = (LinearLayout) findViewById(R.id.left_drawer);
 		mLinearLayout.setOnClickListener(new OnClickListener() {
 
@@ -139,38 +152,52 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void setActionBar() {
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		toolbar.setTitle("解密陌生人");
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		mActionBarDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-		mDrawerLayout,/* DrawerLayout object */
-		toolbar, /* nav drawer icon to replace 'Up' caret */
-		R.string.drawer_open, /* "open drawer" description */
-		R.string.drawer_close)/* "close drawer" description */
-		{
-			/** Called when a drawer has settled in a completely closed state. */
-			public void onDrawerClosed(View drawerView) {
-				super.onDrawerClosed(drawerView);
-				mLinearLayout.removeAllViews();
-				mLinearLayout.invalidate();
-			}
+		mDrawerLayout
+				.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+					@Override
+					public void onDrawerClosed(View drawerView) {
+						super.onDrawerClosed(drawerView);
+						mLinearLayout.removeAllViews();
+						mLinearLayout.invalidate();
+					}
 
+					@Override
+					public void onDrawerSlide(View drawerView, float slideOffset) {
+						super.onDrawerSlide(drawerView, slideOffset);
+						offset = slideOffset;
+						if (slideOffset > 0.6
+								&& mLinearLayout.getChildCount() == 0) {
+							mViewAnimator.showMenuContent();
+							flipped = true;
+							mDrawerArrowDrawable.setFlip(flipped);
+						} else {
+							flipped = false;
+							mDrawerArrowDrawable.setFlip(flipped);
+						}
+
+						mDrawerArrowDrawable.setParameter(offset);
+					}
+
+					/**
+					 * Called when a drawer has settled in a completely open
+					 * state.
+					 */
+					public void onDrawerOpened(View drawerView) {
+						super.onDrawerOpened(drawerView);
+					}
+				});
+
+		imageView.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onDrawerSlide(View drawerView, float slideOffset) {
-				super.onDrawerSlide(drawerView, slideOffset);
-				if (slideOffset > 0.6 && mLinearLayout.getChildCount() == 0) {
-					mViewAnimator.showMenuContent();
+			public void onClick(View v) {
+				if (mDrawerLayout.isDrawerVisible(START)) {
+					mDrawerLayout.closeDrawer(START);
+				} else {
+					mDrawerLayout.openDrawer(START);
 				}
 			}
+		});
 
-			/** Called when a drawer has settled in a completely open state. */
-			public void onDrawerOpened(View drawerView) {
-				super.onDrawerOpened(drawerView);
-			}
-		};
-		mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 	}
 
 	private void createMenuList() {
@@ -305,12 +332,10 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void disableHomeButton() {
-		getSupportActionBar().setHomeButtonEnabled(false);
 	}
 
 	@Override
 	public void enableHomeButton() {
-		getSupportActionBar().setHomeButtonEnabled(true);
 		mDrawerLayout.closeDrawers();
 	}
 
@@ -318,18 +343,6 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void addViewToContainer(View view) {
 		mLinearLayout.addView(view);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mActionBarDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		mActionBarDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	// 退出APP
