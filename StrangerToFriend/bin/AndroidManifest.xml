@@ -65,6 +65,8 @@
         </activity>
         <activity android:name="com.science.strangertofriend.ui.ShowNearMenMapActivity" >
         </activity>
+        <activity android:name="com.science.strangertofriend.ui.DecodeGameActivity" >
+        </activity>
 
         <service
             android:name="com.baidu.location.f"

@@ -33,7 +33,7 @@ public class BaseActivity extends Activity {
 	private AppContext appContext;// 全局Context
 	// 定义一个变量，来标识是否退出
 	private static boolean isExit = false;
-	private int i = -1;
+	public int i = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

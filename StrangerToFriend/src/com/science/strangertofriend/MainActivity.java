@@ -97,7 +97,7 @@ public class MainActivity extends ActionBarActivity implements
 		initComponent();
 		setActionBar();
 		createMenuList();
-		// list 为菜单每个项的内容
+		// mMenuList 为菜单每个项的内容
 		// contentFragment 为主体显示继承自Fragment 并实现了ScreenShotable接口
 		// 最后一个参数为ViewAnimator.ViewAnimatorListener
 		// 接口,其中一个方法便是addViewToContainer
@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity implements
 		// 激活导航栏设置
 		tintManager.setNavigationBarTintEnabled(true);
 		// 设置一个颜色给系统栏
-		tintManager.setTintColor(Color.parseColor("#dd8fb9"));
+		tintManager.setTintColor(Color.parseColor("#f698b2"));
 	}
 
 	private void initComponent() {

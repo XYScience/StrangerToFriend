@@ -52,7 +52,6 @@ public class LoginActivity extends BaseActivity {
 	private EditText mUser, mPassword;
 	private Button mLoginButton;
 	private TextView mForgetPassword, mRegisterNow;
-	private int i = -1;
 	private String mUsernameString, mPasswordString;
 	private MyDialog mMyDialog;
 	private String mObjectId;

@@ -46,7 +46,6 @@ public class RegisterActivity extends BaseActivity {
 	private EditText mUserName, mEmail, mPassword;
 	private Button mRegisterButton;
 	private MyDialog mMyDialog;
-	private int i = -1;
 	private String mUsernameString, mPasswordString, mEmailString;
 	private Boolean mBoyflag = false, mGirlFlag = false;
 

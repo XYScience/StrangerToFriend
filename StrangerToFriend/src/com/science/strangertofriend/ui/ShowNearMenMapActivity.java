@@ -6,9 +6,9 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
@@ -66,7 +65,6 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 	private Context context;
 	private String mUserObjectId, mUsername, mGender;
-	private int i = -1;
 
 	// 定位相关
 	private LocationClient mLocationClient;
@@ -186,12 +184,11 @@ public class ShowNearMenMapActivity extends BaseActivity {
 			mLongtitude = location.getLongitude();
 
 			if (isFirstIn) {
+
 				AVService.myLocation(mUserObjectId, mUsername, mGender,
-						location.getLatitude(), location.getLongitude());
-				mMyPoint = new AVGeoPoint(location.getLatitude(),
-						location.getLongitude());
-				LatLng latLng = new LatLng(location.getLatitude(),
-						location.getLongitude());
+						mLatitude, mLongtitude);
+				mMyPoint = new AVGeoPoint(mLatitude, mLongtitude);
+				LatLng latLng = new LatLng(mLatitude, mLongtitude);
 				MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
 				mBaiduMap.animateMapStatus(msu);
 				isFirstIn = false;
@@ -212,7 +209,9 @@ public class ShowNearMenMapActivity extends BaseActivity {
 			public void run() {
 				try {
 					AVQuery<AVObject> query = new AVQuery<>("MyLocation");
+					// 查找附近1000米的人
 					query.whereWithinKilometers("location", mMyPoint, 1);
+					query.whereNotEqualTo("username", mUsername);
 					List<AVObject> placeList = query.find();
 
 					for (AVObject avo : placeList) {
@@ -275,8 +274,8 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 						@Override
 						public void onInfoWindowClick() {
-							Toast.makeText(context, "我在这里", Toast.LENGTH_LONG)
-									.show();
+							// 解密游戏
+							decodeGame();
 						}
 					});
 			mBaiduMap.showInfoWindow(infoWindow);
@@ -309,8 +308,8 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 							@Override
 							public void onInfoWindowClick() {
-								// 添加好友
-								addFriend();
+								// 解密游戏
+								decodeGame();
 							}
 						});
 				mBaiduMap.showInfoWindow(infoWindow);
@@ -320,56 +319,10 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		});
 	}
 
-	private void addFriend() {
+	private void decodeGame() {
 
-		new SweetAlertDialog(ShowNearMenMapActivity.this,
-				SweetAlertDialog.WARNING_TYPE)
-				.setTitleText("确定添加为好友?")
-				.setCancelText("取消")
-				.setConfirmText("确认")
-				.showCancelButton(true)
-				.setCancelClickListener(
-						new SweetAlertDialog.OnSweetClickListener() {
-							@Override
-							public void onClick(SweetAlertDialog sDialog) {
-								// reuse previous dialog instance, keep
-								// widget user state, reset them if you need
-								sDialog.setTitleText("已取消!")
-										.setConfirmText("OK")
-										.showCancelButton(false)
-										.setCancelClickListener(null)
-										.setConfirmClickListener(null)
-										.changeAlertType(
-												SweetAlertDialog.SUCCESS_TYPE);
-							}
-						})
-				.setConfirmClickListener(
-						new SweetAlertDialog.OnSweetClickListener() {
-							@Override
-							public void onClick(final SweetAlertDialog sDialog) {
-								sDialog.dismiss();
-
-								final SweetAlertDialog nAlertDialog = new SweetAlertDialog(
-										ShowNearMenMapActivity.this,
-										SweetAlertDialog.PROGRESS_TYPE)
-										.setTitleText("邂逅相遇,适我愿兮");
-								nAlertDialog.show();
-								nAlertDialog.setCancelable(false);
-								new CountDownTimer(800 * 4, 800) {
-									public void onTick(long millisUntilFinished) {
-										// you can change the progress bar color
-										// by ProgressHelper
-										// every 800 millis
-										colorProgress(nAlertDialog);
-									}
-
-									public void onFinish() {
-										i = -1;
-										nAlertDialog.dismiss();
-									}
-								}.start();
-							}
-						}).show();
+		Intent intent = new Intent(context, DecodeGameActivity.class);
+		startActivity(intent);
 	}
 
 	/**
