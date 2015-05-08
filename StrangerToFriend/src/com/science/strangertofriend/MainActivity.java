@@ -40,7 +40,6 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.materialmenu.DrawerArrowDrawable;
 import com.science.strangertofriend.fragment.AddressListFragment;
 import com.science.strangertofriend.fragment.MessageFragment;
-import com.science.strangertofriend.fragment.SetFragment;
 import com.science.strangertofriend.fragment.ShakeFragment;
 import com.science.strangertofriend.fragment.UserFragment;
 import com.science.strangertofriend.utils.AppContext;
@@ -71,7 +70,6 @@ public class MainActivity extends ActionBarActivity implements
 	private UserFragment mUserFragment;
 	private MessageFragment mMessageFragment;
 	private AddressListFragment mAddressListFragment;
-	private SetFragment mSetFragment;
 	@SuppressWarnings("rawtypes")
 	private ViewAnimator mViewAnimator;
 	private LinearLayout mLinearLayout;
@@ -202,27 +200,18 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void createMenuList() {
 
-		SlideMenuItem slideMenuItemClose = new SlideMenuItem("Close",
-				R.drawable.close_drawer);
-		mMenuList.add(slideMenuItemClose);
 		SlideMenuItem slideMenuItemShake = new SlideMenuItem("Shake",
-				R.drawable.shake);
+				R.drawable.a);
 		mMenuList.add(slideMenuItemShake);
-		SlideMenuItem slideMenuItemUser = new SlideMenuItem("User",
-				R.drawable.user);
-		mMenuList.add(slideMenuItemUser);
 		SlideMenuItem slideMenuItemMessage = new SlideMenuItem("Message",
-				R.drawable.message);
+				R.drawable.b);
 		mMenuList.add(slideMenuItemMessage);
 		SlideMenuItem slideMenuItemAddress = new SlideMenuItem("Address",
-				R.drawable.address);
+				R.drawable.c);
 		mMenuList.add(slideMenuItemAddress);
-		SlideMenuItem slideMenuItemSet = new SlideMenuItem("Set",
-				R.drawable.set);
-		mMenuList.add(slideMenuItemSet);
-		SlideMenuItem slideMenuItemQuit = new SlideMenuItem("Quit",
-				R.drawable.quit);
-		mMenuList.add(slideMenuItemQuit);
+		SlideMenuItem slideMenuItemUser = new SlideMenuItem("User",
+				R.drawable.d);
+		mMenuList.add(slideMenuItemUser);
 	}
 
 	// 摇一摇视图切换动画实现
@@ -277,19 +266,6 @@ public class MainActivity extends ActionBarActivity implements
 		return mAddressListFragment;
 	}
 
-	// 设置视图切换动画实现
-	public ScreenShotable replaceSetFragment(ScreenShotable screenShotable,
-			int topPosition) {
-
-		CircularRevealAnima(screenShotable, topPosition);
-
-		mSetFragment = new SetFragment();
-		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content_frame, mSetFragment).commit();
-
-		return mSetFragment;
-	}
-
 	@Override
 	public ScreenShotable onSwitch(Resourceble slideMenuItem,
 			ScreenShotable screenShotable, int topPosition) {
@@ -303,11 +279,6 @@ public class MainActivity extends ActionBarActivity implements
 			return replaceMessageFragment(screenShotable, topPosition);
 		case "Address":
 			return replaceAddressListFragment(screenShotable, topPosition);
-		case "Set":
-			return replaceSetFragment(screenShotable, topPosition);
-		case "Quit":
-			quitApp();
-			return screenShotable;
 		default:
 			return screenShotable;
 		}

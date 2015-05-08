@@ -9,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.science.strangertofriend.R;
+import com.science.strangertofriend.widget.DampView;
 
 /**
  * @description 用户信息
@@ -26,6 +28,8 @@ public class UserFragment extends Fragment implements ScreenShotable {
 
 	private View mContainerView;
 	private Bitmap mBitmap;
+	private ImageView mUserBackgroundImg;
+	private View mRootView;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -37,9 +41,20 @@ public class UserFragment extends Fragment implements ScreenShotable {
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.user_fragment, container,
-				false);
-		return rootView;
+		mRootView = inflater.inflate(R.layout.user_fragment, container, false);
+
+		// 初始化
+		initComponent();
+
+		return mRootView;
+	}
+
+	private void initComponent() {
+		// 背景下拉变大
+		mUserBackgroundImg = (ImageView) mRootView
+				.findViewById(R.id.user_background_img);
+		DampView view = (DampView) mRootView.findViewById(R.id.dampview);
+		view.setImageView(mUserBackgroundImg);
 	}
 
 	@Override

@@ -364,10 +364,9 @@ public final class R {
 		public static final int abc_textfield_search_activated_mtrl_alpha = 0x7f020035;
 		public static final int abc_textfield_search_default_mtrl_alpha = 0x7f020036;
 		public static final int abc_textfield_search_material = 0x7f020037;
-		public static final int item_down = 0x7f020047;
-		public static final int item_up = 0x7f020048;
-		public static final int item_up_b = 0x7f020049;
-		public static final int menu_item_selector = 0x7f02004d;
+		public static final int item_down = 0x7f020049;
+		public static final int item_up = 0x7f02004a;
+		public static final int menu_item_selector = 0x7f02004e;
 	}
 	public static final class id {
 		public static final int action_bar = 0x7f0b0037;
