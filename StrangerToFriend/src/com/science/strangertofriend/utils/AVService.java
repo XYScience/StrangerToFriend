@@ -35,6 +35,14 @@ public class AVService {
 		user.signUpInBackground(signUpCallback);
 	}
 
+	// ¸öÍÆClientID
+	public static void saveClientID(String username, String clientID) {
+		AVObject avObject = new AVObject("ClientID");
+		avObject.put("username", username);
+		avObject.put("clientID", clientID);
+		avObject.saveInBackground();
+	}
+
 	public static void requestPasswordReset(String email,
 			RequestPasswordResetCallback callback) {
 		AVUser.requestPasswordResetInBackground(email, callback);

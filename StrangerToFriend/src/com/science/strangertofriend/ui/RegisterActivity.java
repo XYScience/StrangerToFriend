@@ -21,6 +21,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.SignUpCallback;
+import com.igexin.sdk.PushManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AVService;
@@ -157,11 +158,15 @@ public class RegisterActivity extends BaseActivity {
 		});
 	}
 
-	public void register(String gender) {
-		SignUpCallback signUpCallback = new SignUpCallback() {
+	public void register(final String gender) {
+		final SignUpCallback signUpCallback = new SignUpCallback() {
 			public void done(AVException e) {
 				if (e == null) {
 					mMyDialog.successDialog("×¢²á³É¹¦!");
+					AVService.uploadImage(mUsernameString, mEmailString,
+							genderBitmap);
+					AVService.saveClientID(mUsernameString, PushManager
+							.getInstance().getClientid(RegisterActivity.this));
 					Intent mainIntent = new Intent(RegisterActivity.this,
 							MainActivity.class);
 					startActivity(mainIntent);
@@ -192,9 +197,6 @@ public class RegisterActivity extends BaseActivity {
 
 		AVService.signUp(mUsernameString, mPasswordString, mEmailString,
 				gender, signUpCallback);
-
-		AVService.uploadImage(mUsernameString, mEmailString, genderBitmap);
-
 	}
 
 	private void progressDialog(final String gender) {

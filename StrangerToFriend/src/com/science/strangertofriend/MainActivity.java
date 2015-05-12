@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements
 		// 最后一个参数为ViewAnimator.ViewAnimatorListener
 		// 接口,其中一个方法便是addViewToContainer
 		// 在ViewAnimator 中创建view 并添加到 linearLayout 菜单中.
-		mViewAnimator = new ViewAnimator<>(this, mMenuList, mShakeFragment,
+		mViewAnimator = new ViewAnimator<>(this, mMenuList, mMessageFragment,
 				mDrawerLayout, this);
 	}
 
@@ -126,9 +126,9 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void initComponent() {
 
-		mShakeFragment = new ShakeFragment();
+		mMessageFragment = new MessageFragment();
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content_frame, mShakeFragment).commit();
+				.replace(R.id.content_frame, mMessageFragment).commit();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 

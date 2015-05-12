@@ -61,6 +61,10 @@ public class ShakeFragment extends Fragment implements ScreenShotable {
 				startActivity(intent);
 			}
 		});
+		if (getActivity().getIntent().getStringExtra("username") != null) {
+			mToNearMapButton.setText(getActivity().getIntent().getStringExtra(
+					"username"));
+		}
 	}
 
 	@Override

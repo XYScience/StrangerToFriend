@@ -248,7 +248,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		Marker marker = null;
 		OverlayOptions options;
 
-		for (LocationMenList menList : avObjects) {
+		for (final LocationMenList menList : avObjects) {
 
 			// 经纬度
 			latLng = new LatLng(menList.getLatitude(), menList.getLongtitude());
@@ -275,7 +275,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 						@Override
 						public void onInfoWindowClick() {
 							// 解密游戏
-							decodeGame();
+							decodeGame(menList.getUsername());
 						}
 					});
 			mBaiduMap.showInfoWindow(infoWindow);
@@ -309,7 +309,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 							@Override
 							public void onInfoWindowClick() {
 								// 解密游戏
-								decodeGame();
+								decodeGame(menList.getUsername());
 							}
 						});
 				mBaiduMap.showInfoWindow(infoWindow);
@@ -319,9 +319,10 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		});
 	}
 
-	private void decodeGame() {
+	private void decodeGame(String username) {
 
 		Intent intent = new Intent(context, DecodeGameActivity.class);
+		intent.putExtra("username", username);
 		startActivity(intent);
 	}
 

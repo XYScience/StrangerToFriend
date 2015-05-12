@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
 
 /**
@@ -26,6 +27,9 @@ public class AppContext extends Application {
 		AVOSCloud.initialize(getApplicationContext(),
 				"naxbv0f9j653brj453n6yzcvlwx44oeuuw1uve2bvzipd3gu",
 				"hf1nu0zrbbwupc18c363kwuluu00gf7ujaku0bfr5boapqbc");
+		// ∆Ù”√±¿¿£¥ÌŒÛÕ≥º∆
+		AVAnalytics.enableCrashReport(this.getApplicationContext(), true);
+		AVOSCloud.setDebugLogEnabled(true);
 
 	}
 
