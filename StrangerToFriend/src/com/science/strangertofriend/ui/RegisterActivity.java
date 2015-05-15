@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -77,6 +78,8 @@ public class RegisterActivity extends BaseActivity {
 		mPassword = (EditText) findViewById(R.id.password);
 		mRegisterButton = (Button) findViewById(R.id.register);
 		mMyDialog = new MyDialog(RegisterActivity.this);
+		// SDK初始化，第三方程序启动时，都要进行SDK初始化工作
+		PushManager.getInstance().initialize(getApplicationContext());
 
 	}
 
@@ -354,10 +357,17 @@ public class RegisterActivity extends BaseActivity {
 		Bundle extras = picdata.getExtras();
 		if (extras != null) {
 			// 取得SDCard图片路径做显示
-			genderBitmap = extras.getParcelable("data");
-			Drawable drawable = new BitmapDrawable(null, genderBitmap);
+			Bitmap bitmap = extras.getParcelable("data");
+			Drawable drawable = new BitmapDrawable(null, bitmap);
 			urlpath = FileUtil.saveFile(RegisterActivity.this, IMAGE_FILE_NAME,
-					genderBitmap);
+					bitmap);
+			// 压缩图片
+			BitmapFactory.Options option = new BitmapFactory.Options();
+			// 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
+			option.inSampleSize = 2;
+			// 根据图片的SDCard路径读出Bitmap
+			genderBitmap = BitmapFactory.decodeFile(urlpath, option);
+
 			mCameraAvatar.setImageDrawable(drawable);
 
 			Toast.makeText(RegisterActivity.this,

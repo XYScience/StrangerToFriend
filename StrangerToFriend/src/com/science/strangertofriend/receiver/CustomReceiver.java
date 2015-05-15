@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
-import com.science.strangertofriend.ui.DecodeGameActivity;
+import com.science.strangertofriend.fragment.MessageFragment;
 
 /**
  * @description
@@ -21,6 +21,8 @@ import com.science.strangertofriend.ui.DecodeGameActivity;
  */
 
 public class CustomReceiver extends BroadcastReceiver {
+
+	private String data;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -44,9 +46,9 @@ public class CustomReceiver extends BroadcastReceiver {
 
 			if (payload != null) {
 				String data = new String(payload);
-				Log.d("StrangerToFriend", "Got Payload:" + data);
-				if (DecodeGameActivity.tLogView != null)
-					DecodeGameActivity.tLogView.append(data + "\n");
+				Log.e("StrangerToFriend", "Got Payload:" + data);
+				MessageFragment.mUsernameList.add(0, data);
+				// DecodeGameActivity.tLogView.append(data + "\n");
 			}
 			break;
 		case PushConsts.GET_CLIENTID:
@@ -74,5 +76,13 @@ public class CustomReceiver extends BroadcastReceiver {
 		default:
 			break;
 		}
+	}
+
+	public void getData(UsernameCallBack usernameCallBack) {
+		usernameCallBack.getUsername(data);
+	}
+
+	public interface UsernameCallBack {
+		public void getUsername(String username);
 	}
 }

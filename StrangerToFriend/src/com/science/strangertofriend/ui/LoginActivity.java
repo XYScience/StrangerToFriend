@@ -54,7 +54,6 @@ public class LoginActivity extends BaseActivity {
 	private TextView mForgetPassword, mRegisterNow;
 	private String mUsernameString, mPasswordString;
 	private MyDialog mMyDialog;
-	private String mObjectId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -142,16 +141,16 @@ public class LoginActivity extends BaseActivity {
 			case 1:
 				List<AVObject> responseList = (List<AVObject>) msg.obj;
 				if (responseList != null && responseList.size() != 0) {
-					mObjectId = responseList.get(responseList.size() - 1)
-							.getObjectId();
-					byteToDrawable();
+					String mObjectId = responseList
+							.get(responseList.size() - 1).getObjectId();
+					byteToDrawable(mObjectId);
 				}
 				break;
 			}
 		}
 	};
 
-	private void byteToDrawable() {
+	private void byteToDrawable(final String mObjectId) {
 
 		new Thread(new Runnable() {
 

@@ -231,12 +231,12 @@ public class DecodeGameActivity extends BaseActivity {
 		param.put("appkey", appkey);
 		param.put("appid", appid);
 		// 注：透传内容后面需用来验证接口调用是否成功，假定填写为hello girl~
-		param.put("data", "正在请求" + username + "加为好友");
+		param.put("data", username);
 
 		curDate = new Date(System.currentTimeMillis());
 		param.put("time", formatter.format(curDate)); // 当前请求时间，可选
 		param.put("clientid", clientID); // 您获取的ClientID
-											// 红米1c6850e1f444df6faf7d34d23a2b8216
+		// 红米1c6850e1f444df6faf7d34d23a2b8216
 
 		param.put("expire", 3600); // 消息超时时间，单位为秒，可选
 

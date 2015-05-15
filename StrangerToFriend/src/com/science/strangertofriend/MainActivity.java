@@ -32,6 +32,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -73,6 +74,7 @@ public class MainActivity extends ActionBarActivity implements
 	@SuppressWarnings("rawtypes")
 	private ViewAnimator mViewAnimator;
 	private LinearLayout mLinearLayout;
+	private TextView mTitleText;
 	// 定义一个变量，来标识是否退出
 	private static boolean isExit = false;
 	private int i = -1;
@@ -126,6 +128,8 @@ public class MainActivity extends ActionBarActivity implements
 
 	private void initComponent() {
 
+		mTitleText = (TextView) findViewById(R.id.title);
+		mTitleText.setText("聊天");
 		mMessageFragment = new MessageFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, mMessageFragment).commit();
@@ -135,7 +139,7 @@ public class MainActivity extends ActionBarActivity implements
 		imageView = (ImageView) findViewById(R.id.drawer_indicator);
 		final Resources resources = getResources();
 		mDrawerArrowDrawable = new DrawerArrowDrawable(resources);
-		mDrawerArrowDrawable.setStrokeColor(0xffc2c7cc);
+		mDrawerArrowDrawable.setStrokeColor(0xffffffff);
 		imageView.setImageDrawable(mDrawerArrowDrawable);
 
 		mLinearLayout = (LinearLayout) findViewById(R.id.left_drawer);
@@ -219,7 +223,7 @@ public class MainActivity extends ActionBarActivity implements
 			int topPosition) {
 
 		CircularRevealAnima(screenShotable, topPosition);
-
+		mTitleText.setText("摇一摇");
 		mShakeFragment = new ShakeFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, mShakeFragment).commit();
@@ -232,7 +236,7 @@ public class MainActivity extends ActionBarActivity implements
 			int topPosition) {
 
 		CircularRevealAnima(screenShotable, topPosition);
-
+		mTitleText.setText("个人");
 		mUserFragment = new UserFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, mUserFragment).commit();
@@ -240,12 +244,12 @@ public class MainActivity extends ActionBarActivity implements
 		return mUserFragment;
 	}
 
-	// 消息视图切换动画实现
+	// 聊天视图切换动画实现
 	public ScreenShotable replaceMessageFragment(ScreenShotable screenShotable,
 			int topPosition) {
 
 		CircularRevealAnima(screenShotable, topPosition);
-
+		mTitleText.setText("聊天");
 		mMessageFragment = new MessageFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, mMessageFragment).commit();
@@ -258,7 +262,7 @@ public class MainActivity extends ActionBarActivity implements
 			ScreenShotable screenShotable, int topPosition) {
 
 		CircularRevealAnima(screenShotable, topPosition);
-
+		mTitleText.setText("通讯录");
 		mAddressListFragment = new AddressListFragment();
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.content_frame, mAddressListFragment).commit();

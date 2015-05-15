@@ -10,7 +10,7 @@
 
     <!-- 标题栏 -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/title_bg"
@@ -36,7 +36,31 @@
                 android:minWidth="?attr/actionBarSize"
                 android:scaleType="centerInside" />
         </com.science.strangertofriend.widget.RippleView>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#fff"
+            android:textSize="22sp" />
+
+        <com.science.strangertofriend.widget.RippleView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            ripple:rv_type="simpleRipple"
+            ripple:rv_zoom="false" >
+
+            <ImageView
+                android:id="@+id/title_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/title_more"
+                android:contentDescription="@null" />
+        </com.science.strangertofriend.widget.RippleView>
+    </RelativeLayout>
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"

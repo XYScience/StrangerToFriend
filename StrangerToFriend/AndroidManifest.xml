@@ -156,13 +156,13 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        
+
         <provider
             android:name="com.igexin.download.DownloadProvider"
             android:authorities="downloads.com.science.strangertofriend"
             android:process=":pushservice" />
         <!-- android:authorities="downloads.第三方包名" -->
-        
+
         <activity
             android:name="com.igexin.getuiext.activity.GetuiExtActivity"
             android:configChanges="orientation|keyboard|keyboardHidden"
