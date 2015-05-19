@@ -267,8 +267,8 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 
 						@Override
 						public void run() {
-							AVService.removeArticleCollect(list.get(
-									list.size() - 1).getObjectId());
+							AVService.removeMessage(list.get(list.size() - 1)
+									.getObjectId());
 						}
 					}).start();
 				}
@@ -332,8 +332,12 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 		mapUsername.put("requestTime", sendTime);
 		mRequestList.add(0, mapUsername);
 		mMessageListAdapter.notifyDataSetChanged();
+		// 保存消息
 		AVService.messageList(sendUsername, AVUser.getCurrentUser()
 				.getUsername(), sendTime, sendUsername + "已加您为好友");
+		// 保存好友通讯录
+		AVService.addressList(sendUsername, AVUser.getCurrentUser()
+				.getUsername(), sendTime);
 
 		return mRequestList;
 	}

@@ -56,13 +56,34 @@ public class AVService {
 	}
 
 	// 删除消息列表
-	public static void removeArticleCollect(String objectId) {
+	public static void removeMessage(String objectId) {
 		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
 		AVObject avObj = null;
 		try {
 			avObj = query.get(objectId);
 			avObj.delete();
-			System.out.print("---------------------:" + "已删除");
+		} catch (AVException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 好友通讯录列表
+	public static void addressList(String sendUsername, String receiveUser,
+			String sendTime) {
+		AVObject avObject = new AVObject("AddressList");
+		avObject.put("friends", sendUsername);
+		avObject.put("myself", receiveUser);
+		avObject.put("sendTime", sendTime);
+		avObject.saveInBackground();
+	}
+
+	// 删除好友
+	public static void removeFriends(String objectId) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>("AddressList");
+		AVObject avObj = null;
+		try {
+			avObj = query.get(objectId);
+			avObj.delete();
 		} catch (AVException e) {
 			e.printStackTrace();
 		}

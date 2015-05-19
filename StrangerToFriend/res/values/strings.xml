@@ -39,5 +39,7 @@
     <string name="user_number">账号：</string>
     <string name="itemdeleted">删除当前好友?</string>
     <string name="taptoundo">撤销</string>
+    <string name="a">A</string>
+    <string name="hint_search">请输入关键字</string>
 
 </resources>
