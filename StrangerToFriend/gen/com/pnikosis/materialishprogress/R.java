@@ -8,23 +8,23 @@ package com.pnikosis.materialishprogress;
 
 public final class R {
 	public static final class attr {
-		public static final int barColor = 0x7f010003;
-		public static final int barSpinCycleTime = 0x7f010007;
-		public static final int barWidth = 0x7f01000a;
-		public static final int circleRadius = 0x7f010008;
-		public static final int fillRadius = 0x7f010009;
-		public static final int linearProgress = 0x7f01000b;
-		public static final int progressIndeterminate = 0x7f010002;
-		public static final int rimColor = 0x7f010004;
-		public static final int rimWidth = 0x7f010005;
-		public static final int spinSpeed = 0x7f010006;
+		public static final int barColor = 0x7f01000f;
+		public static final int barSpinCycleTime = 0x7f010013;
+		public static final int barWidth = 0x7f010016;
+		public static final int circleRadius = 0x7f010014;
+		public static final int fillRadius = 0x7f010015;
+		public static final int linearProgress = 0x7f010017;
+		public static final int progressIndeterminate = 0x7f01000e;
+		public static final int rimColor = 0x7f010010;
+		public static final int rimWidth = 0x7f010011;
+		public static final int spinSpeed = 0x7f010012;
 	}
 	public static final class string {
-		public static final int app_name = 0x7f050000;
-		public static final int default_progressbar = 0x7f050003;
+		public static final int app_name = 0x7f070000;
+		public static final int default_progressbar = 0x7f07002c;
 	}
 	public static final class styleable {
-		public static final int[] ProgressWheel = { 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b };
+		public static final int[] ProgressWheel = { 0x7f01000e, 0x7f01000f, 0x7f010010, 0x7f010011, 0x7f010012, 0x7f010013, 0x7f010014, 0x7f010015, 0x7f010016, 0x7f010017 };
 		public static final int ProgressWheel_barColor = 1;
 		public static final int ProgressWheel_barSpinCycleTime = 5;
 		public static final int ProgressWheel_barWidth = 8;

@@ -19,10 +19,9 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/item_avater"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/item_avater"
-        android:text="username"
+        android:text="@string/username"
         android:textColor="#000"
         android:textSize="22sp" />
 
@@ -33,9 +32,8 @@
         android:layout_alignBottom="@id/item_avater"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/item_avater"
-        android:text="message"
         android:textColor="#808080"
-        android:textSize="18sp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/time"
@@ -43,8 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/item_avater"
-        android:text="12:00"
         android:textColor="#a6a6a6"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
 </RelativeLayout>

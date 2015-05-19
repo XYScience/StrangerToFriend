@@ -8,6 +8,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestPasswordResetCallback;
 import com.avos.avoscloud.SignUpCallback;
@@ -41,6 +42,30 @@ public class AVService {
 		avObject.put("username", username);
 		avObject.put("clientID", clientID);
 		avObject.saveInBackground();
+	}
+
+	// 消息列表
+	public static void messageList(String sendUsername, String receiveUser,
+			String sendTime, String messsage) {
+		AVObject avObject = new AVObject("MessageList");
+		avObject.put("sendUsername", sendUsername);
+		avObject.put("receiveUser", receiveUser);
+		avObject.put("sendTime", sendTime);
+		avObject.put("messsage", messsage);
+		avObject.saveInBackground();
+	}
+
+	// 删除消息列表
+	public static void removeArticleCollect(String objectId) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
+		AVObject avObj = null;
+		try {
+			avObj = query.get(objectId);
+			avObj.delete();
+			System.out.print("---------------------:" + "已删除");
+		} catch (AVException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void requestPasswordReset(String email,

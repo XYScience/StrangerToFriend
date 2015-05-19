@@ -166,15 +166,16 @@ public class DecodeGameActivity extends BaseActivity {
 	private void friendValidation() {
 
 		Intent intent = getIntent();
-		final String username = intent.getStringExtra("username");
+		final String receiveUser = intent.getStringExtra("receiveUser");
+		final String sendUsername = intent.getStringExtra("sendUsername");
 		AVQuery<AVObject> query = new AVQuery<AVObject>("ClientID");
-		query.whereEqualTo("username", username);
+		query.whereEqualTo("username", receiveUser);
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
 			public void done(List<AVObject> list, AVException e) {
 				if (list != null && list.size() != 0) {
-					friendValidationPassthrough(username,
+					friendValidationPassthrough(sendUsername,
 							list.get(list.size() - 1).getString("clientID"));
 				}
 			}
@@ -220,7 +221,8 @@ public class DecodeGameActivity extends BaseActivity {
 		// GetuiSdkHttpPost.httpPost(param);
 	}
 
-	private void friendValidationPassthrough(String username, String clientID) {
+	private void friendValidationPassthrough(String sendUsername,
+			String clientID) {
 		/**
 		 * 透传消息
 		 */
@@ -231,11 +233,11 @@ public class DecodeGameActivity extends BaseActivity {
 		param.put("appkey", appkey);
 		param.put("appid", appid);
 		// 注：透传内容后面需用来验证接口调用是否成功，假定填写为hello girl~
-		param.put("data", username);
+		param.put("data", sendUsername);
 
 		curDate = new Date(System.currentTimeMillis());
 		param.put("time", formatter.format(curDate)); // 当前请求时间，可选
-		param.put("clientid", clientID); // 您获取的ClientID
+		param.put("clientid", clientID); // 推送验证消息给clientID的好友
 		// 红米1c6850e1f444df6faf7d34d23a2b8216
 
 		param.put("expire", 3600); // 消息超时时间，单位为秒，可选

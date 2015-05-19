@@ -26,20 +26,21 @@ public class AddressListFragment extends Fragment implements ScreenShotable {
 
 	private View mContainerView;
 	private Bitmap mBitmap;
+	private View mRootView;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		this.mContainerView = view.findViewById(R.id.address_container);
+		this.mContainerView = view.findViewById(R.id.message_container);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-		View rootView = inflater.inflate(R.layout.address_list_fragment,
-				container, false);
-		return rootView;
+		mRootView = inflater.inflate(R.layout.address_list_fragment, container,
+				false);
+		return mRootView;
 	}
 
 	@Override

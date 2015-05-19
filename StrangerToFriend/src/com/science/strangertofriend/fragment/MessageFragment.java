@@ -1,9 +1,13 @@
 package com.science.strangertofriend.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,9 +23,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
@@ -31,6 +47,8 @@ import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.adapter.MessageListAdapter;
 import com.science.strangertofriend.adapter.SwingBottomInAnimationAdapter;
+import com.science.strangertofriend.ui.ChatRoomActivity;
+import com.science.strangertofriend.utils.AVService;
 
 /**
  * @description 消息界面
@@ -50,8 +68,8 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	private View mRootView;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 	private SwipeMenuListView mMessageList;
-	private MessageListAdapter mMessageListAdapter;
-	public static ArrayList<String> mUsernameList;
+	public static MessageListAdapter mMessageListAdapter;
+	public static List<Map<String, Object>> mRequestList;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -88,24 +106,52 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 
 		mMessageList = (SwipeMenuListView) mRootView
 				.findViewById(R.id.message_listView);
-
+		mRequestList = new ArrayList<Map<String, Object>>();
 	}
 
 	private void initData() {
-		mUsernameList = new ArrayList<String>();
-		mUsernameList.add("test1");
-		mUsernameList.add("test2");
-		mUsernameList.add("test3");
-		mUsernameList.add("test4");
-		mUsernameList.add("test5");
+
 		mMessageListAdapter = new MessageListAdapter(getActivity(),
-				mUsernameList);
+				mRequestList);
 		// 动态列表
 		SwingBottomInAnimationAdapter swingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
 				mMessageListAdapter);
 		swingBottomInAnimationAdapter.setAbsListView(mMessageList);
 		mMessageList.setAdapter(swingBottomInAnimationAdapter);
 
+		getMessageList();
+	}
+
+	// 云端查找信息列表
+	public List<Map<String, Object>> getMessageList() {
+
+		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
+		query.whereEqualTo("receiveUser", AVUser.getCurrentUser().getUsername());
+		query.findInBackground(new FindCallback<AVObject>() {
+
+			@Override
+			public void done(List<AVObject> list, AVException e) {
+				if (list != null && list.size() != 0) {
+					mRequestList.clear();
+					for (AVObject avo : list) {
+						Map<String, Object> mapUsername = new HashMap<String, Object>();
+						mapUsername.put("sendUsername",
+								avo.getString("sendUsername"));
+						mapUsername.put("frienRequest",
+								avo.getString("messsage"));
+						mapUsername.put("requestTime",
+								avo.getString("sendTime"));
+						mRequestList.add(0, mapUsername);
+					}
+					mMessageListAdapter.notifyDataSetChanged();
+				} else {
+					mRequestList.clear();
+					mMessageListAdapter.notifyDataSetChanged();
+				}
+			}
+		});
+
+		return mRequestList;
 	}
 
 	private void initSwipeMenu() {
@@ -159,7 +205,8 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				case 1:
 					// delete
 					// delete(item);
-					mUsernameList.remove(position);
+					reomveMessageItem(mRequestList.get(position));
+					mRequestList.remove(position);
 					mMessageListAdapter.notifyDataSetChanged();
 					break;
 				}
@@ -186,6 +233,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 		// test item long click
 		mMessageList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
+			@SuppressLint("ShowToast")
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -194,18 +242,100 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				return false;
 			}
 		});
+
+		mMessageList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				open(position);
+			}
+		});
+	}
+
+	// 删除消息item
+	private void reomveMessageItem(Map<String, Object> item) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
+		query.whereEqualTo("sendUsername", item.get("sendUsername"));
+		query.findInBackground(new FindCallback<AVObject>() {
+
+			@Override
+			public void done(final List<AVObject> list, AVException e) {
+				if (list != null && list.size() != 0) {
+					// 子线程访问网络
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							AVService.removeArticleCollect(list.get(
+									list.size() - 1).getObjectId());
+						}
+					}).start();
+				}
+			}
+		});
 	}
 
 	// 进入聊天界面
-	private void open(int position) {
-		Toast.makeText(getActivity(), "This is " + position, Toast.LENGTH_SHORT)
-				.show();
+	private void open(final int position) {
+		// Toast.makeText(getActivity(), "This is " + position,
+		// Toast.LENGTH_SHORT)
+		// .show();
+		ChatManager chatManager = ChatManager.getInstance();
+		chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser()
+				.getUsername());
+		chatManager.openClientWithSelfId(AVUser.getCurrentUser().getUsername(),
+				new AVIMClientCallback() {
+					@Override
+					public void done(AVIMClient avimClient, AVException e) {
+						if (e != null) {
+							e.printStackTrace();
+						}
+						System.out.print("-----------------------------:"
+								+ e.getMessage());
+						final ChatManager chatManager = ChatManager
+								.getInstance();
+						chatManager.fetchConversationWithUserId(mRequestList
+								.get(position).get("sendUsername").toString(),
+								new AVIMConversationCreatedCallback() {
+									@Override
+									public void done(
+											AVIMConversation conversation,
+											AVException e) {
+										if (e != null) {
+											System.out.print("e.getMessage()"
+													+ e.getMessage());
+										} else {
+											chatManager
+													.registerConversation(conversation);
+											Intent intent = new Intent(
+													getActivity(),
+													ChatRoomActivity.class);
+											intent.putExtra(
+													ChatActivity.CONVID,
+													conversation
+															.getConversationId());
+											startActivity(intent);
+										}
+									}
+								});
+					}
+				});
 	}
 
-	public static void getFriendRequest(String username) {
+	public static List<Map<String, Object>> getRequestData(String sendUsername,
+			String message, String sendTime) {
 
-		mUsernameList.add(username);
+		Map<String, Object> mapUsername = new HashMap<String, Object>();
+		mapUsername.put("sendUsername", sendUsername);
+		mapUsername.put("frienRequest", message);
+		mapUsername.put("requestTime", sendTime);
+		mRequestList.add(0, mapUsername);
+		mMessageListAdapter.notifyDataSetChanged();
+		AVService.messageList(sendUsername, AVUser.getCurrentUser()
+				.getUsername(), sendTime, sendUsername + "已加您为好友");
 
+		return mRequestList;
 	}
 
 	@Override
@@ -215,9 +345,12 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 			@Override
 			public void run() {
 				mSwipeRefreshLayout.setRefreshing(false);
-				mMessageListAdapter.notifyDataSetChanged();
+				getMessageList();
+				// if (mRequestList.size() != 0) {
+				// mMessageListAdapter.notifyDataSetChanged();
+				// }
 			}
-		}, 3500);
+		}, 3800);
 	}
 
 	@Override

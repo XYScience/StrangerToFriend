@@ -1,8 +1,7 @@
 package com.science.strangertofriend.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,13 +27,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageListAdapter extends BaseAdapter {
 
-	private ArrayList<String> mUsernameList;
+	private List<Map<String, Object>> mMessageList;
 	private Context mContext;
 	private LayoutInflater mInflater;
+	private String mSendUsernameString;
 
-	public MessageListAdapter(Context context, ArrayList<String> username) {
+	public MessageListAdapter(Context context,
+			List<Map<String, Object>> mUsernameList) {
 		mInflater = LayoutInflater.from(context);
-		mUsernameList = username;
+		mMessageList = mUsernameList;
 		mContext = context;
 	}
 
@@ -49,24 +50,25 @@ public class MessageListAdapter extends BaseAdapter {
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
 		// viewHolder.avater.setImageDrawable();
-		viewHolder.username.setText(mUsernameList.get(position));// 请求好友
-		Date date = new Date();
-		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-		String sendtime = format.format(date);
-		viewHolder.time.setText(sendtime);// 获取短信的接收时间
+		viewHolder.sendUsername.setText((String) mMessageList.get(position)
+				.get("sendUsername"));// 发送请求的好友
+		viewHolder.message.setText((String) mMessageList.get(position).get(
+				"frienRequest"));// 信息“请求加为好友"
+		viewHolder.time.setText((String) mMessageList.get(position).get(
+				"requestTime"));// 获取消息的接收时间
 
 		return convertView;
 	}
 
 	class ViewHolder {
 		CircleImageView avater;
-		TextView username;
+		TextView sendUsername;
 		TextView message;
 		TextView time;
 
 		public ViewHolder(View view) {
 			avater = (CircleImageView) view.findViewById(R.id.item_avater);
-			username = (TextView) view.findViewById(R.id.username);
+			sendUsername = (TextView) view.findViewById(R.id.username);
 			message = (TextView) view.findViewById(R.id.message);
 			time = (TextView) view.findViewById(R.id.time);
 			view.setTag(this);
@@ -80,12 +82,12 @@ public class MessageListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return mUsernameList.size();
+		return mMessageList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return position;
+		return mMessageList.get(position);
 	}
 
 }

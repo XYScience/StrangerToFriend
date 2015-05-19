@@ -319,10 +319,11 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		});
 	}
 
-	private void decodeGame(String username) {
+	private void decodeGame(String receiveUser) {
 
 		Intent intent = new Intent(context, DecodeGameActivity.class);
-		intent.putExtra("username", username);
+		intent.putExtra("receiveUser", receiveUser); // 接收验证的
+		intent.putExtra("sendUsername", mUsername); // 发送验证的(当前用户)
 		startActivity(intent);
 	}
 

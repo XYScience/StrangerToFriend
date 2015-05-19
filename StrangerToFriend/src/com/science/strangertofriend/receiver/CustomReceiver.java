@@ -1,5 +1,9 @@
 package com.science.strangertofriend.receiver;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +26,7 @@ import com.science.strangertofriend.fragment.MessageFragment;
 
 public class CustomReceiver extends BroadcastReceiver {
 
-	private String data;
-
+	@SuppressLint("SimpleDateFormat")
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
@@ -45,9 +48,13 @@ public class CustomReceiver extends BroadcastReceiver {
 			System.out.println("第三方回执接口调用" + (result ? "成功" : "失败"));
 
 			if (payload != null) {
-				String data = new String(payload);
-				Log.e("StrangerToFriend", "Got Payload:" + data);
-				MessageFragment.mUsernameList.add(0, data);
+				String sendUsername = new String(payload);// 发送者
+				Date date = new Date();
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				String sendTime = format.format(date);
+				Log.e("StrangerToFriend", "Got Payload:" + sendUsername);
+				MessageFragment.getRequestData(sendUsername, sendUsername
+						+ "已添加您为好友", sendTime);
 				// DecodeGameActivity.tLogView.append(data + "\n");
 			}
 			break;
@@ -77,12 +84,11 @@ public class CustomReceiver extends BroadcastReceiver {
 			break;
 		}
 	}
-
-	public void getData(UsernameCallBack usernameCallBack) {
-		usernameCallBack.getUsername(data);
-	}
-
-	public interface UsernameCallBack {
-		public void getUsername(String username);
-	}
+	// public void getData(UsernameCallBack usernameCallBack) {
+	// usernameCallBack.getUsername(data);
+	// }
+	//
+	// public interface UsernameCallBack {
+	// public void getUsername(String username);
+	// }
 }
