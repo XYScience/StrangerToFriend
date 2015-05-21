@@ -151,7 +151,7 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 	private void getAddressList() {
 
 		AVQuery<AVObject> query = new AVQuery<AVObject>("AddressList");
-		query.whereEqualTo("myself", AVUser.getCurrentUser().getUsername());
+		query.whereEqualTo("currentUser", AVUser.getCurrentUser().getUsername());
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
@@ -269,8 +269,11 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// Toast.makeText(getActivity(), position + " long click", 0)
-				// .show();
+				Toast.makeText(
+						getActivity(),
+						"你好，我是"
+								+ ((SortModel) adapter.getItem(position))
+										.getName(), Toast.LENGTH_SHORT).show();
 				return false;
 			}
 		});
@@ -402,8 +405,9 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 						if (e != null) {
 							e.printStackTrace();
 						}
-						System.out.print("-----------------------------:"
-								+ e.getMessage());
+						System.out
+								.print("---------------AddressListFragment:open:"
+										+ e.getMessage());
 						final ChatManager chatManager = ChatManager
 								.getInstance();
 						chatManager.fetchConversationWithUserId(
@@ -427,26 +431,81 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 													ChatActivity.CONVID,
 													conversation
 															.getConversationId());
-											startActivity(intent);
-											// 发送时间
-											Date date = new Date();
-											SimpleDateFormat format = new SimpleDateFormat(
-													"HH:mm:ss");
-											String sendTime = format
-													.format(date);
-											// 保存消息
-											AVService.messageList(
-													((SortModel) adapter
-															.getItem(position))
-															.getName(), AVUser
-															.getCurrentUser()
-															.getUsername(),
-													sendTime, "已发送消息");
+											intent.putExtra("position",
+													position);
+											startActivityForResult(intent, 1);
+
 										}
 									}
 								});
 					}
 				});
+	}
+
+	/**
+	 * 查找当前用户聊天好友并显示到message页面
+	 * 
+	 * @param position
+	 */
+	private void findMessageListFriend(final String message, final int position) {
+
+		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
+		query.whereEqualTo("currentUser", AVUser.getCurrentUser().getUsername());
+		query.whereEqualTo("friend",
+				((SortModel) adapter.getItem(position)).getName());
+		query.findInBackground(new FindCallback<AVObject>() {
+
+			@SuppressLint("SimpleDateFormat")
+			@Override
+			public void done(final List<AVObject> list, AVException e) {
+
+				// 发送时间
+				Date date = new Date();
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				final String sendTime = format.format(date);
+
+				if (list != null && list.size() != 0) {
+					// 子线程访问网络
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							AVService.updateMessageList(
+									list.get(list.size() - 1).getObjectId(),
+									sendTime, message);
+						}
+					}).start();
+				} else {
+
+					// 子线程访问网络
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							// 保存消息
+							AVService.messageList(((SortModel) adapter
+									.getItem(position)).getName(), AVUser
+									.getCurrentUser().getUsername(), sendTime,
+									message);
+						}
+					}).start();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == 1) {
+			if (resultCode == -1) {
+
+				String messsage = data.getStringExtra("messsage");
+				int position = data.getIntExtra("position", 0);
+				findMessageListFriend(messsage, position);
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private void initListener() {
@@ -465,19 +524,6 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 					}
 				}
 
-			}
-		});
-
-		// item点击事件
-		sortListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// 这里要利用adapter.getItem(position)来获取当前position所对应的对象
-				Toast.makeText(getActivity(),
-						((SortModel) adapter.getItem(position)).getName(),
-						Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -520,8 +566,6 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 
 			SortModel sortModel = new SortModel();
 			sortModel.setName(avo.getString("friends"));
-			System.out.print("------------------------------friends:"
-					+ avo.getString("friends"));
 			// 汉字转换成拼音
 			String pinyin = characterParser
 					.getSelling(avo.getString("friends"));
@@ -581,7 +625,7 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 
 	@Override
 	public void takeScreenShot() {
-		Thread thread = new Thread() {
+		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Bitmap bitmap = Bitmap.createBitmap(mContainerView.getWidth(),
@@ -590,9 +634,18 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 				mContainerView.draw(canvas);
 				AddressListFragment.this.mBitmap = bitmap;
 			}
-		};
-
-		thread.start();
+		}, 0);
+		// Thread thread = new Thread() {
+		// @Override
+		// public void run() {
+		// Bitmap bitmap = Bitmap.createBitmap(mContainerView.getWidth(),
+		// mContainerView.getHeight(), Bitmap.Config.ARGB_8888);
+		// Canvas canvas = new Canvas(bitmap);
+		// mContainerView.draw(canvas);
+		// AddressListFragment.this.mBitmap = bitmap;
+		// }
+		// };
+		// thread.start();
 	}
 
 	@Override

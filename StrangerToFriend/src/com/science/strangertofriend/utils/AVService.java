@@ -45,14 +45,30 @@ public class AVService {
 	}
 
 	// 消息列表
-	public static void messageList(String sendUsername, String receiveUser,
+	public static void messageList(String friend, String currentUser,
 			String sendTime, String messsage) {
 		AVObject avObject = new AVObject("MessageList");
-		avObject.put("sendUsername", sendUsername);
-		avObject.put("receiveUser", receiveUser);
+		avObject.put("friend", friend);
+		avObject.put("currentUser", currentUser);
 		avObject.put("sendTime", sendTime);
 		avObject.put("messsage", messsage);
 		avObject.saveInBackground();
+	}
+
+	// 更新消息列表
+	public static void updateMessageList(String objID, String sendTime,
+			String messsage) {
+
+		AVObject messageList = new AVObject("MessageList");
+		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
+		try {
+			messageList = query.get(objID);
+		} catch (AVException e) {
+			e.printStackTrace();
+		}
+		messageList.put("messsage", messsage);
+		messageList.put("sendTime", sendTime);
+		messageList.saveInBackground();
 	}
 
 	// 删除消息列表
@@ -68,11 +84,11 @@ public class AVService {
 	}
 
 	// 好友通讯录列表
-	public static void addressList(String sendUsername, String receiveUser,
+	public static void addressList(String friend, String currentUser,
 			String sendTime) {
 		AVObject avObject = new AVObject("AddressList");
-		avObject.put("friends", sendUsername);
-		avObject.put("myself", receiveUser);
+		avObject.put("friends", friend);
+		avObject.put("currentUser", currentUser);
 		avObject.put("sendTime", sendTime);
 		avObject.saveInBackground();
 	}
@@ -113,6 +129,25 @@ public class AVService {
 		po.put("email", emailString);
 		po.put("gender", imageFile);
 		po.saveInBackground();
+	}
+
+	public static void uploadSmallAvater(String usernameString,
+			Bitmap genderPhoto) {
+
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		genderPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		byte[] data = stream.toByteArray();
+		AVFile imageFile = new AVFile("smallgender", data);
+		try {
+			imageFile.save();
+		} catch (AVException e) {
+			e.printStackTrace();
+		}
+		// Associate image with AVOS Cloud object
+		AVObject avo = new AVObject("SmallGender");
+		avo.put("username", usernameString);
+		avo.put("smallgender", imageFile);
+		avo.saveInBackground();
 	}
 
 	public static void myLocation(String userObjectId, String username,

@@ -48,13 +48,13 @@ public class CustomReceiver extends BroadcastReceiver {
 			System.out.println("第三方回执接口调用" + (result ? "成功" : "失败"));
 
 			if (payload != null) {
-				String sendUsername = new String(payload);// 发送者
+				String friend = new String(payload);// 发送者
 				Date date = new Date();
 				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 				String sendTime = format.format(date);
-				Log.e("StrangerToFriend", "Got Payload:" + sendUsername);
-				MessageFragment.getRequestData(sendUsername, sendUsername
-						+ "已添加您为好友", sendTime);
+				Log.e("StrangerToFriend", "Got Payload:" + friend);
+				MessageFragment.getRequestData(friend, friend + "已添加您为好友",
+						sendTime);
 				// DecodeGameActivity.tLogView.append(data + "\n");
 			}
 			break;

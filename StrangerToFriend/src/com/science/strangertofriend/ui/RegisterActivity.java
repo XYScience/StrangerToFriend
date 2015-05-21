@@ -55,7 +55,7 @@ public class RegisterActivity extends BaseActivity {
 	private String urlpath; // 图片本地路径
 	private static final int REQUESTCODE_TAKE = 1; // 相机拍照标记
 	private static final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
-	private Bitmap genderBitmap;
+	private Bitmap genderBitmap, smallGenderBitmap;
 	private Boolean isTakeGenderFlag = false;
 
 	@Override
@@ -168,6 +168,8 @@ public class RegisterActivity extends BaseActivity {
 					mMyDialog.successDialog("注册成功!");
 					AVService.uploadImage(mUsernameString, mEmailString,
 							genderBitmap);
+					AVService.uploadSmallAvater(mUsernameString,
+							smallGenderBitmap);
 					AVService.saveClientID(mUsernameString, PushManager
 							.getInstance().getClientid(RegisterActivity.this));
 					Intent mainIntent = new Intent(RegisterActivity.this,
@@ -342,8 +344,8 @@ public class RegisterActivity extends BaseActivity {
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 500);
-		intent.putExtra("outputY", 500);
+		intent.putExtra("outputX", 300);
+		intent.putExtra("outputY", 300);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, REQUESTCODE_CUTTING);
 	}
@@ -359,8 +361,11 @@ public class RegisterActivity extends BaseActivity {
 			// 取得SDCard图片路径做显示
 			Bitmap bitmap = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(null, bitmap);
+			mCameraAvatar.setImageDrawable(drawable);
+
 			urlpath = FileUtil.saveFile(RegisterActivity.this, IMAGE_FILE_NAME,
 					bitmap);
+
 			// 压缩图片
 			BitmapFactory.Options option = new BitmapFactory.Options();
 			// 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
@@ -368,12 +373,19 @@ public class RegisterActivity extends BaseActivity {
 			// 根据图片的SDCard路径读出Bitmap
 			genderBitmap = BitmapFactory.decodeFile(urlpath, option);
 
-			mCameraAvatar.setImageDrawable(drawable);
+			// 列表小图头像
+			// 压缩图片
+			BitmapFactory.Options optionSmall = new BitmapFactory.Options();
+			// 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
+			optionSmall.inSampleSize = 6;
+			// 根据图片的SDCard路径读出Bitmap
+			smallGenderBitmap = BitmapFactory.decodeFile(urlpath, optionSmall);
 
 			Toast.makeText(RegisterActivity.this,
 					"头像保存在:" + urlpath.replaceAll(IMAGE_FILE_NAME, ""),
 					Toast.LENGTH_LONG).show();
 			isTakeGenderFlag = true;
+
 			// 新线程后台上传服务端
 			// pd = ProgressDialog.show(RegisterActivity.this, null,
 			// "正在上传图片，请稍候...");

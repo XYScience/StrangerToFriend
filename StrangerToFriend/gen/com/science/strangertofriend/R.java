@@ -1989,6 +1989,8 @@ containing a value of this type.
         public static final int activity_horizontal_margin=0x7f06000c;
         public static final int activity_vertical_margin=0x7f06000d;
         public static final int alert_width=0x7f06000e;
+        public static final int avater_list=0x7f060043;
+        public static final int avater_login=0x7f060044;
         public static final int chat_BottomBtnMargin=0x7f060005;
         public static final int chat_BottomBtnSize=0x7f060009;
         public static final int chat_BottomHeight=0x7f060000;

@@ -59,8 +59,8 @@
 
         <activity
             android:name="com.science.strangertofriend.ui.LoginActivity"
-            android:label="@string/app_name" 
-            android:windowSoftInputMode="adjustPan">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -81,9 +81,7 @@
         </activity>
         <activity android:name="com.science.strangertofriend.ui.DecodeGameActivity" >
         </activity>
-        <activity
-            android:name="com.science.strangertofriend.ui.ChatRoomActivity"
-            android:launchMode="singleTask" >
+        <activity android:name="com.science.strangertofriend.ui.ChatRoomActivity" >
         </activity>
 
         <!-- 百度地图定位开始 -->

@@ -1,6 +1,8 @@
 package com.science.strangertofriend.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +11,14 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,10 +33,12 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -70,6 +77,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	private SwipeMenuListView mMessageList;
 	public static MessageListAdapter mMessageListAdapter;
 	public static List<Map<String, Object>> mRequestList;
+	private String mCurrentUsername;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -107,6 +115,8 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 		mMessageList = (SwipeMenuListView) mRootView
 				.findViewById(R.id.message_listView);
 		mRequestList = new ArrayList<Map<String, Object>>();
+
+		mCurrentUsername = AVUser.getCurrentUser().getUsername();
 	}
 
 	private void initData() {
@@ -126,7 +136,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	public List<Map<String, Object>> getMessageList() {
 
 		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
-		query.whereEqualTo("receiveUser", AVUser.getCurrentUser().getUsername());
+		query.whereEqualTo("currentUser", mCurrentUsername);
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
@@ -134,14 +144,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				if (list != null && list.size() != 0) {
 					mRequestList.clear();
 					for (AVObject avo : list) {
-						Map<String, Object> mapUsername = new HashMap<String, Object>();
-						mapUsername.put("sendUsername",
-								avo.getString("sendUsername"));
-						mapUsername.put("frienRequest",
-								avo.getString("messsage"));
-						mapUsername.put("requestTime",
-								avo.getString("sendTime"));
-						mRequestList.add(0, mapUsername);
+						findGenderCallback(avo, avo.getString("friend"));
 					}
 					mMessageListAdapter.notifyDataSetChanged();
 				} else {
@@ -152,6 +155,88 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 		});
 
 		return mRequestList;
+	}
+
+	// 根据当前用户名查找回调
+	private void findGenderCallback(final AVObject avo, String friend) {
+		AVQuery<AVObject> query = new AVQuery<AVObject>("SmallGender");
+		query.whereEqualTo("username", friend);
+		query.findInBackground(new FindCallback<AVObject>() {
+			public void done(List<AVObject> avObjects, AVException e) {
+				if (e == null) {
+					// Message msg = new Message();
+					// msg.what = 1;
+					// msg.obj = avObjects;
+					// mUsernameHandler.sendMessage(msg);
+					if (avObjects != null && avObjects.size() != 0) {
+						String mObjectId = avObjects.get(avObjects.size() - 1)
+								.getObjectId();
+						byteToDrawable(avo, mObjectId);
+					}
+				} else {
+					Toast.makeText(getActivity(), "请检查网络！", Toast.LENGTH_LONG)
+							.show();
+				}
+			}
+		});
+	}
+
+	@SuppressLint("HandlerLeak")
+	private Handler mUsernameHandler = new Handler() {
+		@SuppressWarnings("unchecked")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				List<AVObject> responseList = (List<AVObject>) msg.obj;
+				if (responseList != null && responseList.size() != 0) {
+					String mObjectId = responseList
+							.get(responseList.size() - 1).getObjectId();
+					// byteToDrawable(mObjectId);
+				}
+				break;
+			}
+		}
+	};
+
+	private void byteToDrawable(final AVObject avo, final String mObjectId) {
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AVQuery<AVObject> query = new AVQuery<AVObject>(
+							"SmallGender");
+					AVObject gender = query.get(mObjectId);
+					// Retrieving the file
+					AVFile imageFile = (AVFile) gender.get("smallgender");
+					imageFile.getDataInBackground(new GetDataCallback() {
+						public void done(byte[] data, AVException e) {
+							if (data != null) {
+								// Success; data has the file
+								Bitmap bitmap = BitmapFactory.decodeByteArray(
+										data, 0, data.length);
+								Map<String, Object> mapUsername = new HashMap<String, Object>();
+								mapUsername.put("friend",
+										avo.getString("friend"));
+								mapUsername.put("frienRequest",
+										avo.getString("messsage"));
+								mapUsername.put("requestTime",
+										avo.getString("sendTime"));
+								mapUsername.put("friendGender",
+										new BitmapDrawable(bitmap));
+								mRequestList.add(0, mapUsername);
+								mMessageListAdapter.notifyDataSetChanged();
+							} else {
+								// Failed
+							}
+						}
+					});
+				} catch (AVException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}).start();
 	}
 
 	private void initSwipeMenu() {
@@ -237,8 +322,8 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Toast.makeText(getActivity(), position + " long click", 0)
-						.show();
+				// Toast.makeText(getActivity(), position + " long click", 0)
+				// .show();
 				return false;
 			}
 		});
@@ -256,7 +341,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	// 删除消息item
 	private void reomveMessageItem(Map<String, Object> item) {
 		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
-		query.whereEqualTo("sendUsername", item.get("sendUsername"));
+		query.whereEqualTo("friend", item.get("friend"));
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
@@ -284,7 +369,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 		ChatManager chatManager = ChatManager.getInstance();
 		chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser()
 				.getUsername());
-		chatManager.openClientWithSelfId(AVUser.getCurrentUser().getUsername(),
+		chatManager.openClientWithSelfId(mCurrentUsername,
 				new AVIMClientCallback() {
 					@Override
 					public void done(AVIMClient avimClient, AVException e) {
@@ -296,14 +381,14 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 						final ChatManager chatManager = ChatManager
 								.getInstance();
 						chatManager.fetchConversationWithUserId(mRequestList
-								.get(position).get("sendUsername").toString(),
+								.get(position).get("friend").toString(),
 								new AVIMConversationCreatedCallback() {
 									@Override
 									public void done(
 											AVIMConversation conversation,
 											AVException e) {
 										if (e != null) {
-											System.out.print("e.getMessage()"
+											System.out.print("e.getMessage():"
 													+ e.getMessage());
 										} else {
 											chatManager
@@ -315,7 +400,9 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 													ChatActivity.CONVID,
 													conversation
 															.getConversationId());
-											startActivity(intent);
+											intent.putExtra("position",
+													position);
+											startActivityForResult(intent, 1);
 										}
 									}
 								});
@@ -323,43 +410,96 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				});
 	}
 
-	public static List<Map<String, Object>> getRequestData(String sendUsername,
+	/**
+	 * 查找当前用户聊天好友并显示到message页面
+	 * 
+	 * @param position
+	 */
+	private void findMessageListFriend(final String message, final int position) {
+
+		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
+		query.whereEqualTo("currentUser", mCurrentUsername);
+		query.whereEqualTo("friend", mRequestList.get(position).get("friend")
+				.toString());
+		query.findInBackground(new FindCallback<AVObject>() {
+
+			@SuppressLint("SimpleDateFormat")
+			@Override
+			public void done(final List<AVObject> list, AVException e) {
+
+				// 发送时间
+				Date date = new Date();
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				final String sendTime = format.format(date);
+
+				if (list != null && list.size() != 0) {
+					// 子线程访问网络
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							AVService.updateMessageList(
+									list.get(list.size() - 1).getObjectId(),
+									sendTime, message);
+						}
+					}).start();
+				} else {
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == 1) {
+			if (resultCode == -1) {
+
+				String messsage = data.getStringExtra("messsage");
+				int position = data.getIntExtra("position", 1);
+				findMessageListFriend(messsage, position);
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public static List<Map<String, Object>> getRequestData(String friend,
 			String message, String sendTime) {
 
 		Map<String, Object> mapUsername = new HashMap<String, Object>();
-		mapUsername.put("sendUsername", sendUsername);
+		mapUsername.put("friend", friend);
 		mapUsername.put("frienRequest", message);
 		mapUsername.put("requestTime", sendTime);
 		mRequestList.add(0, mapUsername);
 		mMessageListAdapter.notifyDataSetChanged();
 		// 保存消息
-		AVService.messageList(sendUsername, AVUser.getCurrentUser()
-				.getUsername(), sendTime, sendUsername + "已加您为好友");
+		AVService.messageList(friend, AVUser.getCurrentUser().getUsername(),
+				sendTime, message);
+		AVService.messageList(AVUser.getCurrentUser().getUsername(), friend,
+				sendTime, AVUser.getCurrentUser().getUsername() + "已添加您为好友");
 		// 保存好友通讯录
-		AVService.addressList(sendUsername, AVUser.getCurrentUser()
-				.getUsername(), sendTime);
+		AVService.addressList(friend, AVUser.getCurrentUser().getUsername(),
+				sendTime);
+		AVService.addressList(AVUser.getCurrentUser().getUsername(), friend,
+				sendTime);
 
 		return mRequestList;
 	}
 
 	@Override
 	public void onRefresh() {
-
+		getMessageList();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				mSwipeRefreshLayout.setRefreshing(false);
-				getMessageList();
-				// if (mRequestList.size() != 0) {
-				// mMessageListAdapter.notifyDataSetChanged();
-				// }
 			}
 		}, 3800);
 	}
 
 	@Override
 	public void takeScreenShot() {
-		Thread thread = new Thread() {
+		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Bitmap bitmap = Bitmap.createBitmap(mContainerView.getWidth(),
@@ -368,9 +508,19 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				mContainerView.draw(canvas);
 				MessageFragment.this.mBitmap = bitmap;
 			}
-		};
+		}, 0);
 
-		thread.start();
+		// Thread thread = new Thread() {
+		// @Override
+		// public void run() {
+		// Bitmap bitmap = Bitmap.createBitmap(mContainerView.getWidth(),
+		// mContainerView.getHeight(), Bitmap.Config.ARGB_8888);
+		// Canvas canvas = new Canvas(bitmap);
+		// mContainerView.draw(canvas);
+		// MessageFragment.this.mBitmap = bitmap;
+		// }
+		// };
+		// thread.start();
 	}
 
 	@Override

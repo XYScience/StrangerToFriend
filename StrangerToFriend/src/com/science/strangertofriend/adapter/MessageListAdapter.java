@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,25 +51,27 @@ public class MessageListAdapter extends BaseAdapter {
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 
 		// viewHolder.avater.setImageDrawable();
-		viewHolder.sendUsername.setText((String) mMessageList.get(position)
-				.get("sendUsername"));// 发送请求的好友
+		viewHolder.friendUsername.setText((String) mMessageList.get(position)
+				.get("friend"));// 发送请求的好友
 		viewHolder.message.setText((String) mMessageList.get(position).get(
 				"frienRequest"));// 信息“请求加为好友"
 		viewHolder.time.setText((String) mMessageList.get(position).get(
 				"requestTime"));// 获取消息的接收时间
+		viewHolder.avater.setImageDrawable((Drawable) mMessageList
+				.get(position).get("friendGender"));// 获取用户头像
 
 		return convertView;
 	}
 
 	class ViewHolder {
 		CircleImageView avater;
-		TextView sendUsername;
+		TextView friendUsername;
 		TextView message;
 		TextView time;
 
 		public ViewHolder(View view) {
 			avater = (CircleImageView) view.findViewById(R.id.item_avater);
-			sendUsername = (TextView) view.findViewById(R.id.username);
+			friendUsername = (TextView) view.findViewById(R.id.username);
 			message = (TextView) view.findViewById(R.id.message);
 			time = (TextView) view.findViewById(R.id.time);
 			view.setTag(this);

@@ -4,6 +4,7 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -59,7 +60,7 @@ public class UserFragment extends Fragment implements ScreenShotable {
 
 	@Override
 	public void takeScreenShot() {
-		Thread thread = new Thread() {
+		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Bitmap bitmap = Bitmap.createBitmap(mContainerView.getWidth(),
@@ -68,9 +69,18 @@ public class UserFragment extends Fragment implements ScreenShotable {
 				mContainerView.draw(canvas);
 				UserFragment.this.mBitmap = bitmap;
 			}
-		};
-
-		thread.start();
+		}, 0);
+		// Thread thread = new Thread() {
+		// @Override
+		// public void run() {
+		// Bitmap bitmap = Bitmap.createBitmap(mContainerView.getWidth(),
+		// mContainerView.getHeight(), Bitmap.Config.ARGB_8888);
+		// Canvas canvas = new Canvas(bitmap);
+		// mContainerView.draw(canvas);
+		// UserFragment.this.mBitmap = bitmap;
+		// }
+		// };
+		// thread.start();
 	}
 
 	@Override

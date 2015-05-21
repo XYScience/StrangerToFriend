@@ -7,12 +7,12 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/item_avater"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/avater_list"
+        android:layout_height="@dimen/avater_list"
         android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_launcher"
-        app:border_color="#FFEEEEEE"
+        app:border_color="#808080"
         app:border_width="2dp" />
 
     <TextView

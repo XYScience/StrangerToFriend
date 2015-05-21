@@ -360,6 +360,8 @@ int dimen abc_text_size_title_material_toolbar 0x7f060028
 int dimen activity_horizontal_margin 0x7f06000c
 int dimen activity_vertical_margin 0x7f06000d
 int dimen alert_width 0x7f06000e
+int dimen avater_list 0x7f060043
+int dimen avater_login 0x7f060044
 int dimen chat_BottomBtnMargin 0x7f060005
 int dimen chat_BottomBtnSize 0x7f060009
 int dimen chat_BottomHeight 0x7f060000
