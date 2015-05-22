@@ -9,9 +9,11 @@
 
     <solid android:color="#ff6787" />
 
-    <stroke
+    <!--
+           <stroke
         android:dashGap="0dp"
         android:width="1dp"
-        android:color="@android:color/white" />
+        android:color="@android:color/white" />
+    -->
 
 </shape>

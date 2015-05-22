@@ -14,8 +14,7 @@
         <com.science.strangertofriend.widget.DampView
             android:id="@+id/dampview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none" >
+            android:layout_height="match_parent" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,14 +41,14 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/avatar"
-                            android:layout_width="@dimen/avater_user"
-                			android:layout_height="@dimen/avater_user"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="10dp"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="15dp"
                             android:src="@drawable/default_user_img"
                             app:border_color="#FFEEEEEE"
-                            app:border_width="4dp" />
+                            app:border_width="2dp" />
 
                         <LinearLayout
                             android:id="@+id/linear_username"
@@ -70,26 +69,39 @@
                                 android:textSize="22sp" />
 
                             <ImageView
-                                android:id="@+id/gender"
+                                android:id="@+id/girl"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@null" />
+                                android:contentDescription="@null"
+                                android:src="@drawable/user_girl" />
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/my_sign"
+                        <com.science.strangertofriend.widget.RippleView
+                            android:id="@+id/user_add_rippleView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/linear_username"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginRight="15dp"
                             android:layout_marginTop="5dp"
-                            android:ellipsize="end"
-                            android:singleLine="true"
-                            android:text="@string/hello_world"
-                            android:textColor="#fff"
-                            android:textSize="20sp" />
+                            app:rv_ripplePadding="30dp"
+                            ripple:rv_type="simpleRipple"
+                            ripple:rv_zoom="false" >
+
+                            <Button
+                                android:id="@+id/user_add"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/add_friend_button"
+                                android:drawableLeft="@drawable/user_add"
+                                android:drawablePadding="10dp"
+                                android:paddingBottom="7dp"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:paddingTop="7dp"
+                                android:text="@string/add_friend"
+                                android:textColor="#8f8f8f"
+                                android:textSize="23sp" />
+                        </com.science.strangertofriend.widget.RippleView>
                     </RelativeLayout>
                 </FrameLayout>
 
@@ -116,7 +128,7 @@
                     android:background="#f698b2" />
 
                 <TextView
-                    android:id="@+id/user_acount"
+                    android:id="@+id/user_number_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -187,7 +199,7 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/user_position"
+                        android:id="@+id/user_position_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -280,6 +292,34 @@
                         android:textSize="18sp" />
                 </RelativeLayout>
 
+                <!-- 签名 -->
+
+                <RelativeLayout
+                    android:id="@+id/user_sign_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/abc_btn_radio_to_on_mtrl_015"
+                        android:gravity="center_vertical"
+                        android:text="@string/user_sign"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/user_sign_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/user_sign_content"
+                        android:textColor="#686868"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
                 <com.science.strangertofriend.widget.RippleView
                     android:id="@+id/rippleView"
                     android:layout_width="match_parent"
@@ -291,7 +331,7 @@
                     ripple:rv_zoom="false" >
 
                     <Button
-                        android:id="@+id/logout"
+                        android:id="@+id/register"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"

@@ -150,6 +150,8 @@ public class LoginActivity extends BaseActivity {
 		}
 	};
 
+	Bitmap bitmap;
+
 	private void byteToDrawable(final String mObjectId) {
 
 		new Thread(new Runnable() {
@@ -171,7 +173,6 @@ public class LoginActivity extends BaseActivity {
 					public void done(byte[] data, AVException e) {
 						if (data != null) {
 							// Success; data has the file
-							Bitmap bitmap;
 							bitmap = BitmapFactory.decodeByteArray(data, 0,
 									data.length);
 							// LayoutParams laParams = (LayoutParams)
@@ -182,14 +183,14 @@ public class LoginActivity extends BaseActivity {
 							// mCameraAvatar.setLayoutParams(laParams);
 							mCameraAvatar.setImageDrawable(new BitmapDrawable(
 									bitmap));
-							mCameraAvatar
-									.setMaxHeight((getScreenHeight() / 3) + 20);
-							mCameraAvatar
-									.setMaxWidth((getScreenWidth() / 3) + 20);
-							mCameraAvatar
-									.setMinimumHeight((getScreenWidth() / 3) + 20);
-							mCameraAvatar
-									.setMinimumWidth((getScreenWidth() / 3) + 20);
+							// mCameraAvatar
+							// .setMaxHeight((getScreenHeight() / 3) + 20);
+							// mCameraAvatar
+							// .setMaxWidth((getScreenWidth() / 3) + 20);
+							// mCameraAvatar
+							// .setMinimumHeight((getScreenWidth() / 3) + 20);
+							// mCameraAvatar
+							// .setMinimumWidth((getScreenWidth() / 3) + 20);
 						} else {
 							// Failed
 						}
@@ -271,6 +272,7 @@ public class LoginActivity extends BaseActivity {
 							mMyDialog.successDialog("µÇÂ½³É¹¦!");
 							Intent mainIntent = new Intent(LoginActivity.this,
 									MainActivity.class);
+							mainIntent.putExtra("avater", bitmap);
 							startActivity(mainIntent);
 							LoginActivity.this.finish();
 						} else {

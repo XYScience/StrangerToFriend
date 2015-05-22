@@ -169,4 +169,9 @@ public class AVService {
 		// myLocation.put("longtitude", longititude);
 		// myLocation.saveInBackground();
 	}
+
+	// ÍË³öµÇÂ¼
+	public static void logout() {
+		AVUser.logOut();
+	}
 }

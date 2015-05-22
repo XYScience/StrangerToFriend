@@ -613,12 +613,11 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 
 	@Override
 	public void onRefresh() {
-
+		getAddressList();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				mSwipeRefreshLayout.setRefreshing(false);
-				getAddressList();
 			}
 		}, 3800);
 	}

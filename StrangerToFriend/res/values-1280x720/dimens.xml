@@ -1,7 +1,8 @@
 <resources>
- 
-    <dimen name="user_bg_img">210dp</dimen> 
-    <dimen name="avater_list">60dp</dimen> 
-    <dimen name="avater_login">142dp</dimen> 
+
+    <dimen name="user_bg_img">225dp</dimen>
+    <dimen name="avater_list">60dp</dimen>
+    <dimen name="avater_login">142dp</dimen>
+    <dimen name="avater_user">120dp</dimen>
 
 </resources>
