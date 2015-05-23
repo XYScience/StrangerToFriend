@@ -92,8 +92,8 @@
             android:paddingTop="9dp"
             android:singleLine="true"
             android:textColor="#fff"
-            android:textColorHint="#ccc"
-            android:textSize="20sp" />
+            android:textColorHint="#fff"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/email"
@@ -110,8 +110,8 @@
             android:paddingTop="9dp"
             android:singleLine="true"
             android:textColor="#fff"
-            android:textColorHint="#ccc"
-            android:textSize="20sp" />
+            android:textColorHint="#fff"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/password"
@@ -128,8 +128,8 @@
             android:paddingTop="9dp"
             android:singleLine="true"
             android:textColor="#fff"
-            android:textColorHint="#ccc"
-            android:textSize="20sp" />
+            android:textColorHint="#fff"
+            android:textSize="18sp" />
 
         <com.science.strangertofriend.widget.RippleView
             android:id="@+id/rippleView"
@@ -151,7 +151,7 @@
                 android:paddingTop="7dp"
                 android:text="@string/register"
                 android:textColor="#fff"
-                android:textSize="23sp" />
+                android:textSize="20sp" />
         </com.science.strangertofriend.widget.RippleView>
     </RelativeLayout>
 

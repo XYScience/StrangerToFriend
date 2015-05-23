@@ -1,12 +1,16 @@
 package com.science.strangertofriend.fragment;
 
+import java.util.List;
+
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,8 +22,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.FindCallback;
 import com.science.strangertofriend.R;
+import com.science.strangertofriend.ui.AlterActivity;
 import com.science.strangertofriend.ui.LoginActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
@@ -44,10 +53,15 @@ public class UserFragment extends Fragment implements ScreenShotable {
 	private ImageView mAvatar;
 	private TextView mUsername;
 	private ImageView mGender;
-	private TextView mMySign;
+	private TextView mMyStatement;
 	private TextView mUserAcount;
 	private TextView mUserPosition;
+	private TextView mUserBirth;
+	private TextView mUserHome;
+	private TextView mUserConstellation;
+	private TextView mUserInlove;
 	private Button mLogout;
+	private ImageView mAlterPic;
 
 	public int i = -1;
 
@@ -81,9 +95,17 @@ public class UserFragment extends Fragment implements ScreenShotable {
 		mAvatar = (ImageView) mRootView.findViewById(R.id.avatar);
 		mUsername = (TextView) mRootView.findViewById(R.id.username);
 		mGender = (ImageView) mRootView.findViewById(R.id.gender);
-		mMySign = (TextView) mRootView.findViewById(R.id.my_sign);
+		mMyStatement = (TextView) mRootView.findViewById(R.id.my_sign);
 		mUserAcount = (TextView) mRootView.findViewById(R.id.user_acount);
 		mUserPosition = (TextView) mRootView.findViewById(R.id.user_position);
+		mUserBirth = (TextView) mRootView.findViewById(R.id.user_birth_content);
+		mUserHome = (TextView) mRootView.findViewById(R.id.user_home_content);
+		mUserConstellation = (TextView) mRootView
+				.findViewById(R.id.user_constellation);
+		mUserInlove = (TextView) mRootView.findViewById(R.id.user_inlove);
+		mAlterPic = (ImageView) mRootView
+				.findViewById(R.id.user_message_alter_pic);
+
 		mLogout = (Button) mRootView.findViewById(R.id.logout);
 	}
 
@@ -106,9 +128,70 @@ public class UserFragment extends Fragment implements ScreenShotable {
 			break;
 		}
 
+		AVQuery<AVObject> query = new AVQuery<AVObject>("UserInformation");
+		query.whereEqualTo("username", mUsername.getText().toString());
+		query.findInBackground(new FindCallback<AVObject>() {
+			public void done(List<AVObject> avObjects, AVException e) {
+				if (e == null) {
+					Message msg = new Message();
+					msg.what = 1;
+					msg.obj = avObjects;
+					mHandler.sendMessage(msg);
+				} else {
+					// Toast.makeText(AlterActivity.this, "Çë¼ì²éÍøÂç£¡",
+					// Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+	}
+
+	@SuppressLint("HandlerLeak")
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				showOldInformation((List<AVObject>) msg.obj);
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	// ÏÔÊ¾ÒÑÌîÐ´ÄÚÈÝ
+	private void showOldInformation(List<AVObject> responseList) {
+		if (responseList != null && responseList.size() != 0) {
+			mUserBirth.setText(responseList.get(responseList.size() - 1)
+					.getString("birth"));
+			mUserHome.setText(responseList.get(responseList.size() - 1)
+					.getString("hometown"));
+			mUserInlove.setText(responseList.get(responseList.size() - 1)
+					.getString("inlove"));
+			mUserConstellation.setText(responseList
+					.get(responseList.size() - 1).getString("constellation"));
+			mMyStatement.setText(responseList.get(responseList.size() - 1)
+					.getString("personalStatement"));
+		}
 	}
 
 	private void initListener() {
+
+		mAlterPic.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), AlterActivity.class);
+				intent.putExtra("birth", mUserBirth.getText().toString());
+				intent.putExtra("hometown", mUserHome.getText().toString());
+				intent.putExtra("inlove", mUserInlove.getText().toString());
+				intent.putExtra("constellation", mUserConstellation.getText()
+						.toString());
+				intent.putExtra("personalStatement", mMyStatement.getText()
+						.toString());
+				startActivityForResult(intent, 1);
+			}
+		});
 
 		// ÍË³öµÇÂ¼
 		mLogout.setOnClickListener(new OnClickListener() {
@@ -167,6 +250,22 @@ public class UserFragment extends Fragment implements ScreenShotable {
 					getResources().getColor(android.R.color.holo_red_light));
 			break;
 		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == 1) {
+			if (resultCode == -1) {
+				mMyStatement.setText(data.getStringExtra("personalStatement"));
+				mUserBirth.setText(data.getStringExtra("birth"));
+				mUserHome.setText(data.getStringExtra("hometown"));
+				mUserConstellation
+						.setText(data.getStringExtra("constellation"));
+				mUserInlove.setText(data.getStringExtra("inlove"));
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override

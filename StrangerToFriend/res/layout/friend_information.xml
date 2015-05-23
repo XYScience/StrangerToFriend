@@ -14,7 +14,8 @@
         <com.science.strangertofriend.widget.DampView
             android:id="@+id/dampview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:scrollbars="none" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,10 +31,20 @@
                     <ImageView
                         android:id="@+id/user_background_img"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/user_bg_img"
+                        android:layout_height="@dimen/friend_bg_img"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop"
                         android:src="@drawable/myself_bg" />
+
+                    <ImageView
+                        android:id="@+id/back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/scanner_back_img"
+                        android:contentDescription="@null"
+                        android:minHeight="55dp"
+                        android:minWidth="55dp"
+                        android:scaleType="centerInside" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -41,14 +52,14 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/avatar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/avater_user"
+                            android:layout_height="@dimen/avater_user"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="15dp"
                             android:src="@drawable/default_user_img"
                             app:border_color="#FFEEEEEE"
-                            app:border_width="2dp" />
+                            app:border_width="4dp" />
 
                         <LinearLayout
                             android:id="@+id/linear_username"
@@ -69,39 +80,26 @@
                                 android:textSize="22sp" />
 
                             <ImageView
-                                android:id="@+id/girl"
+                                android:id="@+id/gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@null"
-                                android:src="@drawable/user_girl" />
+                                android:contentDescription="@null" />
                         </LinearLayout>
 
-                        <com.science.strangertofriend.widget.RippleView
-                            android:id="@+id/user_add_rippleView"
+                        <TextView
+                            android:id="@+id/my_sign"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/linear_username"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginRight="15dp"
                             android:layout_marginTop="5dp"
-                            app:rv_ripplePadding="30dp"
-                            ripple:rv_type="simpleRipple"
-                            ripple:rv_zoom="false" >
-
-                            <Button
-                                android:id="@+id/user_add"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/add_friend_button"
-                                android:drawableLeft="@drawable/user_add"
-                                android:drawablePadding="10dp"
-                                android:paddingBottom="7dp"
-                                android:paddingLeft="15dp"
-                                android:paddingRight="15dp"
-                                android:paddingTop="7dp"
-                                android:text="@string/add_friend"
-                                android:textColor="#8f8f8f"
-                                android:textSize="23sp" />
-                        </com.science.strangertofriend.widget.RippleView>
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text="@string/hello_world"
+                            android:textColor="#fff"
+                            android:textSize="18sp" />
                     </RelativeLayout>
                 </FrameLayout>
 
@@ -114,7 +112,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/user_number"
+                    android:text="@string/friend_number"
                     android:textColor="#f698b2"
                     android:textSize="20sp" />
 
@@ -156,16 +154,6 @@
                         android:text="@string/user_message"
                         android:textColor="#f698b2"
                         android:textSize="20sp" />
-
-                    <ImageView
-                        android:id="@+id/user_message_alter_pic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="right"
-                        android:contentDescription="@null"
-                        android:src="@drawable/alter" />
                 </RelativeLayout>
 
                 <View
@@ -203,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/user_position_content"
+                        android:text="@string/friend_position_content"
                         android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
@@ -231,7 +219,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/user_unfill_in"
                         android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
@@ -259,17 +246,43 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/user_unfill_in"
                         android:textColor="#686868"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+
+                <!-- 恋爱 -->
+
+                <RelativeLayout
+                    android:id="@+id/user_inlove_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/inlove"
+                        android:gravity="center_vertical"
+                        android:text="@string/user_inlove"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/user_inlove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
                 <!-- 星座 -->
 
                 <RelativeLayout
-                    android:id="@+id/user_start_layout"
+                    android:id="@+id/user_constellation_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="10dp" >
@@ -283,67 +296,13 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/user_start_content"
+                        android:id="@+id/user_constellation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/user_unfill_in"
                         android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
-
-                <!-- 签名 -->
-
-                <RelativeLayout
-                    android:id="@+id/user_sign_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/abc_btn_radio_to_on_mtrl_015"
-                        android:gravity="center_vertical"
-                        android:text="@string/user_sign"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/user_sign_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="@string/user_sign_content"
-                        android:textColor="#686868"
-                        android:textSize="18sp" />
-                </RelativeLayout>
-
-                <com.science.strangertofriend.widget.RippleView
-                    android:id="@+id/rippleView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:layout_marginTop="40dp"
-                    app:rv_ripplePadding="30dp"
-                    ripple:rv_type="simpleRipple"
-                    ripple:rv_zoom="false" >
-
-                    <Button
-                        android:id="@+id/register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginRight="45dp"
-                        android:background="@drawable/button_click"
-                        android:paddingBottom="7dp"
-                        android:paddingTop="7dp"
-                        android:text="@string/exit_now_number"
-                        android:textColor="#fff"
-                        android:textSize="23sp" />
-                </com.science.strangertofriend.widget.RippleView>
             </LinearLayout>
         </com.science.strangertofriend.widget.DampView>
     </RelativeLayout>

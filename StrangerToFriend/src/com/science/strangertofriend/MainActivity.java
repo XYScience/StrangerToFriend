@@ -13,6 +13,7 @@ import yalantis.com.sidemenu.model.SlideMenuItem;
 import yalantis.com.sidemenu.util.ViewAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +24,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
@@ -43,7 +46,13 @@ import com.science.strangertofriend.fragment.AddressListFragment;
 import com.science.strangertofriend.fragment.MessageFragment;
 import com.science.strangertofriend.fragment.ShakeFragment;
 import com.science.strangertofriend.fragment.UserFragment;
+import com.science.strangertofriend.ui.AlterActivity;
 import com.science.strangertofriend.utils.AppContext;
+import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
+import com.yalantis.contextmenu.lib.MenuObject;
+import com.yalantis.contextmenu.lib.MenuParams;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
+import com.yalantis.contextmenu.lib.interfaces.OnMenuItemLongClickListener;
 
 /**
  * @description
@@ -55,7 +64,8 @@ import com.science.strangertofriend.utils.AppContext;
  */
 
 public class MainActivity extends ActionBarActivity implements
-		ViewAnimator.ViewAnimatorListener {
+		ViewAnimator.ViewAnimatorListener, OnMenuItemClickListener,
+		OnMenuItemLongClickListener {
 
 	private AppContext appContext;// 全局Context
 
@@ -79,6 +89,11 @@ public class MainActivity extends ActionBarActivity implements
 	private static boolean isExit = false;
 	private int i = -1;
 
+	// 上下文菜单
+	private DialogFragment mMenuDialogFragment;
+	private FragmentManager mFragmentManager;
+	private ImageView mTitleMore;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -95,6 +110,7 @@ public class MainActivity extends ActionBarActivity implements
 		// 沉浸式状态栏设置
 		initSystemBar();
 		initComponent();
+		initListener();
 		setActionBar();
 		createMenuList();
 		// mMenuList 为菜单每个项的内容
@@ -148,6 +164,60 @@ public class MainActivity extends ActionBarActivity implements
 			@Override
 			public void onClick(View v) {
 				mDrawerLayout.closeDrawers();
+			}
+		});
+
+		// 上下文菜单
+		mTitleMore = (ImageView) findViewById(R.id.title_more);
+		mFragmentManager = getSupportFragmentManager();
+		initMenuFragment();
+	}
+
+	// 上下文菜单
+	private void initMenuFragment() {
+
+		MenuParams menuParams = new MenuParams();
+		menuParams.setActionBarSize((int) getResources().getDimension(
+				R.dimen.title_height));
+		menuParams.setMenuObjects(getMenuObjects());
+		menuParams.setClosableOutside(false);
+		mMenuDialogFragment = ContextMenuDialogFragment.newInstance(menuParams);
+	}
+
+	// 上下文菜单
+	private List<MenuObject> getMenuObjects() {
+		List<MenuObject> menuObjects = new ArrayList<>();
+
+		MenuObject close = new MenuObject();
+		close.setResource(R.drawable.close_drawer);
+
+		MenuObject set = new MenuObject("应用设置");
+		set.setResource(R.drawable.set);
+
+		MenuObject user = new MenuObject("资料更改");
+		user.setResource(R.drawable.user);
+
+		MenuObject quit = new MenuObject("退出应用");
+		quit.setResource(R.drawable.quit);
+
+		menuObjects.add(close);
+		menuObjects.add(set);
+		menuObjects.add(user);
+		menuObjects.add(quit);
+		return menuObjects;
+	}
+
+	private void initListener() {
+
+		mTitleMore.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mFragmentManager
+						.findFragmentByTag(ContextMenuDialogFragment.TAG) == null) {
+					mMenuDialogFragment.show(mFragmentManager,
+							ContextMenuDialogFragment.TAG);
+				}
 			}
 		});
 	}
@@ -318,6 +388,34 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void addViewToContainer(View view) {
 		mLinearLayout.addView(view);
+	}
+
+	@Override
+	public void onMenuItemClick(View clickedView, int position) {
+		switch (position) {
+		case 0:
+			break;
+
+		case 1:
+			break;
+
+		case 2:
+			Intent intent = new Intent(this, AlterActivity.class);
+			startActivityForResult(intent, 1);
+			break;
+
+		case 3:
+			quitApp();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onMenuItemLongClick(View clickedView, int position) {
+		Toast.makeText(this, "Can i help you?", Toast.LENGTH_SHORT).show();
 	}
 
 	// 退出APP

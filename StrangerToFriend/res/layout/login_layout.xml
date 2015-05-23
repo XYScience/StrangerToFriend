@@ -22,8 +22,8 @@
             android:layout_width="@dimen/avater_login"
             android:layout_height="@dimen/avater_login"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="50dp"
-            android:src="@drawable/ic_camera"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/login_defalut"
             app:border_color="#FFEEEEEE"
             app:border_width="4dp" />
 
@@ -41,8 +41,8 @@
             android:paddingTop="9dp"
             android:singleLine="true"
             android:textColor="#fff"
-            android:textColorHint="#ccc"
-            android:textSize="20sp" />
+            android:textColorHint="#fff"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/password"
@@ -59,8 +59,8 @@
             android:paddingTop="9dp"
             android:singleLine="true"
             android:textColor="#fff"
-            android:textColorHint="#ccc"
-            android:textSize="20sp" />
+            android:textColorHint="#fff"
+            android:textSize="18sp" />
 
         <com.science.strangertofriend.widget.RippleView
             android:id="@+id/rippleView"
@@ -82,7 +82,7 @@
                 android:paddingTop="7dp"
                 android:text="@string/login"
                 android:textColor="#fff"
-                android:textSize="23sp" />
+                android:textSize="20sp" />
         </com.science.strangertofriend.widget.RippleView>
 
         <LinearLayout
@@ -110,7 +110,7 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/forget_password"
                     android:textColor="#fff"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
             </com.science.strangertofriend.widget.RippleView>
 
             <com.science.strangertofriend.widget.RippleView
@@ -130,7 +130,7 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/register"
                     android:textColor="#fff"
-                    android:textSize="17sp" />
+                    android:textSize="14sp" />
             </com.science.strangertofriend.widget.RippleView>
         </LinearLayout>
     </RelativeLayout>

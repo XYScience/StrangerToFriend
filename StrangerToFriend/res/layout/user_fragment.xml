@@ -43,7 +43,7 @@
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/avatar"
                             android:layout_width="@dimen/avater_user"
-                			android:layout_height="@dimen/avater_user"
+                            android:layout_height="@dimen/avater_user"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="10dp"
                             android:layout_marginTop="20dp"
@@ -89,7 +89,7 @@
                             android:singleLine="true"
                             android:text="@string/hello_world"
                             android:textColor="#fff"
-                            android:textSize="20sp" />
+                            android:textSize="18sp" />
                     </RelativeLayout>
                 </FrameLayout>
 
@@ -124,7 +124,7 @@
                     android:layout_marginTop="10dp"
                     android:drawableLeft="@drawable/acount"
                     android:gravity="center_vertical"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <!-- 个人信息开始 -->
 
@@ -192,7 +192,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="@string/user_position_content"
-                        android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
@@ -220,7 +219,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="@string/user_unfill_in"
-                        android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
@@ -248,14 +246,40 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="@string/user_unfill_in"
-                        android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
 
+                <!-- 恋爱 -->
+
+                <RelativeLayout
+                    android:id="@+id/user_inlove_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/inlove"
+                        android:gravity="center_vertical"
+                        android:text="@string/user_inlove"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/user_inlove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/user_unfill_in"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+                
                 <!-- 星座 -->
 
                 <RelativeLayout
-                    android:id="@+id/user_start_layout"
+                    android:id="@+id/user_constellation_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -271,14 +295,14 @@
                         android:textSize="18sp" />
 
                     <TextView
-                        android:id="@+id/user_start_content"
+                        android:id="@+id/user_constellation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="@string/user_unfill_in"
-                        android:textColor="#686868"
                         android:textSize="18sp" />
                 </RelativeLayout>
+                
 
                 <com.science.strangertofriend.widget.RippleView
                     android:id="@+id/rippleView"
@@ -302,7 +326,7 @@
                         android:paddingTop="7dp"
                         android:text="@string/exit_now_number"
                         android:textColor="#fff"
-                        android:textSize="23sp" />
+                        android:textSize="20sp" />
                 </com.science.strangertofriend.widget.RippleView>
             </LinearLayout>
         </com.science.strangertofriend.widget.DampView>

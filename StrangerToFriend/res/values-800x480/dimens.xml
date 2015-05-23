@@ -1,6 +1,9 @@
 <resources>
  
     <dimen name="user_bg_img">205dp</dimen> 
+    <dimen name="friend_add_bg_img">245dp</dimen>
+    <dimen name="friend_kitkat_bg_img">235dp</dimen>
+    <dimen name="friend_bg_img">195dp</dimen>
     <dimen name="avater_list">60dp</dimen> 
     <dimen name="avater_login">122dp</dimen> 
     <dimen name="avater_user">105dp</dimen> 

@@ -43,6 +43,7 @@
     <string name="user_birth">出生</string>
     <string name="user_xingzuo">星座</string>
     <string name="user_home">家乡</string>
+    <string name="user_inlove">恋爱</string>
     <string name="user_sign">签名</string>
     <string name="user_unfill_in">未填写</string>
     <string name="user_sign_content">我要减肥！ </string>
@@ -52,5 +53,7 @@
     <string name="save_alter">保 存</string>
     <string name="games_radio_yes">是</string>
     <string name="games_radio_no">否</string>
+    <string name="friend_position_content">0m</string>
+    <string name="friend_number">Ta的账号</string>
 
 </resources>

@@ -1,16 +1,10 @@
 package com.science.strangertofriend.ui;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,7 +25,7 @@ import com.science.strangertofriend.widget.MyDialog;
  * 
  */
 
-public class ForgetPasswordActivity extends Activity {
+public class ForgetPasswordActivity extends BaseActivity {
 
 	private EditText mEmailForFind;
 	private Button mFindPassword;
@@ -42,21 +36,7 @@ public class ForgetPasswordActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forget_password);
 
-		// ³Á½þÊ½×´Ì¬À¸ÉèÖÃ
-		initSystemBar();
 		initComponent();
-	}
-
-	@TargetApi(Build.VERSION_CODES.KITKAT)
-	private void initSystemBar() {
-		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
-			// Í¸Ã÷×´Ì¬À¸
-			getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			// Í¸Ã÷µ¼º½À¸
-			getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-		}
 	}
 
 	private void initComponent() {

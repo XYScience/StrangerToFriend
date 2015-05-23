@@ -207,7 +207,7 @@ public class RegisterActivity extends BaseActivity {
 	private void progressDialog(final String gender) {
 		final SweetAlertDialog pDialog = new SweetAlertDialog(
 				RegisterActivity.this, SweetAlertDialog.PROGRESS_TYPE)
-				.setTitleText("拼命加载中、、");
+				.setTitleText("拼命加载中");
 		pDialog.show();
 		pDialog.setCancelable(false);
 		new CountDownTimer(800 * 4, 800) {

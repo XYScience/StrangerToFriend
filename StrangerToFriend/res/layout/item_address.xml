@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.science.strangertofriend"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical" >
@@ -18,18 +19,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/avater_list"
         android:layout_below="@id/catalog"
         android:layout_margin="10dip" >
 
-        <ImageView
-            android:id="@+id/img_friend_avatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/friend_avatar"
+            android:layout_width="@dimen/avater_list"
+            android:layout_height="@dimen/avater_list"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:contentDescription="@null"
-            android:src="@drawable/chat_default_user_avatar" />
+            android:src="@drawable/chat_default_user_avatar"
+            app:border_color="#808080"
+            app:border_width="2dp" />
 
         <TextView
             android:id="@+id/title"
@@ -37,8 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dip"
-            android:layout_toRightOf="@id/img_friend_avatar"
-            android:text="幸运"
+            android:layout_toRightOf="@id/friend_avatar"
             android:textColor="#3e3e39"
             android:textSize="20sp" />
     </RelativeLayout>

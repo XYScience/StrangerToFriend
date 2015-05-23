@@ -85,6 +85,8 @@
         </activity>
         <activity android:name="com.science.strangertofriend.ui.FriendInformationActivity" >
         </activity>
+        <activity android:name="com.science.strangertofriend.ui.AlterActivity" >
+        </activity>
 
         <!-- 百度地图定位开始 -->
         <service

@@ -50,7 +50,7 @@ public class BaseActivity extends Activity {
 	}
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
-	private void initSystemBar() {
+	public void initSystemBar() {
 		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
 			// Í¸Ã÷×´Ì¬À¸
 			getWindow().addFlags(

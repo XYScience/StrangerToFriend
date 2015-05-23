@@ -11,6 +11,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.RequestPasswordResetCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 
 /**
@@ -168,6 +169,23 @@ public class AVService {
 		// myLocation.put("latitude", latitude);
 		// myLocation.put("longtitude", longititude);
 		// myLocation.saveInBackground();
+	}
+
+	// 用户基本资料
+	public static void alterUserInformation(String username, String email,
+			String gender, String birth, String hometown, String inlove,
+			String constellation, String personalStatement,
+			SaveCallback saveCallback) {
+		AVObject doing = new AVObject("UserInformation");
+		doing.put("username", username);
+		doing.put("email", email);
+		doing.put("gender", gender);
+		doing.put("birth", birth);
+		doing.put("hometown", hometown);
+		doing.put("inlove", inlove);
+		doing.put("constellation", constellation);
+		doing.put("personalStatement", personalStatement);
+		doing.saveInBackground(saveCallback);
 	}
 
 	// 退出登录

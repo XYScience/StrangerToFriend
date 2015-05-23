@@ -56,6 +56,7 @@ import com.science.strangertofriend.adapter.SortAdapter;
 import com.science.strangertofriend.adapter.SwingBottomInAnimationAdapter;
 import com.science.strangertofriend.bean.SortModel;
 import com.science.strangertofriend.ui.ChatRoomActivity;
+import com.science.strangertofriend.ui.FriendInformationActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.utils.CharacterParser;
 import com.science.strangertofriend.utils.ClearEditText;
@@ -201,11 +202,12 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 				// set item width
 				openItem.setWidth(dp2px(90));
 				// set item title
-				openItem.setTitle("Open");
+				// openItem.setTitle("详细");
 				// set item title fontsize
-				openItem.setTitleSize(18);
+				// openItem.setTitleSize(18);
 				// set item title font color
-				openItem.setTitleColor(Color.WHITE);
+				// openItem.setTitleColor(Color.WHITE);
+				openItem.setIcon(R.drawable.ic_detials);
 				// add to menu
 				menu.addMenuItem(openItem);
 
@@ -233,7 +235,7 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 				switch (index) {
 				case 0:
 					// open
-					open(position);
+					deatils(position);
 					break;
 				case 1:
 					// delete
@@ -388,6 +390,17 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 				}
 			}
 		});
+	}
+
+	// 进入好友详情
+	private void deatils(int position) {
+
+		Intent intent = new Intent(getActivity(),
+				FriendInformationActivity.class);
+		intent.putExtra("username",
+				((SortModel) adapter.getItem(position)).getName());
+
+		startActivity(intent);
 	}
 
 	// 进入聊天界面
