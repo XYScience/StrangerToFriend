@@ -46,6 +46,7 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.bean.LocationMenList;
+import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
 
 /**
@@ -321,7 +322,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 	private void decodeGame(String receiveUser) {
 
-		Intent intent = new Intent(context, DecodeGameActivity.class);
+		Intent intent = new Intent(context, PuzzleActivity.class);
 		intent.putExtra("receiveUser", receiveUser); // 接收验证的
 		intent.putExtra("sendUsername", mUsername); // 发送验证的(当前用户)
 		startActivity(intent);

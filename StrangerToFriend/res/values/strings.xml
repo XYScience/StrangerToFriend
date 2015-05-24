@@ -55,5 +55,7 @@
     <string name="games_radio_no">否</string>
     <string name="friend_position_content">0m</string>
     <string name="friend_number">Ta的账号</string>
+    <string name="defalut_countdown">120</string>
+    <string name="start">开始</string>
 
 </resources>

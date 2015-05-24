@@ -87,6 +87,8 @@
         </activity>
         <activity android:name="com.science.strangertofriend.ui.AlterActivity" >
         </activity>
+        <activity android:name="com.science.strangertofriend.game.puzzle.PuzzleActivity" >
+        </activity>
 
         <!-- 百度地图定位开始 -->
         <service
