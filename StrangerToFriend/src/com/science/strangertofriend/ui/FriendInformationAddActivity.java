@@ -7,19 +7,19 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.text.InputType;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -30,6 +30,7 @@ import com.avos.avoscloud.FindCallback;
 import com.igexin.sdk.PushManager;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.GetuiSdkHttpPost;
+import com.science.strangertofriend.widget.DampView;
 
 /**
  * @description 解密游戏界面
@@ -41,7 +42,7 @@ import com.science.strangertofriend.utils.GetuiSdkHttpPost;
  * 
  */
 
-public class DecodeGameActivity extends BaseActivity {
+public class FriendInformationAddActivity extends BaseActivity {
 
 	/**
 	 * 第三方应用Master Secret，修改为正确的值
@@ -54,31 +55,120 @@ public class DecodeGameActivity extends BaseActivity {
 	private String appid = "";
 	private SimpleDateFormat formatter = null;
 	private Date curDate = null;
-	public Button button;
-	public static TextView tLogView = null;
+
+	private ImageView mUserBackgroundImg;
+	private ImageView mBackImg;
+
+	private ImageView mAvatar;
+	private TextView mUsername;
+	private ImageView mGender;
+	public Button mAddButton;
+	private TextView mMyStatement;
+	private TextView mUserAcount;
+	private TextView mUserPosition;
+	private TextView mUserBirth;
+	private TextView mUserHome;
+	private TextView mUserInlove;
+	private TextView mUserConstellation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.decode_game);
+		setContentView(R.layout.friend_information_add);
 
-		button = (Button) findViewById(R.id.button);
-		tLogView = (EditText) findViewById(R.id.tvlog);
-		tLogView.setInputType(InputType.TYPE_NULL);
-		tLogView.setSingleLine(false);
-		tLogView.setHorizontallyScrolling(false);
+		initView();
+		initData();
 		// 推送初始化
 		initPush();
+		initListener();
 
-		button.setOnClickListener(new OnClickListener() {
+	}
 
-			@Override
-			public void onClick(View v) {
-				addFriend();
+	private void initView() {
+
+		mAddButton = (Button) findViewById(R.id.user_add);
+		// 背景下拉变大
+		mUserBackgroundImg = (ImageView) findViewById(R.id.user_background_img);
+		DampView view = (DampView) findViewById(R.id.dampview);
+		view.setImageView(mUserBackgroundImg);
+
+		mBackImg = (ImageView) findViewById(R.id.back);
+		mAvatar = (ImageView) findViewById(R.id.avatar);
+		mUsername = (TextView) findViewById(R.id.username);
+		mGender = (ImageView) findViewById(R.id.gender);
+		mMyStatement = (TextView) findViewById(R.id.friend_mystatement);
+		mUserAcount = (TextView) findViewById(R.id.friend_number_content);
+		mUserPosition = (TextView) findViewById(R.id.friend_position_content);
+		mUserBirth = (TextView) findViewById(R.id.friend_birth_content);
+		mUserHome = (TextView) findViewById(R.id.friend_home_content);
+		mUserConstellation = (TextView) findViewById(R.id.friend_constellation);
+		mUserInlove = (TextView) findViewById(R.id.friend_inlove);
+	}
+
+	private void initData() {
+
+		mUsername.setText(getIntent().getStringExtra("receiveUser"));
+		AVQuery<AVObject> query = new AVQuery<AVObject>("UserInformation");
+		query.whereEqualTo("username", getIntent()
+				.getStringExtra("receiveUser"));
+		query.findInBackground(new FindCallback<AVObject>() {
+			public void done(List<AVObject> avObjects, AVException e) {
+				if (e == null) {
+					Message msg = new Message();
+					msg.what = 1;
+					msg.obj = avObjects;
+					mFriendHandler.sendMessage(msg);
+				} else {
+					// Toast.makeText(AlterActivity.this, "请检查网络！",
+					// Toast.LENGTH_LONG).show();
+				}
 			}
 		});
+	}
 
+	@SuppressLint("HandlerLeak")
+	private Handler mFriendHandler = new Handler() {
+		@SuppressWarnings("unchecked")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				showOldInformation((List<AVObject>) msg.obj);
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	// 显示已填写内容
+	private void showOldInformation(List<AVObject> responseList) {
+		if (responseList != null && responseList.size() != 0) {
+			switch (responseList.get(responseList.size() - 1).getString(
+					"gender")) {
+			case "男":
+				mGender.setImageDrawable(getResources().getDrawable(
+						R.drawable.user_boy));
+				break;
+
+			case "女":
+				mGender.setImageDrawable(getResources().getDrawable(
+						R.drawable.user_girl));
+				break;
+			}
+			mMyStatement.setText(responseList.get(responseList.size() - 1)
+					.getString("personalStatement"));
+			mUserAcount.setText(responseList.get(responseList.size() - 1)
+					.getString("email"));
+			mUserBirth.setText(responseList.get(responseList.size() - 1)
+					.getString("birth"));
+			mUserHome.setText(responseList.get(responseList.size() - 1)
+					.getString("hometown"));
+			mUserInlove.setText(responseList.get(responseList.size() - 1)
+					.getString("inlove"));
+			mUserConstellation.setText(responseList
+					.get(responseList.size() - 1).getString("constellation"));
+		}
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -108,10 +198,29 @@ public class DecodeGameActivity extends BaseActivity {
 		PushManager.getInstance().initialize(this.getApplicationContext());
 	}
 
+	private void initListener() {
+
+		mBackImg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				FriendInformationAddActivity.this.finish();
+			}
+		});
+
+		mAddButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				addFriend();
+			}
+		});
+	}
+
 	// 添加等待
 	private void addFriend() {
 
-		new SweetAlertDialog(DecodeGameActivity.this,
+		new SweetAlertDialog(FriendInformationAddActivity.this,
 				SweetAlertDialog.WARNING_TYPE)
 				.setTitleText("确定添加为好友?")
 				.setCancelText("取消")
@@ -139,7 +248,7 @@ public class DecodeGameActivity extends BaseActivity {
 								sDialog.dismiss();
 
 								final SweetAlertDialog nAlertDialog = new SweetAlertDialog(
-										DecodeGameActivity.this,
+										FriendInformationAddActivity.this,
 										SweetAlertDialog.PROGRESS_TYPE)
 										.setTitleText("邂逅相遇,适我愿兮");
 								nAlertDialog.show();
@@ -165,9 +274,8 @@ public class DecodeGameActivity extends BaseActivity {
 	// 发送好友验证
 	private void friendValidation() {
 
-		Intent intent = getIntent();
-		final String receiveUser = intent.getStringExtra("receiveUser");
-		final String sendUsername = intent.getStringExtra("sendUsername");
+		final String receiveUser = getIntent().getStringExtra("receiveUser");
+		final String sendUsername = getIntent().getStringExtra("sendUsername");
 		AVQuery<AVObject> query = new AVQuery<AVObject>("ClientID");
 		query.whereEqualTo("username", receiveUser);
 		query.findInBackground(new FindCallback<AVObject>() {
@@ -251,7 +359,7 @@ public class DecodeGameActivity extends BaseActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			DecodeGameActivity.this.finish();
+			FriendInformationAddActivity.this.finish();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);

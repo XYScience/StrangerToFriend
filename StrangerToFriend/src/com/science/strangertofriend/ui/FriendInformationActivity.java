@@ -22,7 +22,7 @@ import com.science.strangertofriend.R;
 import com.science.strangertofriend.widget.DampView;
 
 /**
- * @description
+ * @description 好友资料
  * 
  * @author 幸运Science 陈土燊
  * @school University of South China

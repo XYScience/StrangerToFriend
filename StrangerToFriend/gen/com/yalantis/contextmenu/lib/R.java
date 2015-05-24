@@ -418,7 +418,7 @@ public final class R {
 		public static final int progress_circular = 0x7f0a0007;
 		public static final int progress_horizontal = 0x7f0a0008;
 		public static final int radio = 0x7f0a0034;
-		public static final int root = 0x7f0a00aa;
+		public static final int root = 0x7f0a00a8;
 		public static final int search_badge = 0x7f0a003e;
 		public static final int search_bar = 0x7f0a003d;
 		public static final int search_button = 0x7f0a003f;
@@ -441,8 +441,8 @@ public final class R {
 		public static final int useLogo = 0x7f0a0013;
 		public static final int withText = 0x7f0a0018;
 		public static final int wrap_content = 0x7f0a0009;
-		public static final int wrapper_buttons = 0x7f0a00ab;
-		public static final int wrapper_text = 0x7f0a00ac;
+		public static final int wrapper_buttons = 0x7f0a00a9;
+		public static final int wrapper_text = 0x7f0a00aa;
 	}
 	public static final class integer {
 		public static final int abc_config_activityDefaultDur = 0x7f090001;
@@ -472,8 +472,8 @@ public final class R {
 		public static final int abc_search_dropdown_item_icons_2line = 0x7f030013;
 		public static final int abc_search_view = 0x7f030014;
 		public static final int abc_simple_dropdown_hint = 0x7f030015;
-		public static final int fragment_menu = 0x7f030034;
-		public static final int support_simple_spinner_dropdown_item = 0x7f030045;
+		public static final int fragment_menu = 0x7f030033;
+		public static final int support_simple_spinner_dropdown_item = 0x7f030044;
 	}
 	public static final class string {
 		public static final int abc_action_bar_home_description = 0x7f0b0001;

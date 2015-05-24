@@ -1,7 +1,7 @@
 <resources>
 
     <dimen name="user_bg_img">215dp</dimen>
-    <dimen name="friend_add_bg_img">255dp</dimen>
+    <dimen name="friend_add_bg_img">265dp</dimen>
     <dimen name="friend_kitkat_bg_img">245dp</dimen>
     <dimen name="friend_bg_img">205dp</dimen>
     <dimen name="avater_list">65dp</dimen>

@@ -33,7 +33,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.game.puzzle.GamePintuLayout.GamePintuListener;
-import com.science.strangertofriend.ui.DecodeGameActivity;
+import com.science.strangertofriend.ui.FriendInformationAddActivity;
 import com.science.strangertofriend.utils.FileUtil;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
@@ -271,7 +271,7 @@ public class PuzzleActivity extends ActionBarActivity implements
 				i = -1;
 				pDialog.dismiss();
 				Intent intent = new Intent(PuzzleActivity.this,
-						DecodeGameActivity.class);
+						FriendInformationAddActivity.class);
 				intent.putExtra("receiveUser",
 						getIntent().getStringExtra("receiveUser")); // 接收验证的
 				intent.putExtra("sendUsername",
