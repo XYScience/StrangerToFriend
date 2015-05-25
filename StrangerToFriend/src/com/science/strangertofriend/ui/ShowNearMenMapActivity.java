@@ -44,10 +44,12 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.bean.LocationMenList;
 import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
+import com.science.strangertofriend.utils.AppContext;
 
 /**
  * @description 地图显示附近的人
@@ -186,8 +188,12 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 			if (isFirstIn) {
 
-				AVService.myLocation(mUserObjectId, mUsername, mGender,
-						mLatitude, mLongtitude);
+				if (AppContext.isThisLocation) {
+					AVService.myLocation(mUserObjectId, mUsername, mGender,
+							mLatitude, mLongtitude);
+					AppContext.isThisLocation = false;
+				}
+
 				mMyPoint = new AVGeoPoint(mLatitude, mLongtitude);
 				LatLng latLng = new LatLng(mLatitude, mLongtitude);
 				MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
@@ -276,7 +282,9 @@ public class ShowNearMenMapActivity extends BaseActivity {
 						@Override
 						public void onInfoWindowClick() {
 							// 解密游戏
-							decodeGame(menList.getUsername());
+							decodeGame(menList.getUsername(),
+									menList.getLatitude(),
+									menList.getLongtitude());
 						}
 					});
 			mBaiduMap.showInfoWindow(infoWindow);
@@ -310,7 +318,9 @@ public class ShowNearMenMapActivity extends BaseActivity {
 							@Override
 							public void onInfoWindowClick() {
 								// 解密游戏
-								decodeGame(menList.getUsername());
+								decodeGame(menList.getUsername(),
+										menList.getLatitude(),
+										menList.getLongtitude());
 							}
 						});
 				mBaiduMap.showInfoWindow(infoWindow);
@@ -320,11 +330,15 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		});
 	}
 
-	private void decodeGame(String receiveUser) {
+	private void decodeGame(String receiveUser, double latitude,
+			double longtitude) {
 
 		Intent intent = new Intent(context, PuzzleActivity.class);
 		intent.putExtra("receiveUser", receiveUser); // 接收验证的
 		intent.putExtra("sendUsername", mUsername); // 发送验证的(当前用户)
+		int distance = (int) DistanceUtil.getDistance(new LatLng(mLatitude,
+				mLongtitude), new LatLng(latitude, longtitude));
+		intent.putExtra("distance", distance);
 		startActivity(intent);
 	}
 

@@ -1,18 +1,11 @@
 package com.science.strangertofriend.ui;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -23,12 +16,9 @@ import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
-import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.LogInCallback;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
@@ -110,19 +100,6 @@ public class LoginActivity extends BaseActivity {
 	// 根据当前输入用户名查找回调
 	private void findGenderCallback() {
 		mUsernameString = mUser.getText().toString();
-		FindCallback<AVObject> findCallback = new FindCallback<AVObject>() {
-			public void done(List<AVObject> avObjects, AVException e) {
-				if (e == null) {
-					Message msg = new Message();
-					msg.what = 1;
-					msg.obj = avObjects;
-					mUsernameHandler.sendMessage(msg);
-				} else {
-					Toast.makeText(LoginActivity.this, "请检查网络！",
-							Toast.LENGTH_LONG).show();
-				}
-			}
-		};
 
 		AVQuery<AVObject> query = new AVQuery<AVObject>("Gender");
 		if (isEmail(mUsernameString)) {
@@ -130,75 +107,8 @@ public class LoginActivity extends BaseActivity {
 		} else {
 			query.whereEqualTo("username", mUsernameString);
 		}
-		query.findInBackground(findCallback);
-	}
+		query.findInBackground(findGenderCallback(this, mCameraAvatar));
 
-	@SuppressLint("HandlerLeak")
-	private Handler mUsernameHandler = new Handler() {
-		@SuppressWarnings("unchecked")
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case 1:
-				List<AVObject> responseList = (List<AVObject>) msg.obj;
-				if (responseList != null && responseList.size() != 0) {
-					String mObjectId = responseList
-							.get(responseList.size() - 1).getObjectId();
-					byteToDrawable(mObjectId);
-				}
-				break;
-			}
-		}
-	};
-
-	Bitmap bitmap;
-
-	private void byteToDrawable(final String mObjectId) {
-
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				AVQuery<AVObject> query = new AVQuery<AVObject>("Gender");
-				AVObject gender = null;
-				try {
-					gender = query.get(mObjectId);
-				} catch (AVException e) {
-					e.printStackTrace();
-				}
-				// Retrieving the file
-				AVFile imageFile = (AVFile) gender.get("gender");
-				imageFile.getDataInBackground(new GetDataCallback() {
-					@SuppressWarnings("deprecation")
-					public void done(byte[] data, AVException e) {
-						if (data != null) {
-							// Success; data has the file
-							bitmap = BitmapFactory.decodeByteArray(data, 0,
-									data.length);
-							// LayoutParams laParams = (LayoutParams)
-							// mCameraAvatar
-							// .getLayoutParams();
-							// laParams.width = (getScreenWidth() / 3) + 20;
-							// laParams.height = (getScreenHeight() / 3) + 20;
-							// mCameraAvatar.setLayoutParams(laParams);
-							mCameraAvatar.setImageDrawable(new BitmapDrawable(
-									bitmap));
-							// mCameraAvatar
-							// .setMaxHeight((getScreenHeight() / 3) + 20);
-							// mCameraAvatar
-							// .setMaxWidth((getScreenWidth() / 3) + 20);
-							// mCameraAvatar
-							// .setMinimumHeight((getScreenWidth() / 3) + 20);
-							// mCameraAvatar
-							// .setMinimumWidth((getScreenWidth() / 3) + 20);
-						} else {
-							// Failed
-						}
-					}
-				});
-			}
-
-		}).start();
 	}
 
 	/**

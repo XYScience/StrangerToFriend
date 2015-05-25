@@ -31,6 +31,8 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class AppContext extends Application {
 
+	public static boolean isThisLocation = true;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

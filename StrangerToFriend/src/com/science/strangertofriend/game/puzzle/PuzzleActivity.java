@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.avos.avoscloud.AVUser;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.game.puzzle.GamePintuLayout.GamePintuListener;
@@ -107,9 +108,20 @@ public class PuzzleActivity extends ActionBarActivity implements
 
 		mTitle.setText("解密游戏");
 		mGamePicture = (int) (Math.random() * 7);
-		mGamePintuLayout.setTimeEnabled(true, BitmapFactory.decodeResource(
-				getResources(), gameBitmapBoy[mGamePicture]));
-		mOriginalImage.setImageResource(gameBitmapBoy[mGamePicture]);
+		switch (AVUser.getCurrentUser().get("gender").toString()) {
+		case "男":
+			mGamePintuLayout.setTimeEnabled(true, BitmapFactory.decodeResource(
+					getResources(), gameBitmapGirl[mGamePicture]));
+			mOriginalImage.setImageResource(gameBitmapGirl[mGamePicture]);
+			break;
+
+		case "女":
+			mGamePintuLayout.setTimeEnabled(true, BitmapFactory.decodeResource(
+					getResources(), gameBitmapBoy[mGamePicture]));
+			mOriginalImage.setImageResource(gameBitmapBoy[mGamePicture]);
+			break;
+		}
+
 		// 上下文菜单
 		mFragmentManager = getSupportFragmentManager();
 		initMenuFragment();
@@ -276,6 +288,9 @@ public class PuzzleActivity extends ActionBarActivity implements
 						getIntent().getStringExtra("receiveUser")); // 接收验证的
 				intent.putExtra("sendUsername",
 						getIntent().getStringExtra("sendUsername")); // 发送验证的(当前用户)
+				intent.putExtra("distance",
+						getIntent().getIntExtra("distance", 0));
+
 				startActivity(intent);
 				PuzzleActivity.this.finish();
 			}
@@ -356,9 +371,20 @@ public class PuzzleActivity extends ActionBarActivity implements
 
 		if (!flag) {
 
-			new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-					.setTitleText("原图").setContentText("其实我很厉害，只是厉害的不明显")
-					.setCustomImage(gameBitmapBoy[mGamePicture]).show();
+			switch (AVUser.getCurrentUser().get("gender").toString()) {
+			case "男":
+				new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+						.setTitleText("当前原图").setContentText("其实我很厉害，只是厉害的不明显")
+						.setCustomImage(gameBitmapGirl[mGamePicture]).show();
+				break;
+
+			case "女":
+				new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+						.setTitleText("当前原图").setContentText("其实我很厉害，只是厉害的不明显")
+						.setCustomImage(gameBitmapBoy[mGamePicture]).show();
+				break;
+			}
+
 		} else {
 			new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
 					.setTitleText("原图").setContentText("其实我很厉害，只是厉害的不明显")

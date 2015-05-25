@@ -50,6 +50,7 @@ public class RegisterActivity extends BaseActivity {
 	private MyDialog mMyDialog;
 	private String mUsernameString, mPasswordString, mEmailString;
 	private Boolean mBoyflag = false, mGirlFlag = false;
+	private Boolean mGenderPicBoyFlag = true, mGenderPicGirlFlag = true;
 
 	private static final String IMAGE_FILE_NAME = "avatar.jpg";// 头像文件名称
 	private String urlpath; // 图片本地路径
@@ -100,6 +101,21 @@ public class RegisterActivity extends BaseActivity {
 			public void onClick(View v) {
 				mBoyflag = true;
 				mGirlFlag = false;
+				if (mGenderPicBoyFlag) {
+					mGenderBoy.setImageDrawable(getResources().getDrawable(
+							R.drawable.click_after_boy));
+					mGenderGirl.setImageDrawable(getResources().getDrawable(
+							R.drawable.girl));
+					mGenderPicBoyFlag = false;
+					mGenderPicGirlFlag = true;
+				} else {
+					mGenderBoy.setImageDrawable(getResources().getDrawable(
+							R.drawable.boy));
+					mGenderGirl.setImageDrawable(getResources().getDrawable(
+							R.drawable.girl));
+					mGenderPicBoyFlag = true;
+					mGenderPicGirlFlag = true;
+				}
 			}
 		});
 
@@ -109,6 +125,21 @@ public class RegisterActivity extends BaseActivity {
 			public void onClick(View v) {
 				mBoyflag = false;
 				mGirlFlag = true;
+				if (mGenderPicGirlFlag) {
+					mGenderGirl.setImageDrawable(getResources().getDrawable(
+							R.drawable.click_after_girl));
+					mGenderBoy.setImageDrawable(getResources().getDrawable(
+							R.drawable.boy));
+					mGenderPicGirlFlag = false;
+					mGenderPicBoyFlag = true;
+				} else {
+					mGenderGirl.setImageDrawable(getResources().getDrawable(
+							R.drawable.girl));
+					mGenderBoy.setImageDrawable(getResources().getDrawable(
+							R.drawable.boy));
+					mGenderPicGirlFlag = true;
+					mGenderPicBoyFlag = true;
+				}
 			}
 		});
 
@@ -174,6 +205,7 @@ public class RegisterActivity extends BaseActivity {
 							.getInstance().getClientid(RegisterActivity.this));
 					Intent mainIntent = new Intent(RegisterActivity.this,
 							MainActivity.class);
+					mainIntent.putExtra("avater", genderBitmap);
 					startActivity(mainIntent);
 					RegisterActivity.this.finish();
 				} else {
@@ -344,8 +376,8 @@ public class RegisterActivity extends BaseActivity {
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
 		// outputX outputY 是裁剪图片宽高
-		intent.putExtra("outputX", 300);
-		intent.putExtra("outputY", 300);
+		intent.putExtra("outputX", 200);
+		intent.putExtra("outputY", 200);
 		intent.putExtra("return-data", true);
 		startActivityForResult(intent, REQUESTCODE_CUTTING);
 	}

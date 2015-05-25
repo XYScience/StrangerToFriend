@@ -31,7 +31,7 @@
                     <ImageView
                         android:id="@+id/user_background_img"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/friend_add_bg_img"
+                        android:layout_height="@dimen/friend_add_kitkat_bg_img"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop"
                         android:src="@drawable/myself_bg" />
@@ -39,7 +39,9 @@
                     <ImageView
                         android:id="@+id/back"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"                        android:background="@drawable/scanner_back_img"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/scanner_back_img"
                         android:contentDescription="@null"
                         android:minHeight="55dp"
                         android:minWidth="55dp"
@@ -47,7 +49,8 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp" >
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/avatar"

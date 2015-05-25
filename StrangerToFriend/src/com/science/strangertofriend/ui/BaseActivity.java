@@ -1,8 +1,13 @@
 package com.science.strangertofriend.ui;
 
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -11,12 +16,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetDataCallback;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AppContext;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * @description 基类
@@ -34,6 +48,8 @@ public class BaseActivity extends Activity {
 	// 定义一个变量，来标识是否退出
 	private static boolean isExit = false;
 	public int i = -1;
+	public Bitmap bitmap;
+	private View mView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,77 @@ public class BaseActivity extends Activity {
 		}
 	}
 
+	// 查找回调
+	public FindCallback<AVObject> findGenderCallback(final Context context,
+			View view) {
+
+		mView = view;
+
+		FindCallback<AVObject> findCallback = new FindCallback<AVObject>() {
+			public void done(List<AVObject> avObjects, AVException e) {
+				if (e == null) {
+					Message msg = new Message();
+					msg.what = 1;
+					msg.obj = avObjects;
+					mUsernameHandler.sendMessage(msg);
+				} else {
+					Toast.makeText(context, "请检查网络！", Toast.LENGTH_LONG).show();
+				}
+			}
+		};
+		return findCallback;
+	}
+
+	@SuppressLint("HandlerLeak")
+	private Handler mUsernameHandler = new Handler() {
+		@SuppressWarnings("unchecked")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				List<AVObject> responseList = (List<AVObject>) msg.obj;
+				if (responseList != null && responseList.size() != 0) {
+					String objectId = responseList.get(responseList.size() - 1)
+							.getObjectId();
+					byteToDrawable(objectId);
+				}
+				break;
+			}
+		}
+	};
+
+	public Bitmap byteToDrawable(final String objectId) {
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				AVQuery<AVObject> query = new AVQuery<AVObject>("Gender");
+				AVObject gender = null;
+				try {
+					gender = query.get(objectId);
+				} catch (AVException e) {
+					e.printStackTrace();
+				}
+				// Retrieving the file
+				AVFile imageFile = (AVFile) gender.get("gender");
+				imageFile.getDataInBackground(new GetDataCallback() {
+					public void done(byte[] data, AVException e) {
+						if (data != null) {
+							// Success; data has the file
+							bitmap = BitmapFactory.decodeByteArray(data, 0,
+									data.length);
+							((CircleImageView) mView).setImageBitmap(bitmap);
+						} else {
+						}
+					}
+				});
+			}
+
+		}).start();
+		return bitmap;
+	}
+
 	// 获取屏幕的宽度
 	public int getScreenWidth() {
 		DisplayMetrics dm = new DisplayMetrics();
@@ -134,4 +221,19 @@ public class BaseActivity extends Activity {
 		}
 	};
 
+	// LayoutParams laParams = (LayoutParams)
+	// mCameraAvatar
+	// .getLayoutParams();
+	// laParams.width = (getScreenWidth() / 3) + 20;
+	// laParams.height = (getScreenHeight() / 3) + 20;
+	// mCameraAvatar.setLayoutParams(laParams);
+	// ---------------
+	// mCameraAvatar
+	// .setMaxHeight((getScreenHeight() / 3) + 20);
+	// mCameraAvatar
+	// .setMaxWidth((getScreenWidth() / 3) + 20);
+	// mCameraAvatar
+	// .setMinimumHeight((getScreenWidth() / 3) + 20);
+	// mCameraAvatar
+	// .setMinimumWidth((getScreenWidth() / 3) + 20);
 }

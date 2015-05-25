@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -28,12 +31,13 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.igexin.sdk.PushManager;
+import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.GetuiSdkHttpPost;
 import com.science.strangertofriend.widget.DampView;
 
 /**
- * @description 解密游戏界面
+ * @description 解密游戏后好友界面
  * 
  * @author 幸运Science 陈土燊
  * @school University of South China
@@ -75,7 +79,11 @@ public class FriendInformationAddActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.friend_information_add);
+		if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+			setContentView(R.layout.friend_information_add_kitkat);
+		} else {
+			setContentView(R.layout.friend_information_add);
+		}
 
 		initView();
 		initData();
@@ -109,6 +117,15 @@ public class FriendInformationAddActivity extends BaseActivity {
 	private void initData() {
 
 		mUsername.setText(getIntent().getStringExtra("receiveUser"));
+		mUserPosition.setText(getIntent().getIntExtra("distance", 0) + "m");
+
+		// 查找好友头像
+		AVQuery<AVObject> queryGender = new AVQuery<AVObject>("Gender");
+		queryGender.whereEqualTo("username",
+				getIntent().getStringExtra("receiveUser"));
+		queryGender.findInBackground(findGenderCallback(this, mAvatar));
+
+		// 查找好友信息
 		AVQuery<AVObject> query = new AVQuery<AVObject>("UserInformation");
 		query.whereEqualTo("username", getIntent()
 				.getStringExtra("receiveUser"));
@@ -213,6 +230,22 @@ public class FriendInformationAddActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				addFriend();
+			}
+		});
+
+		mMyStatement.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mMyStatement.getText().toString() != null) {
+
+					new SweetAlertDialog(FriendInformationAddActivity.this,
+							SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+							.setTitleText("Ta的签名")
+							.setContentText(mMyStatement.getText().toString())
+							.setCustomImage(R.drawable.add_friend_statement)
+							.show();
+				}
 			}
 		});
 	}
@@ -354,6 +387,11 @@ public class FriendInformationAddActivity extends BaseActivity {
 		param.put("sign", GetuiSdkHttpPost.makeSign(MASTERSECRET, param));
 
 		GetuiSdkHttpPost.httpPost(param);
+
+		Intent intentMain = new Intent(FriendInformationAddActivity.this,
+				MainActivity.class);
+		startActivity(intentMain);
+		FriendInformationAddActivity.this.finish();
 	}
 
 	@Override
