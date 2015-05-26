@@ -495,11 +495,14 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 
 						@Override
 						public void run() {
+
 							// 保存消息
 							AVService.messageList(((SortModel) adapter
-									.getItem(position)).getName(), AVUser
-									.getCurrentUser().getUsername(), sendTime,
-									message);
+									.getItem(position)).getName(),
+									((SortModel) adapter.getItem(position))
+											.getAvaterUrl(), AVUser
+											.getCurrentUser().getUsername(),
+									sendTime, message);
 						}
 					}).start();
 				}
@@ -578,6 +581,10 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 		for (AVObject avo : list) {
 
 			SortModel sortModel = new SortModel();
+
+			/*
+			 * 通讯录列表好友名字
+			 */
 			sortModel.setName(avo.getString("friends"));
 			// 汉字转换成拼音
 			String pinyin = characterParser
@@ -590,6 +597,11 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 			} else {
 				sortModel.setSortLetters("#");
 			}
+
+			/*
+			 * 通讯录列表好友头像
+			 */
+			sortModel.setAvaterUrl(avo.getString("avaterUrl"));
 
 			mSortList.add(sortModel);
 		}

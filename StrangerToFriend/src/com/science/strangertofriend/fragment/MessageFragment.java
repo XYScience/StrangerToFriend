@@ -11,14 +11,11 @@ import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,15 +27,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetDataCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
@@ -77,7 +71,11 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	private SwipeMenuListView mMessageList;
 	public static MessageListAdapter mMessageListAdapter;
 	public static List<Map<String, Object>> mRequestList;
-	private String mCurrentUsername;
+	private static String mCurrentUsername;
+
+	// private static String mFriend;
+	// private static String mMessage;
+	// private static String mSendTime;
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -144,7 +142,15 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				if (list != null && list.size() != 0) {
 					mRequestList.clear();
 					for (AVObject avo : list) {
-						findGenderCallback(avo, avo.getString("friend"));
+
+						Map<String, Object> mapUsername = new HashMap<String, Object>();
+						mapUsername.put("friend", avo.getString("friend"));
+						mapUsername.put("urlAvater", avo.getString("urlAvater"));
+						mapUsername.put("frienRequest",
+								avo.getString("messsage"));
+						mapUsername.put("requestTime",
+								avo.getString("sendTime"));
+						mRequestList.add(0, mapUsername);
 					}
 					mMessageListAdapter.notifyDataSetChanged();
 				} else {
@@ -155,88 +161,6 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 		});
 
 		return mRequestList;
-	}
-
-	// 根据当前用户名查找回调
-	private void findGenderCallback(final AVObject avo, String friend) {
-		AVQuery<AVObject> query = new AVQuery<AVObject>("SmallGender");
-		query.whereEqualTo("username", friend);
-		query.findInBackground(new FindCallback<AVObject>() {
-			public void done(List<AVObject> avObjects, AVException e) {
-				if (e == null) {
-					// Message msg = new Message();
-					// msg.what = 1;
-					// msg.obj = avObjects;
-					// mUsernameHandler.sendMessage(msg);
-					if (avObjects != null && avObjects.size() != 0) {
-						String mObjectId = avObjects.get(avObjects.size() - 1)
-								.getObjectId();
-						byteToDrawable(avo, mObjectId);
-					}
-				} else {
-					Toast.makeText(getActivity(), "请检查网络！", Toast.LENGTH_LONG)
-							.show();
-				}
-			}
-		});
-	}
-
-	@SuppressLint("HandlerLeak")
-	private Handler mUsernameHandler = new Handler() {
-		@SuppressWarnings("unchecked")
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case 1:
-				List<AVObject> responseList = (List<AVObject>) msg.obj;
-				if (responseList != null && responseList.size() != 0) {
-					String mObjectId = responseList
-							.get(responseList.size() - 1).getObjectId();
-					// byteToDrawable(mObjectId);
-				}
-				break;
-			}
-		}
-	};
-
-	private void byteToDrawable(final AVObject avo, final String mObjectId) {
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					AVQuery<AVObject> query = new AVQuery<AVObject>(
-							"SmallGender");
-					AVObject gender = query.get(mObjectId);
-					// Retrieving the file
-					AVFile imageFile = (AVFile) gender.get("smallgender");
-					imageFile.getDataInBackground(new GetDataCallback() {
-						public void done(byte[] data, AVException e) {
-							if (data != null) {
-								// Success; data has the file
-								Bitmap bitmap = BitmapFactory.decodeByteArray(
-										data, 0, data.length);
-								Map<String, Object> mapUsername = new HashMap<String, Object>();
-								mapUsername.put("friend",
-										avo.getString("friend"));
-								mapUsername.put("frienRequest",
-										avo.getString("messsage"));
-								mapUsername.put("requestTime",
-										avo.getString("sendTime"));
-								mapUsername.put("friendGender",
-										new BitmapDrawable(bitmap));
-								mRequestList.add(0, mapUsername);
-								mMessageListAdapter.notifyDataSetChanged();
-							} else {
-								// Failed
-							}
-						}
-					});
-				} catch (AVException e) {
-					e.printStackTrace();
-				}
-			}
-
-		}).start();
 	}
 
 	private void initSwipeMenu() {
@@ -461,29 +385,6 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	public static List<Map<String, Object>> getRequestData(String friend,
-			String message, String sendTime) {
-
-		Map<String, Object> mapUsername = new HashMap<String, Object>();
-		mapUsername.put("friend", friend);
-		mapUsername.put("frienRequest", message);
-		mapUsername.put("requestTime", sendTime);
-		mRequestList.add(0, mapUsername);
-		mMessageListAdapter.notifyDataSetChanged();
-		// 保存消息
-		AVService.messageList(friend, AVUser.getCurrentUser().getUsername(),
-				sendTime, message);
-		AVService.messageList(AVUser.getCurrentUser().getUsername(), friend,
-				sendTime, AVUser.getCurrentUser().getUsername() + "已添加您为好友");
-		// 保存好友通讯录
-		AVService.addressList(friend, AVUser.getCurrentUser().getUsername(),
-				sendTime);
-		AVService.addressList(AVUser.getCurrentUser().getUsername(), friend,
-				sendTime);
-
-		return mRequestList;
 	}
 
 	@Override

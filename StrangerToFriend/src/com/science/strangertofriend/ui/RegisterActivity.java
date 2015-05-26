@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -21,8 +20,9 @@ import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
-import com.igexin.sdk.PushManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AVService;
@@ -53,10 +53,10 @@ public class RegisterActivity extends BaseActivity {
 	private Boolean mGenderPicBoyFlag = true, mGenderPicGirlFlag = true;
 
 	private static final String IMAGE_FILE_NAME = "avatar.jpg";// 头像文件名称
-	private String urlpath; // 图片本地路径
+	private String avaterUrl; // 图片本地路径
 	private static final int REQUESTCODE_TAKE = 1; // 相机拍照标记
 	private static final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
-	private Bitmap genderBitmap, smallGenderBitmap;
+	private Bitmap mAvateritmap;
 	private Boolean isTakeGenderFlag = false;
 
 	@Override
@@ -79,8 +79,6 @@ public class RegisterActivity extends BaseActivity {
 		mPassword = (EditText) findViewById(R.id.password);
 		mRegisterButton = (Button) findViewById(R.id.register);
 		mMyDialog = new MyDialog(RegisterActivity.this);
-		// SDK初始化，第三方程序启动时，都要进行SDK初始化工作
-		PushManager.getInstance().initialize(getApplicationContext());
 
 	}
 
@@ -198,14 +196,11 @@ public class RegisterActivity extends BaseActivity {
 				if (e == null) {
 					mMyDialog.successDialog("注册成功!");
 					AVService.uploadImage(mUsernameString, mEmailString,
-							genderBitmap);
-					AVService.uploadSmallAvater(mUsernameString,
-							smallGenderBitmap);
-					AVService.saveClientID(mUsernameString, PushManager
-							.getInstance().getClientid(RegisterActivity.this));
+							avaterUrl);
+
 					Intent mainIntent = new Intent(RegisterActivity.this,
 							MainActivity.class);
-					mainIntent.putExtra("avater", genderBitmap);
+					mainIntent.putExtra("avater", mAvateritmap);
 					startActivity(mainIntent);
 					RegisterActivity.this.finish();
 				} else {
@@ -232,8 +227,23 @@ public class RegisterActivity extends BaseActivity {
 			}
 		};
 
-		AVService.signUp(mUsernameString, mPasswordString, mEmailString,
-				gender, signUpCallback);
+		AVInstallation.getCurrentInstallation().saveInBackground(
+				new SaveCallback() {
+					public void done(AVException e) {
+						if (e == null) {
+							// 保存成功
+							String installationId = AVInstallation
+									.getCurrentInstallation()
+									.getInstallationId();
+							// 关联 installationId 到用户表等操作……
+							AVService.signUp(mUsernameString, mPasswordString,
+									mEmailString, gender, installationId,
+									signUpCallback);
+						} else {
+							// 保存失败，输出错误信息
+						}
+					}
+				});
 	}
 
 	private void progressDialog(final String gender) {
@@ -391,30 +401,22 @@ public class RegisterActivity extends BaseActivity {
 		Bundle extras = picdata.getExtras();
 		if (extras != null) {
 			// 取得SDCard图片路径做显示
-			Bitmap bitmap = extras.getParcelable("data");
-			Drawable drawable = new BitmapDrawable(null, bitmap);
+			mAvateritmap = extras.getParcelable("data");
+			Drawable drawable = new BitmapDrawable(null, mAvateritmap);
 			mCameraAvatar.setImageDrawable(drawable);
 
-			urlpath = FileUtil.saveFile(RegisterActivity.this, IMAGE_FILE_NAME,
-					bitmap);
+			avaterUrl = FileUtil.saveFile(RegisterActivity.this,
+					IMAGE_FILE_NAME, mAvateritmap);
 
 			// 压缩图片
-			BitmapFactory.Options option = new BitmapFactory.Options();
+			// BitmapFactory.Options option = new BitmapFactory.Options();
 			// 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
-			option.inSampleSize = 2;
+			// option.inSampleSize = 2;
 			// 根据图片的SDCard路径读出Bitmap
-			genderBitmap = BitmapFactory.decodeFile(urlpath, option);
-
-			// 列表小图头像
-			// 压缩图片
-			BitmapFactory.Options optionSmall = new BitmapFactory.Options();
-			// 压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
-			optionSmall.inSampleSize = 6;
-			// 根据图片的SDCard路径读出Bitmap
-			smallGenderBitmap = BitmapFactory.decodeFile(urlpath, optionSmall);
+			// genderBitmap = BitmapFactory.decodeFile(avaterUrl, option);
 
 			Toast.makeText(RegisterActivity.this,
-					"头像保存在:" + urlpath.replaceAll(IMAGE_FILE_NAME, ""),
+					"头像保存在:" + avaterUrl.replaceAll(IMAGE_FILE_NAME, ""),
 					Toast.LENGTH_LONG).show();
 			isTakeGenderFlag = true;
 

@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -26,7 +25,8 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
-import com.avos.avoscloud.GetDataCallback;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AppContext;
 
@@ -48,7 +48,6 @@ public class BaseActivity extends Activity {
 	// 定义一个变量，来标识是否退出
 	private static boolean isExit = false;
 	public int i = -1;
-	public Bitmap bitmap;
 	private View mView;
 
 	@Override
@@ -140,7 +139,7 @@ public class BaseActivity extends Activity {
 		}
 	};
 
-	public Bitmap byteToDrawable(final String objectId) {
+	public void byteToDrawable(final String objectId) {
 
 		new Thread(new Runnable() {
 
@@ -156,22 +155,46 @@ public class BaseActivity extends Activity {
 				}
 				// Retrieving the file
 				AVFile imageFile = (AVFile) gender.get("gender");
-				imageFile.getDataInBackground(new GetDataCallback() {
-					public void done(byte[] data, AVException e) {
-						if (data != null) {
-							// Success; data has the file
-							bitmap = BitmapFactory.decodeByteArray(data, 0,
-									data.length);
-							((CircleImageView) mView).setImageBitmap(bitmap);
-						} else {
-						}
-					}
-				});
+
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = imageFile.getUrl();
+				mHandlerLoad.sendMessage(msg);
+				// imageFile.getDataInBackground(new GetDataCallback() {
+				// public void done(byte[] data, AVException e) {
+				// if (data != null) {
+				// // Success; data has the file
+				// bitmap = BitmapFactory.decodeByteArray(data, 0,
+				// data.length);
+				// ((CircleImageView) mView).setImageBitmap(bitmap);
+				// } else {
+				// }
+				// }
+				// });
 			}
 
 		}).start();
-		return bitmap;
 	}
+
+	// 子线程Handler刷新UI界面
+	@SuppressLint("HandlerLeak")
+	private Handler mHandlerLoad = new Handler() {
+
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				@SuppressWarnings("deprecation")
+				DisplayImageOptions options = new DisplayImageOptions.Builder()
+						.showStubImage(R.drawable.default_load)
+						.showImageForEmptyUri(R.drawable.default_load)
+						.showImageOnFail(R.drawable.default_load)
+						.cacheInMemory(true).cacheOnDisc(true)
+						.bitmapConfig(Bitmap.Config.RGB_565).build();
+				ImageLoader.getInstance().displayImage((String) msg.obj,
+						((CircleImageView) mView), options);
+			}
+		};
+	};
 
 	// 获取屏幕的宽度
 	public int getScreenWidth() {

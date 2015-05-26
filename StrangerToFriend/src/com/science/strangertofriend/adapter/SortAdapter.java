@@ -3,13 +3,17 @@ package com.science.strangertofriend.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.bean.SortModel;
 
@@ -61,12 +65,14 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 		final SortModel mContent = list.get(position);
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = LayoutInflater.from(mContext).inflate(R.layout.item_address,
-					null);
+			convertView = LayoutInflater.from(mContext).inflate(
+					R.layout.item_address, null);
 			viewHolder.tvTitle = (TextView) convertView
 					.findViewById(R.id.title);
 			viewHolder.tvLetter = (TextView) convertView
 					.findViewById(R.id.catalog);
+			viewHolder.friendAvatar = (ImageView) convertView
+					.findViewById(R.id.friend_avatar);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -81,6 +87,14 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 			viewHolder.tvLetter.setVisibility(View.GONE);
 		}
 		viewHolder.tvTitle.setText(this.list.get(position).getName());
+		DisplayImageOptions options = new DisplayImageOptions.Builder()
+				.showStubImage(R.drawable.default_load)
+				.showImageForEmptyUri(R.drawable.default_load)
+				.showImageOnFail(R.drawable.default_load).cacheInMemory(true)
+				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
+		ImageLoader.getInstance().displayImage(
+				this.list.get(position).getAvaterUrl(),
+				viewHolder.friendAvatar, options);
 		return convertView;
 	}
 
@@ -116,6 +130,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 	final static class ViewHolder {
 		TextView tvLetter;
 		TextView tvTitle;
+		ImageView friendAvatar;
 	}
 
 	/**

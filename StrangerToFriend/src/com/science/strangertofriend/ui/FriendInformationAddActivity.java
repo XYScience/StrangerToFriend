@@ -2,38 +2,35 @@ package com.science.strangertofriend.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVPush;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
-import com.igexin.sdk.PushManager;
-import com.science.strangertofriend.MainActivity;
+import com.avos.avoscloud.SendCallback;
 import com.science.strangertofriend.R;
-import com.science.strangertofriend.utils.GetuiSdkHttpPost;
+import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
 
 /**
@@ -87,8 +84,8 @@ public class FriendInformationAddActivity extends BaseActivity {
 
 		initView();
 		initData();
-		// 推送初始化
-		initPush();
+		// 个推推送初始化
+		// initPush();
 		initListener();
 
 	}
@@ -112,6 +109,7 @@ public class FriendInformationAddActivity extends BaseActivity {
 		mUserHome = (TextView) findViewById(R.id.friend_home_content);
 		mUserConstellation = (TextView) findViewById(R.id.friend_constellation);
 		mUserInlove = (TextView) findViewById(R.id.friend_inlove);
+
 	}
 
 	private void initData() {
@@ -186,33 +184,6 @@ public class FriendInformationAddActivity extends BaseActivity {
 			mUserConstellation.setText(responseList
 					.get(responseList.size() - 1).getString("constellation"));
 		}
-	}
-
-	@SuppressLint("SimpleDateFormat")
-	private void initPush() {
-
-		formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		// 从AndroidManifest.xml的meta-data中读取SDK配置信息
-		String packageName = getApplicationContext().getPackageName();
-		ApplicationInfo appInfo;
-		try {
-			appInfo = getPackageManager().getApplicationInfo(packageName,
-					PackageManager.GET_META_DATA);
-			if (appInfo.metaData != null) {
-
-				appid = appInfo.metaData.getString("PUSH_APPID");
-				appsecret = appInfo.metaData.getString("PUSH_APPSECRET");
-				appkey = (appInfo.metaData.get("PUSH_APPKEY") != null) ? appInfo.metaData
-						.get("PUSH_APPKEY").toString() : null;
-			}
-
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
-		// SDK初始化，第三方程序启动时，都要进行SDK初始化工作
-		Log.d("GetuiSdkDemo", "initializing sdk...");
-		PushManager.getInstance().initialize(this.getApplicationContext());
 	}
 
 	private void initListener() {
@@ -309,89 +280,128 @@ public class FriendInformationAddActivity extends BaseActivity {
 
 		final String receiveUser = getIntent().getStringExtra("receiveUser");
 		final String sendUsername = getIntent().getStringExtra("sendUsername");
-		AVQuery<AVObject> query = new AVQuery<AVObject>("ClientID");
+		AVQuery<AVUser> query = AVUser.getQuery();
 		query.whereEqualTo("username", receiveUser);
-		query.findInBackground(new FindCallback<AVObject>() {
+		query.findInBackground(new FindCallback<AVUser>() {
 
 			@Override
-			public void done(List<AVObject> list, AVException e) {
+			public void done(List<AVUser> list, AVException arg1) {
 				if (list != null && list.size() != 0) {
-					friendValidationPassthrough(sendUsername,
-							list.get(list.size() - 1).getString("clientID"));
+					friendValidationPassthrough(sendUsername, receiveUser, list
+							.get(list.size() - 1).getString("installationId"));
+				}
+			}
+		});
+	}
+
+	private void friendValidationPassthrough(final String sendUsername,
+			final String receiveUser, String receiveUserID) {
+
+		AVPush push = new AVPush();
+		// 设置频道
+		push.setChannel("public");
+		// 设置消息
+		push.setMessage(sendUsername + "已添加你为好友");
+		// 设置查询条件
+		push.setQuery(AVInstallation.getQuery().whereEqualTo("installationId",
+				receiveUserID));
+		// 推送
+		push.sendInBackground(new SendCallback() {
+			@Override
+			public void done(AVException e) {
+				Toast toast = null;
+				if (e == null) {
+					toast = Toast.makeText(FriendInformationAddActivity.this,
+							"发送成功", Toast.LENGTH_SHORT);
+					findFriendObjId(receiveUser, sendUsername);
+				} else {
+					toast = Toast.makeText(FriendInformationAddActivity.this,
+							"发送失败，请检查网络", Toast.LENGTH_SHORT);
+				}
+				// callback 运行在 UI 线程。
+				toast.show();
+			}
+		});
+	}
+
+	private void findFriendObjId(final String receiveUser,
+			final String sendUsername) {
+		AVQuery<AVObject> queryFriend = new AVQuery<AVObject>("Gender");
+		queryFriend.whereEqualTo("username", receiveUser);
+		queryFriend.findInBackground(new FindCallback<AVObject>() {
+
+			@Override
+			public void done(List<AVObject> list, AVException arg1) {
+				if (list != null && list.size() != 0) {
+					findFriendAvaterUrl(receiveUser, sendUsername,
+							list.get(list.size() - 1).getObjectId(), 1);
 				}
 			}
 		});
 
-		/**
-		 * 通知栏消息
-		 */
-		// !!!!!!注意：以下为个推服务端API1.0接口，仅供测试。不推荐在现网系统使用1.0版服务端接口，请参考最新的个推服务端API接口文档，使用最新的2.0版接口
-		// Map<String, Object> param = new HashMap<String, Object>();
-		// param.put("action", "pushSpecifyMessage"); //
-		// pushSpecifyMessage为接口名，注意大小写
-		// /*---以下代码用于设定接口相应参数---*/
-		// param.put("appkey", appkey);
-		// param.put("type", 2); // 推送类型： 2为消息
-		// param.put("pushTitle", "通知栏测试"); // pushTitle请填写您的应用名称
-		//
-		// // 推送消息类型，有TransmissionMsg、LinkMsg、NotifyMsg三种，此处以LinkMsg举例
-		// param.put("pushType", "LinkMsg");
-		//
-		// param.put("offline", true); // 是否进入离线消息
-		//
-		// param.put("offlineTime", 72); // 消息离线保留时间
-		// param.put("priority", 1); // 推送任务优先级
-		//
-		// List<String> cidList = new ArrayList<String>();
-		// cidList.add(PushManager.getInstance().getClientid(this)); //
-		// 您获取的ClientID
-		// param.put("tokenMD5List", cidList);
-		//
-		// // 生成Sign值，用于鉴权，需要MasterSecret，请务必填写
-		// param.put("sign", GetuiSdkHttpPost.makeSign(MASTERSECRET, param));
-		//
-		// // LinkMsg消息实体
-		// Map<String, Object> linkMsg = new HashMap<String, Object>();
-		// linkMsg.put("linkMsgIcon", "push.png"); // 消息在通知栏的图标
-		// linkMsg.put("linkMsgTitle", "通知栏测试"); // 推送消息的标题
-		// linkMsg.put("linkMsgContent", "您收到一条测试消息，点击访问www.igetui.com！"); //
-		// 推送消息的内容
-		// linkMsg.put("linkMsgUrl", "http://www.igetui.com/"); // 点击通知跳转的目标网页
-		// param.put("msg", linkMsg);
-		//
-		// GetuiSdkHttpPost.httpPost(param);
+		AVQuery<AVObject> queryCurrentUser = new AVQuery<AVObject>("Gender");
+		queryCurrentUser.whereEqualTo("username", sendUsername);
+		queryCurrentUser.findInBackground(new FindCallback<AVObject>() {
+
+			@Override
+			public void done(List<AVObject> list, AVException arg1) {
+				if (list != null && list.size() != 0) {
+					findFriendAvaterUrl(receiveUser, sendUsername,
+							list.get(list.size() - 1).getObjectId(), 2);
+				}
+			}
+		});
 	}
 
-	private void friendValidationPassthrough(String sendUsername,
-			String clientID) {
-		/**
-		 * 透传消息
-		 */
-		// !!!!!!注意：以下为个推服务端API1.0接口，仅供测试。不推荐在现网系统使用1.0版服务端接口，请参考最新的个推服务端API接口文档，使用最新的2.0版接口
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("action", "pushmessage"); // pushmessage为接口名，注意全部小写
-		/*---以下代码用于设定接口相应参数---*/
-		param.put("appkey", appkey);
-		param.put("appid", appid);
-		// 注：透传内容后面需用来验证接口调用是否成功，假定填写为hello girl~
-		param.put("data", sendUsername);
+	private void findFriendAvaterUrl(final String receiveUser,
+			final String sendUsername, final String objId, final int id) {
 
-		curDate = new Date(System.currentTimeMillis());
-		param.put("time", formatter.format(curDate)); // 当前请求时间，可选
-		param.put("clientid", clientID); // 推送验证消息给clientID的好友
-		// 红米1c6850e1f444df6faf7d34d23a2b8216
+		new Thread(new Runnable() {
 
-		param.put("expire", 3600); // 消息超时时间，单位为秒，可选
+			@SuppressLint("SimpleDateFormat")
+			@Override
+			public void run() {
 
-		// 生成Sign值，用于鉴权
-		param.put("sign", GetuiSdkHttpPost.makeSign(MASTERSECRET, param));
+				// 取得发送时间
+				Date date = new Date();
+				SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+				String sendTime = format.format(date);
 
-		GetuiSdkHttpPost.httpPost(param);
+				AVQuery<AVObject> query = new AVQuery<AVObject>("Gender");
+				AVObject avObj = null;
+				try {
+					avObj = query.get(objId);
+				} catch (AVException e) {
+					e.printStackTrace();
+				}
+				// Retrieving the file
+				switch (id) {
+				case 1:
+					AVFile imageFileFriend = (AVFile) avObj.get("gender");
+					String avaterUrlFriend = imageFileFriend.getThumbnailUrl(
+							false, 150, 150);
+					// 保存消息
+					AVService.messageList(receiveUser, avaterUrlFriend,
+							sendUsername, sendTime, receiveUser + "已添加您为好友");
+					// 保存好友通讯录
+					AVService.addressList(receiveUser, sendUsername,
+							avaterUrlFriend, sendTime);
+					break;
 
-		Intent intentMain = new Intent(FriendInformationAddActivity.this,
-				MainActivity.class);
-		startActivity(intentMain);
-		FriendInformationAddActivity.this.finish();
+				case 2:
+					AVFile imageFileCurrent = (AVFile) avObj.get("gender");
+					String avaterUrlCurrent = imageFileCurrent.getThumbnailUrl(
+							false, 150, 150);
+					AVService.messageList(sendUsername, avaterUrlCurrent,
+							receiveUser, sendTime, sendUsername + "已添加您为好友");
+					AVService.addressList(sendUsername, receiveUser,
+							avaterUrlCurrent, sendTime);
+					break;
+				}
+
+			}
+
+		}).start();
 	}
 
 	@Override

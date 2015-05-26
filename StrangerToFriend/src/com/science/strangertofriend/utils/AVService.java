@@ -1,8 +1,7 @@
 package com.science.strangertofriend.utils;
 
-import java.io.ByteArrayOutputStream;
-
-import android.graphics.Bitmap;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -28,28 +27,23 @@ public class AVService {
 
 	// 注册
 	public static void signUp(String username, String password, String email,
-			String gender, SignUpCallback signUpCallback) {
+			String gender, String installationId, SignUpCallback signUpCallback) {
+
 		AVUser user = new AVUser();
 		user.setUsername(username);
 		user.setPassword(password);
 		user.setEmail(email);
 		user.put("gender", gender);
+		user.put("installationId", installationId);
 		user.signUpInBackground(signUpCallback);
 	}
 
-	// 个推ClientID
-	public static void saveClientID(String username, String clientID) {
-		AVObject avObject = new AVObject("ClientID");
-		avObject.put("username", username);
-		avObject.put("clientID", clientID);
-		avObject.saveInBackground();
-	}
-
 	// 消息列表
-	public static void messageList(String friend, String currentUser,
-			String sendTime, String messsage) {
+	public static void messageList(String friend, String urlAvater,
+			String currentUser, String sendTime, String messsage) {
 		AVObject avObject = new AVObject("MessageList");
 		avObject.put("friend", friend);
+		avObject.put("urlAvater", urlAvater);
 		avObject.put("currentUser", currentUser);
 		avObject.put("sendTime", sendTime);
 		avObject.put("messsage", messsage);
@@ -86,10 +80,11 @@ public class AVService {
 
 	// 好友通讯录列表
 	public static void addressList(String friend, String currentUser,
-			String sendTime) {
+			String avaterUrl, String sendTime) {
 		AVObject avObject = new AVObject("AddressList");
 		avObject.put("friends", friend);
 		avObject.put("currentUser", currentUser);
+		avObject.put("avaterUrl", avaterUrl);
 		avObject.put("sendTime", sendTime);
 		avObject.saveInBackground();
 	}
@@ -113,42 +108,37 @@ public class AVService {
 
 	// 上传图片或头像
 	public static void uploadImage(String usernameString, String emailString,
-			Bitmap genderPhoto) {
+			String urlpath) {
 
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		genderPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-		byte[] data = stream.toByteArray();
-		AVFile imageFile = new AVFile("gender", data);
+		AVFile imageFile = null;
 		try {
-			imageFile.save();
-		} catch (AVException e) {
+			imageFile = AVFile.withAbsoluteLocalPath(usernameString
+					+ "_avater.jpg", urlpath);
+			try {
+				imageFile.save();
+			} catch (AVException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// Associate image with AVOS Cloud object
 		AVObject po = new AVObject("Gender");
 		po.put("username", usernameString);
 		po.put("email", emailString);
 		po.put("gender", imageFile);
 		po.saveInBackground();
-	}
-
-	public static void uploadSmallAvater(String usernameString,
-			Bitmap genderPhoto) {
-
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		genderPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-		byte[] data = stream.toByteArray();
-		AVFile imageFile = new AVFile("smallgender", data);
-		try {
-			imageFile.save();
-		} catch (AVException e) {
-			e.printStackTrace();
-		}
+		// ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		// genderPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+		// byte[] data = stream.toByteArray();
+		// AVFile imageFile = new AVFile("gender", data);
+		// try {
+		// imageFile.save();
+		// } catch (AVException e) {
+		// e.printStackTrace();
+		// }
 		// Associate image with AVOS Cloud object
-		AVObject avo = new AVObject("SmallGender");
-		avo.put("username", usernameString);
-		avo.put("smallgender", imageFile);
-		avo.saveInBackground();
 	}
 
 	public static void myLocation(String userObjectId, String username,

@@ -5,13 +5,15 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.science.strangertofriend.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -57,8 +59,15 @@ public class MessageListAdapter extends BaseAdapter {
 				"frienRequest"));// 信息“请求加为好友"
 		viewHolder.time.setText((String) mMessageList.get(position).get(
 				"requestTime"));// 获取消息的接收时间
-		viewHolder.avater.setImageDrawable((Drawable) mMessageList
-				.get(position).get("friendGender"));// 获取用户头像
+
+		DisplayImageOptions options = new DisplayImageOptions.Builder()
+				.showStubImage(R.drawable.default_load)
+				.showImageForEmptyUri(R.drawable.default_load)
+				.showImageOnFail(R.drawable.default_load).cacheInMemory(true)
+				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
+		ImageLoader.getInstance().displayImage(
+				(String) mMessageList.get(position).get("urlAvater"),
+				viewHolder.avater, options);
 
 		return convertView;
 	}

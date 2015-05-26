@@ -10,14 +10,18 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVAnalytics;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.PushService;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.controller.ChatManagerAdapter;
 import com.avoscloud.leanchatlib.model.UserInfo;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.science.strangertofriend.MainActivity;
+import com.science.strangertofriend.ui.ChatRoomActivity;
 
 /**
  * @description 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -36,6 +40,10 @@ public class AppContext extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		// ImageLoader图片缓存
+		initImageLoader(getApplicationContext());
+
 		// U need your AVOS key and so on to run the code.
 		AVOSCloud.initialize(getApplicationContext(),
 				"naxbv0f9j653brj453n6yzcvlwx44oeuuw1uve2bvzipd3gu",
@@ -65,12 +73,23 @@ public class AppContext extends Application {
 			@Override
 			public void shouldShowNotification(Context context, String selfId,
 					AVIMConversation conversation, AVIMTypedMessage message) {
-				Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(context, "您收到一条消息，请查收！", Toast.LENGTH_LONG)
+						.show();
 			}
 		});
 
-		initImageLoader(this);
+		/**
+		 * 消息透传
+		 */
+		// 设置默认打开的 Activity
+		PushService.setDefaultPushCallback(getApplicationContext(),
+				MainActivity.class);
+		// 订阅频道，当该频道消息到来的时候，打开对应的 Activity
+		PushService.subscribe(getApplicationContext(), "public",
+				MainActivity.class);
+		PushService.subscribe(getApplicationContext(), "private",
+				ChatRoomActivity.class);
+
 	}
 
 	/**
@@ -84,14 +103,23 @@ public class AppContext extends Application {
 		return ni != null && ni.isConnectedOrConnecting();
 	}
 
+	/** 初始化图片加载类配置信息 **/
+	@SuppressWarnings("deprecation")
 	public static void initImageLoader(Context context) {
+
+		// This configuration tuning is custom. You can tune every option, you
+		// may tune some of them,
+		// or you can create default configuration by
+		// ImageLoaderConfiguration.createDefault(this);
+		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-				context).threadPoolSize(3)
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-				// .memoryCache(new WeakMemoryCache())
-				.denyCacheImageMultipleSizesInMemory()
-				.tasksProcessingOrder(QueueProcessingType.LIFO).build();
+				context).threadPriority(Thread.NORM_PRIORITY - 2)// 加载图片的线程数
+				.denyCacheImageMultipleSizesInMemory() // 解码图像的大尺寸将在内存中缓存先前解码图像的小尺寸。
+				.diskCacheFileNameGenerator(new Md5FileNameGenerator())// 设置磁盘缓存文件名称
+				.tasksProcessingOrder(QueueProcessingType.LIFO)// 设置加载显示图片队列进程
+				.writeDebugLogs() // Remove for release app
+				.build();
+		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
 	}
-
 }

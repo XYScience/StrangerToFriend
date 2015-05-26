@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -182,7 +183,9 @@ public class LoginActivity extends BaseActivity {
 							mMyDialog.successDialog("µÇÂ½³É¹¦!");
 							Intent mainIntent = new Intent(LoginActivity.this,
 									MainActivity.class);
-							mainIntent.putExtra("avater", bitmap);
+							mainIntent.putExtra("avater",
+									((BitmapDrawable) mCameraAvatar
+											.getDrawable()).getBitmap());
 							startActivity(mainIntent);
 							LoginActivity.this.finish();
 						} else {
