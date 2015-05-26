@@ -55,6 +55,7 @@ public class PuzzleActivity extends ActionBarActivity implements
 		OnMenuItemClickListener {
 
 	private static final String IMAGE_FILE_NAME = "puzzle_game.jpg";// 头像文件名称
+	private static final int REQUESTCODE_PICK = 0; // 相册选图标记
 	private static final int REQUESTCODE_TAKE = 1; // 相机拍照标记
 	private static final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
 
@@ -148,7 +149,7 @@ public class PuzzleActivity extends ActionBarActivity implements
 		MenuObject current = new MenuObject("当前原图");
 		current.setResource(R.drawable.game_current);
 
-		MenuObject potho = new MenuObject("拍照来源");
+		MenuObject potho = new MenuObject("图片来源");
 		potho.setResource(R.drawable.game_potho);
 
 		MenuObject about = new MenuObject("关于游戏");
@@ -355,7 +356,7 @@ public class PuzzleActivity extends ActionBarActivity implements
 			break;
 
 		case 2:
-			showCamera();
+			showPictureFrom();
 			break;
 
 		case 3:
@@ -401,6 +402,37 @@ public class PuzzleActivity extends ActionBarActivity implements
 				.setCustomImage(R.drawable.game_about_dialog).show();
 	}
 
+	private void showPictureFrom() {
+		new SweetAlertDialog(PuzzleActivity.this, SweetAlertDialog.WARNING_TYPE)
+				.setTitleText("请选择图片来源")
+				.setCancelText("图库")
+				.setConfirmText("拍照")
+				.showCancelButton(true)
+				.setCancelClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								sDialog.dismiss();
+								showGallery();
+							}
+						})
+				.setConfirmClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(final SweetAlertDialog sDialog) {
+								sDialog.dismiss();
+								showCamera();
+							}
+						}).show();
+	}
+
+	private void showGallery() {
+		Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+		pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+				"image/*");
+		startActivityForResult(pickIntent, REQUESTCODE_PICK);
+	}
+
 	private void showCamera() {
 		// 执行拍照前，应该先判断SD卡是否存在
 		String SDState = Environment.getExternalStorageState();
@@ -424,11 +456,20 @@ public class PuzzleActivity extends ActionBarActivity implements
 
 		switch (requestCode) {
 
+		case REQUESTCODE_PICK:
+			try {
+				startPhotoZoom(data.getData());
+			} catch (NullPointerException e) {
+				e.printStackTrace();// 用户点击取消操作
+			}
+			break;
+
 		case REQUESTCODE_TAKE:// 调用相机拍照
 			File temp = new File(Environment.getExternalStorageDirectory()
 					+ "/" + IMAGE_FILE_NAME);
 			startPhotoZoom(Uri.fromFile(temp));
 			break;
+
 		case REQUESTCODE_CUTTING:// 取得裁剪后的图片
 			if (data != null) {
 				setPicToView(data);

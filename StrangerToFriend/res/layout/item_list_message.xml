@@ -32,6 +32,7 @@
         android:layout_alignBottom="@id/item_avater"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/item_avater"
+        android:singleLine="true"
         android:textColor="#808080"
         android:textSize="15sp" />
 
