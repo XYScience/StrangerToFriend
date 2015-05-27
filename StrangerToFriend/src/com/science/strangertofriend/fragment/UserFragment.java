@@ -4,9 +4,12 @@ import java.util.List;
 
 import yalantis.com.sidemenu.interfaces.ScreenShotable;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -16,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +41,8 @@ import com.science.strangertofriend.ui.LoginActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * @description 用户信息
  * 
@@ -54,7 +60,7 @@ public class UserFragment extends Fragment implements ScreenShotable {
 	private ImageView mUserBackgroundImg;
 	private View mRootView;
 
-	private ImageView mAvatar;
+	private CircleImageView mAvatar;
 	private TextView mUsername;
 	private ImageView mGender;
 	private TextView mMyStatement;
@@ -96,7 +102,7 @@ public class UserFragment extends Fragment implements ScreenShotable {
 		DampView view = (DampView) mRootView.findViewById(R.id.dampview);
 		view.setImageView(mUserBackgroundImg);
 
-		mAvatar = (ImageView) mRootView.findViewById(R.id.avatar);
+		mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
 		mUsername = (TextView) mRootView.findViewById(R.id.username);
 		mGender = (ImageView) mRootView.findViewById(R.id.gender);
 		mMyStatement = (TextView) mRootView.findViewById(R.id.my_sign);
@@ -282,6 +288,45 @@ public class UserFragment extends Fragment implements ScreenShotable {
 	}
 
 	private void initListener() {
+
+		mAvatar.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						getActivity());
+				builder.setIcon(R.drawable.game_about_dialog);
+				builder.setTitle("请选择当前心情");
+				// 指定下拉列表的显示数据
+				final String[] mood = { "红——活力 希望", "蓝——宁静 天空", "紫——优雅 玫瑰",
+						"黑——静寂 悲哀" };
+				// 设置一个下拉的列表选择项
+				builder.setItems(mood, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						switch (which) {
+						case 0:
+							mAvatar.setBorderColor(Color.RED);
+							break;
+
+						case 1:
+							mAvatar.setBorderColor(Color.BLUE);
+							break;
+
+						case 2:
+							mAvatar.setBorderColor(Color.argb(255, 255, 0, 255));
+							break;
+
+						case 3:
+							mAvatar.setBorderColor(Color.BLACK);
+							break;
+						}
+					}
+				});
+				builder.show();
+				return true;
+			}
+		});
 
 		mAlterPic.setOnClickListener(new OnClickListener() {
 

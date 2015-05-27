@@ -149,6 +149,7 @@
                     </TableRow>
                 </TableLayout>
             </LinearLayout>
+
             <!-- 消息提醒 -->
 
             <LinearLayout
@@ -193,7 +194,8 @@
                     </TableRow>
                 </TableLayout>
             </LinearLayout>
-            <!-- 黑名单 -->
+
+            <!-- 清除缓存 -->
 
             <LinearLayout
                 android:layout_width="match_parent"

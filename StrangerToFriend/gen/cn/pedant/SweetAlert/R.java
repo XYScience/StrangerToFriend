@@ -59,16 +59,16 @@ public final class R {
 		public static final int progress_circle_radius = 0x7f080046;
 	}
 	public static final class drawable {
-		public static final int blue_button_background = 0x7f020046;
-		public static final int dialog_background = 0x7f020099;
-		public static final int error_center_x = 0x7f0200db;
-		public static final int error_circle = 0x7f0200dc;
-		public static final int gray_button_background = 0x7f0200e9;
-		public static final int red_button_background = 0x7f02011f;
-		public static final int success_bow = 0x7f020131;
-		public static final int success_circle = 0x7f020132;
-		public static final int warning_circle = 0x7f02013b;
-		public static final int warning_sigh = 0x7f02013c;
+		public static final int blue_button_background = 0x7f02004b;
+		public static final int dialog_background = 0x7f02009e;
+		public static final int error_center_x = 0x7f0200e0;
+		public static final int error_circle = 0x7f0200e1;
+		public static final int gray_button_background = 0x7f0200ee;
+		public static final int red_button_background = 0x7f020124;
+		public static final int success_bow = 0x7f020136;
+		public static final int success_circle = 0x7f020137;
+		public static final int warning_circle = 0x7f020140;
+		public static final int warning_sigh = 0x7f020141;
 	}
 	public static final class id {
 		public static final int cancel_button = 0x7f0a0067;

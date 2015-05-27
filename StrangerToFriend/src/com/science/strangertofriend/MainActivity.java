@@ -40,6 +40,7 @@ import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVAnalytics;
+import com.avos.avoscloud.feedback.FeedbackAgent;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.materialmenu.DrawerArrowDrawable;
 import com.science.strangertofriend.fragment.AddressListFragment;
@@ -99,6 +100,10 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// avos用户反馈系统,在用户打开App时，通知用户新的反馈回复
+		FeedbackAgent agent = new FeedbackAgent(MainActivity.this);
+		agent.sync();
 
 		// 跟踪统计应用的打开情况
 		AVAnalytics.trackAppOpened(getIntent());

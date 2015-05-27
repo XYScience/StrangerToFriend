@@ -30,13 +30,6 @@
     <!-- 个推SDK权限配置开始 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-    <!-- <uses-permission android:name="getui.permission.GetuiService.第三方包名" /> -->
-    <uses-permission android:name="getui.permission.GetuiService.com.science.strangertofriend" />
-
-    <permission
-        android:name="getui.permission.GetuiService.com.science.strangertofriend"
-        android:protectionLevel="normal" >
-    </permission>
     <!-- 个推SDK权限配置结束 -->
 
 
@@ -96,6 +89,8 @@
         <activity android:name="com.science.strangertofriend.ui.SettingActivity" >
         </activity>
         <activity android:name="com.science.strangertofriend.ui.UserDealActivity" >
+        </activity>
+        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity" >
         </activity>
 
         <!-- 百度地图定位开始 -->

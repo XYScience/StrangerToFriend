@@ -13,6 +13,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.avos.avoscloud.feedback.FeedbackAgent;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.strangertofriend.R;
@@ -76,7 +77,18 @@ public class SettingActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-
+				new SweetAlertDialog(SettingActivity.this,
+						SweetAlertDialog.WARNING_TYPE)
+						.setTitleText("账号安全")
+						.setContentText("账号安全功能攻城狮正在总攻中..")
+						.setConfirmText("ok")
+						.setConfirmClickListener(
+								new SweetAlertDialog.OnSweetClickListener() {
+									@Override
+									public void onClick(SweetAlertDialog sDialog) {
+										sDialog.dismiss();
+									}
+								}).show();
 			}
 
 		});
@@ -84,7 +96,18 @@ public class SettingActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-
+				new SweetAlertDialog(SettingActivity.this,
+						SweetAlertDialog.WARNING_TYPE)
+						.setTitleText("账号绑定")
+						.setContentText("账号绑定功能攻城狮正在总攻中..")
+						.setConfirmText("ok")
+						.setConfirmClickListener(
+								new SweetAlertDialog.OnSweetClickListener() {
+									@Override
+									public void onClick(SweetAlertDialog sDialog) {
+										sDialog.dismiss();
+									}
+								}).show();
 			}
 
 		});
@@ -141,6 +164,9 @@ public class SettingActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
+				// avos用户反馈系统
+				FeedbackAgent agent = new FeedbackAgent(SettingActivity.this);
+				agent.startDefaultThreadActivity();
 			}
 
 		});
