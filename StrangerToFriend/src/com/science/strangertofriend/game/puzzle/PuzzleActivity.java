@@ -290,7 +290,11 @@ public class PuzzleActivity extends ActionBarActivity implements
 				intent.putExtra("sendUsername",
 						getIntent().getStringExtra("sendUsername")); // 发送验证的(当前用户)
 				intent.putExtra("distance",
-						getIntent().getIntExtra("distance", 0));
+						getIntent().getStringExtra("distance"));
+				intent.putExtra("email", getIntent().getStringExtra("email"));
+				intent.putExtra("gender", getIntent().getStringExtra("gender"));
+				intent.putExtra("locationTime",
+						getIntent().getStringExtra("locationTime"));
 
 				startActivity(intent);
 				PuzzleActivity.this.finish();

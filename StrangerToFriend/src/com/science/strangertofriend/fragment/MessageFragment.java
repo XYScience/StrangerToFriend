@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ImageView;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
@@ -64,6 +65,7 @@ import com.science.strangertofriend.utils.AVService;
 public class MessageFragment extends Fragment implements ScreenShotable,
 		OnRefreshListener {
 
+	private ImageView mChatNofriend;
 	private View mContainerView;
 	private Bitmap mBitmap;
 	private View mRootView;
@@ -100,6 +102,8 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	@SuppressLint("ResourceAsColor")
 	private void initView() {
 
+		mChatNofriend = (ImageView) mRootView.findViewById(R.id.chat_nofriend);
+
 		// 刷新初始化
 		mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView
 				.findViewById(R.id.swipe_container);
@@ -114,7 +118,9 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				.findViewById(R.id.message_listView);
 		mRequestList = new ArrayList<Map<String, Object>>();
 
-		mCurrentUsername = AVUser.getCurrentUser().getUsername();
+		if (AVUser.getCurrentUser() != null) {
+			mCurrentUsername = AVUser.getCurrentUser().getUsername();
+		}
 	}
 
 	private void initData() {
@@ -135,11 +141,13 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 
 		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
 		query.whereEqualTo("currentUser", mCurrentUsername);
+		query.orderByDescending("updatedAt");// 按照时间降序
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
 			public void done(List<AVObject> list, AVException e) {
 				if (list != null && list.size() != 0) {
+					mChatNofriend.setVisibility(View.GONE);
 					mRequestList.clear();
 					for (AVObject avo : list) {
 
@@ -156,6 +164,9 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 				} else {
 					mRequestList.clear();
 					mMessageListAdapter.notifyDataSetChanged();
+					mChatNofriend.setVisibility(View.VISIBLE);
+					mChatNofriend.setImageDrawable(getResources().getDrawable(
+							R.drawable.chat_nofriend));
 				}
 			}
 		});
@@ -340,7 +351,7 @@ public class MessageFragment extends Fragment implements ScreenShotable,
 	 * @param position
 	 */
 	private void findMessageListFriend(final String message, final int position) {
-
+		mChatNofriend.setVisibility(View.GONE);
 		AVQuery<AVObject> query = new AVQuery<AVObject>("MessageList");
 		query.whereEqualTo("currentUser", mCurrentUsername);
 		query.whereEqualTo("friend", mRequestList.get(position).get("friend")

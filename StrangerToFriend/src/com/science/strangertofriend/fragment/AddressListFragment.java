@@ -372,7 +372,7 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 	// 删除消息item
 	private void reomveAddressItem(String friendName) {
 		AVQuery<AVObject> query = new AVQuery<AVObject>("AddressList");
-		query.whereEqualTo("friends", friendName);
+		query.whereEqualTo("friend", friendName);
 		query.findInBackground(new FindCallback<AVObject>() {
 
 			@Override
@@ -399,6 +399,10 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 				FriendInformationActivity.class);
 		intent.putExtra("username",
 				((SortModel) adapter.getItem(position)).getName());
+		intent.putExtra("email",
+				((SortModel) adapter.getItem(position)).getEmail());
+		intent.putExtra("gender",
+				((SortModel) adapter.getItem(position)).getGender());
 
 		startActivity(intent);
 	}
@@ -585,10 +589,9 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 			/*
 			 * 通讯录列表好友名字
 			 */
-			sortModel.setName(avo.getString("friends"));
+			sortModel.setName(avo.getString("friend"));
 			// 汉字转换成拼音
-			String pinyin = characterParser
-					.getSelling(avo.getString("friends"));
+			String pinyin = characterParser.getSelling(avo.getString("friend"));
 			String sortString = pinyin.substring(0, 1).toUpperCase();
 
 			// 正则表达式，判断首字母是否是英文字母
@@ -599,9 +602,17 @@ public class AddressListFragment extends Fragment implements ScreenShotable,
 			}
 
 			/*
-			 * 通讯录列表好友头像
+			 * 好友头像
 			 */
-			sortModel.setAvaterUrl(avo.getString("avaterUrl"));
+			sortModel.setAvaterUrl(avo.getString("friendAvaterUrl"));
+			/*
+			 * 好友Email
+			 */
+			sortModel.setEmail(avo.getString("friendEmail"));
+			/*
+			 * 好友性别
+			 */
+			sortModel.setGender(avo.getString("friendGender"));
 
 			mSortList.add(sortModel);
 		}

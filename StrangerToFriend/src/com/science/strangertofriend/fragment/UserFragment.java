@@ -20,13 +20,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.ui.AlterActivity;
 import com.science.strangertofriend.ui.LoginActivity;
@@ -111,10 +115,13 @@ public class UserFragment extends Fragment implements ScreenShotable {
 
 	private void initData() {
 
-		mAvatar.setImageBitmap((Bitmap) getActivity().getIntent()
-				.getParcelableExtra("avater"));
 		mUsername.setText(AVUser.getCurrentUser().getUsername().toString());
 		mUserAcount.setText(AVUser.getCurrentUser().getEmail().toString());
+
+		AVQuery<AVObject> queryGender = new AVQuery<AVObject>("Gender");
+		queryGender.whereEqualTo("username", AVUser.getCurrentUser()
+				.getUsername().toString());
+		queryGender.findInBackground(findGenderCallback());
 
 		switch (AVUser.getCurrentUser().get("gender").toString()) {
 		case "男":
@@ -144,7 +151,106 @@ public class UserFragment extends Fragment implements ScreenShotable {
 			}
 		});
 
+		AVQuery<AVObject> queryLocation = new AVQuery<AVObject>("MyLocation");
+		queryLocation.whereEqualTo("username", mUsername.getText().toString());
+		queryLocation.orderByDescending("updatedAt");// 按照时间降序
+		queryLocation.setLimit(1);// 最大1个
+		queryLocation.findInBackground(new FindCallback<AVObject>() {
+			public void done(List<AVObject> avObjects, AVException e) {
+				if (e == null) {
+					mUserPosition.setText(avObjects.get(0)
+							.getString("location"));
+				} else {
+					// Toast.makeText(AlterActivity.this, "请检查网络！",
+					// Toast.LENGTH_LONG).show();
+					mUserPosition.setText("未定位");
+				}
+			}
+		});
+
 	}
+
+	// 查找回调
+	public FindCallback<AVObject> findGenderCallback() {
+
+		FindCallback<AVObject> findCallback = new FindCallback<AVObject>() {
+			public void done(List<AVObject> avObjects, AVException e) {
+				if (e == null) {
+					Message msg = new Message();
+					msg.what = 1;
+					msg.obj = avObjects;
+					mUsernameHandler.sendMessage(msg);
+				} else {
+					Toast.makeText(getActivity(), "请检查网络！", Toast.LENGTH_LONG)
+							.show();
+				}
+			}
+		};
+		return findCallback;
+	}
+
+	@SuppressLint("HandlerLeak")
+	private Handler mUsernameHandler = new Handler() {
+		@SuppressWarnings("unchecked")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				List<AVObject> responseList = (List<AVObject>) msg.obj;
+				if (responseList != null && responseList.size() != 0) {
+					String objectId = responseList.get(responseList.size() - 1)
+							.getObjectId();
+					byteToDrawable(objectId);
+				}
+				break;
+			}
+		}
+	};
+
+	public void byteToDrawable(final String objectId) {
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				AVQuery<AVObject> query = new AVQuery<AVObject>("Gender");
+				AVObject gender = null;
+				try {
+					gender = query.get(objectId);
+				} catch (AVException e) {
+					e.printStackTrace();
+				}
+				// Retrieving the file
+				AVFile imageFile = (AVFile) gender.get("avater");
+
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = imageFile.getUrl();
+				mHandlerLoad.sendMessage(msg);
+			}
+
+		}).start();
+	}
+
+	// 子线程Handler刷新UI界面
+	@SuppressLint("HandlerLeak")
+	private Handler mHandlerLoad = new Handler() {
+
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				@SuppressWarnings("deprecation")
+				DisplayImageOptions options = new DisplayImageOptions.Builder()
+						.showStubImage(R.drawable.default_load)
+						.showImageForEmptyUri(R.drawable.default_load)
+						.showImageOnFail(R.drawable.default_load)
+						.cacheInMemory(true).cacheOnDisc(true)
+						.bitmapConfig(Bitmap.Config.RGB_565).build();
+				ImageLoader.getInstance().displayImage((String) msg.obj,
+						mAvatar, options);
+			}
+		};
+	};
 
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {

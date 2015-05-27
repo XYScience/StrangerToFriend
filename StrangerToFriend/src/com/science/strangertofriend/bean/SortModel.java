@@ -12,9 +12,11 @@ package com.science.strangertofriend.bean;
 
 public class SortModel {
 
-	private String name;// 显示的数据
+	private String name;// 好友用户名
 	private String sortLetters;// 显示数据拼音的首字母
-	private String avaterUrl;// 头像URL
+	private String avaterUrl;// 好友头像URL
+	private String email;// 好友Email
+	private String gender;// 好友性别
 
 	public String getName() {
 		return name;
@@ -38,6 +40,22 @@ public class SortModel {
 
 	public void setAvaterUrl(String avaterUrl) {
 		this.avaterUrl = avaterUrl;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 }

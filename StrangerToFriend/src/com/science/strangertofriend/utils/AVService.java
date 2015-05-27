@@ -80,11 +80,13 @@ public class AVService {
 
 	// 好友通讯录列表
 	public static void addressList(String friend, String currentUser,
-			String avaterUrl, String sendTime) {
+			String avaterUrl, String email, String gender, String sendTime) {
 		AVObject avObject = new AVObject("AddressList");
-		avObject.put("friends", friend);
 		avObject.put("currentUser", currentUser);
-		avObject.put("avaterUrl", avaterUrl);
+		avObject.put("friend", friend);
+		avObject.put("friendAvaterUrl", avaterUrl);
+		avObject.put("friendEmail", email);
+		avObject.put("friendGender", gender);
 		avObject.put("sendTime", sendTime);
 		avObject.saveInBackground();
 	}
@@ -108,7 +110,7 @@ public class AVService {
 
 	// 上传图片或头像
 	public static void uploadImage(String usernameString, String emailString,
-			String urlpath) {
+			String urlpath, String gender) {
 
 		AVFile imageFile = null;
 		try {
@@ -127,7 +129,8 @@ public class AVService {
 		AVObject po = new AVObject("Gender");
 		po.put("username", usernameString);
 		po.put("email", emailString);
-		po.put("gender", imageFile);
+		po.put("avater", imageFile);
+		po.put("gender", gender);
 		po.saveInBackground();
 		// ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		// genderPhoto.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -141,15 +144,16 @@ public class AVService {
 		// Associate image with AVOS Cloud object
 	}
 
-	public static void myLocation(String userObjectId, String username,
-			String gender, double latitude, double longititude) {
+	public static void myLocation(String userEmail, String username,
+			String gender, double latitude, double longititude, String location) {
 
 		AVGeoPoint point = new AVGeoPoint(latitude, longititude);
 		AVObject myPlace = new AVObject("MyLocation");
-		myPlace.put("location", point);
-		myPlace.put("userObjectId", userObjectId);
+		myPlace.put("locationPoint", point);
+		myPlace.put("userEmail", userEmail);
 		myPlace.put("username", username);
 		myPlace.put("gender", gender);
+		myPlace.put("location", location);
 		myPlace.saveInBackground();
 
 		// AVObject myLocation = new AVObject("MyLocation");

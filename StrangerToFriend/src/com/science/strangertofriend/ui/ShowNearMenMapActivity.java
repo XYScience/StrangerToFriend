@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -44,12 +46,12 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.utils.DistanceUtil;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.bean.LocationMenList;
 import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.utils.AppContext;
+import com.science.strangertofriend.utils.Utils;
 
 /**
  * @description 地图显示附近的人
@@ -67,7 +69,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 	private BaiduMap mBaiduMap;
 
 	private Context context;
-	private String mUserObjectId, mUsername, mGender;
+	private String mUserEmail, mUsername, mGender;
 
 	// 定位相关
 	private LocationClient mLocationClient;
@@ -123,7 +125,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 		AVUser currentUser = AVUser.getCurrentUser();
 		if (currentUser != null) {
-			mUserObjectId = currentUser.getObjectId();
+			mUserEmail = currentUser.getEmail();
 			mUsername = currentUser.getUsername();
 			mGender = currentUser.getString("gender");
 		} else {
@@ -189,8 +191,8 @@ public class ShowNearMenMapActivity extends BaseActivity {
 			if (isFirstIn) {
 
 				if (AppContext.isThisLocation) {
-					AVService.myLocation(mUserObjectId, mUsername, mGender,
-							mLatitude, mLongtitude);
+					AVService.myLocation(mUserEmail, mUsername, mGender,
+							mLatitude, mLongtitude, location.getAddrStr());
 					AppContext.isThisLocation = false;
 				}
 
@@ -217,16 +219,19 @@ public class ShowNearMenMapActivity extends BaseActivity {
 				try {
 					AVQuery<AVObject> query = new AVQuery<>("MyLocation");
 					// 查找附近1000米的人
-					query.whereWithinKilometers("location", mMyPoint, 1);
+					query.whereWithinKilometers("locationPoint", mMyPoint, 1);
 					query.whereNotEqualTo("username", mUsername);
 					List<AVObject> placeList = query.find();
 
 					for (AVObject avo : placeList) {
 						mLocationMenList.add(new LocationMenList(avo
-								.getString("userObjectId"), avo
-								.getString("username"), avo.getAVGeoPoint(
-								"location").getLatitude(), avo.getAVGeoPoint(
-								"location").getLongitude()));
+								.getString("userEmail"), avo
+								.getString("username"),
+								avo.getString("gender"), avo.getAVGeoPoint(
+										"locationPoint").getLatitude(), avo
+										.getAVGeoPoint("locationPoint")
+										.getLongitude(), new PrettyTime()
+										.format(avo.getUpdatedAt())));
 					}
 					mMenListHandler.obtainMessage(1).sendToTarget();
 				} catch (AVException e) {
@@ -284,7 +289,10 @@ public class ShowNearMenMapActivity extends BaseActivity {
 							// 解密游戏
 							decodeGame(menList.getUsername(),
 									menList.getLatitude(),
-									menList.getLongtitude());
+									menList.getLongtitude(),
+									menList.getUserEmail(),
+									menList.getGender(),
+									menList.getLocationTime());
 						}
 					});
 			mBaiduMap.showInfoWindow(infoWindow);
@@ -320,7 +328,10 @@ public class ShowNearMenMapActivity extends BaseActivity {
 								// 解密游戏
 								decodeGame(menList.getUsername(),
 										menList.getLatitude(),
-										menList.getLongtitude());
+										menList.getLongtitude(),
+										menList.getUserEmail(),
+										menList.getGender(),
+										menList.getLocationTime());
 							}
 						});
 				mBaiduMap.showInfoWindow(infoWindow);
@@ -331,14 +342,19 @@ public class ShowNearMenMapActivity extends BaseActivity {
 	}
 
 	private void decodeGame(String receiveUser, double latitude,
-			double longtitude) {
+			double longtitude, String email, String gender, String locationTime) {
 
 		Intent intent = new Intent(context, PuzzleActivity.class);
 		intent.putExtra("receiveUser", receiveUser); // 接收验证的
 		intent.putExtra("sendUsername", mUsername); // 发送验证的(当前用户)
-		int distance = (int) DistanceUtil.getDistance(new LatLng(mLatitude,
-				mLongtitude), new LatLng(latitude, longtitude));
-		intent.putExtra("distance", distance);
+		// int distance = (int) DistanceUtil.getDistance(new LatLng(mLatitude,
+		// mLongtitude), new LatLng(latitude, longtitude));
+		double distance = Utils.DistanceOfTwoPoints(mLatitude, mLongtitude,
+				latitude, longtitude);
+		intent.putExtra("distance", Utils.getPrettyDistance(distance));
+		intent.putExtra("email", email);
+		intent.putExtra("gender", gender);
+		intent.putExtra("locationTime", locationTime);
 		startActivity(intent);
 	}
 

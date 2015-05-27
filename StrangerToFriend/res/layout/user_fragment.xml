@@ -170,7 +170,7 @@
 
                 <!-- 当前位置 -->
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/user_position_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -179,21 +179,26 @@
                     android:layout_marginTop="10dp" >
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
                         android:drawableLeft="@drawable/current_place"
                         android:gravity="center_vertical"
+                        android:singleLine="true"
                         android:text="@string/user_position"
                         android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/user_position"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="right"
                         android:text="@string/user_position_content"
                         android:textSize="18sp" />
-                </RelativeLayout>
+                </LinearLayout>
 
                 <!-- 出生 -->
 
@@ -275,7 +280,7 @@
                         android:text="@string/user_unfill_in"
                         android:textSize="18sp" />
                 </RelativeLayout>
-                
+
                 <!-- 星座 -->
 
                 <RelativeLayout
@@ -302,7 +307,6 @@
                         android:text="@string/user_unfill_in"
                         android:textSize="18sp" />
                 </RelativeLayout>
-                
 
                 <com.science.strangertofriend.widget.RippleView
                     android:id="@+id/rippleView"

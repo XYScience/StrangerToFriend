@@ -47,6 +47,7 @@ import com.science.strangertofriend.fragment.MessageFragment;
 import com.science.strangertofriend.fragment.ShakeFragment;
 import com.science.strangertofriend.fragment.UserFragment;
 import com.science.strangertofriend.ui.AlterActivity;
+import com.science.strangertofriend.ui.SettingActivity;
 import com.science.strangertofriend.utils.AppContext;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
@@ -397,11 +398,13 @@ public class MainActivity extends ActionBarActivity implements
 			break;
 
 		case 1:
+			Intent intentSet = new Intent(this, SettingActivity.class);
+			startActivity(intentSet);
 			break;
 
 		case 2:
-			Intent intent = new Intent(this, AlterActivity.class);
-			startActivityForResult(intent, 1);
+			Intent intentAlter = new Intent(this, AlterActivity.class);
+			startActivityForResult(intentAlter, 1);
 			break;
 
 		case 3:

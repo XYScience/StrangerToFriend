@@ -12,8 +12,8 @@
         android:layout_centerVertical="true"
         android:contentDescription="@null"
         android:src="@drawable/ic_launcher"
-        app:border_color="#808080"
-        app:border_width="2dp" />
+        app:border_color="#fff"
+        app:border_width="0dp" />
 
     <TextView
         android:id="@+id/username"
@@ -22,8 +22,8 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/item_avater"
         android:text="@string/username"
-        android:textColor="#000"
-        android:textSize="22sp" />
+        android:textColor="#3e3e39"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/message"
@@ -34,7 +34,7 @@
         android:layout_toRightOf="@id/item_avater"
         android:singleLine="true"
         android:textColor="#808080"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/time"

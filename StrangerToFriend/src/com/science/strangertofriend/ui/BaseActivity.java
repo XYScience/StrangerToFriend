@@ -154,7 +154,7 @@ public class BaseActivity extends Activity {
 					e.printStackTrace();
 				}
 				// Retrieving the file
-				AVFile imageFile = (AVFile) gender.get("gender");
+				AVFile imageFile = (AVFile) gender.get("avater");
 
 				Message msg = new Message();
 				msg.what = 1;

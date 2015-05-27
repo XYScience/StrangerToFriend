@@ -58,7 +58,7 @@
             android:value="0EDbtjyfixvEuZseysANcMov" />
 
         <activity
-            android:name="com.science.strangertofriend.ui.LoginActivity"
+            android:name="com.science.strangertofriend.ui.WelcomeActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan" >
             <intent-filter>
@@ -67,7 +67,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.science.strangertofriend.guide.GuideActivity" >
+        </activity>
         <activity android:name="com.science.strangertofriend.MainActivity" >
+        </activity>
+        <activity android:name="com.science.strangertofriend.ui.LoginActivity" >
         </activity>
         <activity android:name="com.science.strangertofriend.ui.BaseActivity" >
         </activity>
@@ -89,6 +93,10 @@
         </activity>
         <activity android:name="com.science.strangertofriend.game.puzzle.PuzzleActivity" >
         </activity>
+        <activity android:name="com.science.strangertofriend.ui.SettingActivity" >
+        </activity>
+        <activity android:name="com.science.strangertofriend.ui.UserDealActivity" >
+        </activity>
 
         <!-- 百度地图定位开始 -->
         <service
@@ -101,6 +109,7 @@
             </intent-filter>
         </service>
         <!-- 百度地图地位结束 -->
+
 
         <!-- avos即使通信 开始 -->
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver" >

@@ -19,28 +19,32 @@ public class LocationMenList implements Serializable {
 	 */
 	private static final long serialVersionUID = -477707387657371625L;
 
-	private String userObjectId;
+	private String userEmail;
 	private String username;
+	private String gender;
 	private double latitude;
 	private double longtitude;
+	private String locationTime;
 
 	public LocationMenList() {
 	}
 
-	public LocationMenList(String userObjectId, String username,
-			double latitude, double longtitude) {
-		this.userObjectId = userObjectId;
+	public LocationMenList(String userEmail, String username, String gender,
+			double latitude, double longtitude, String locationTime) {
+		this.userEmail = userEmail;
 		this.username = username;
+		this.gender = gender;
 		this.latitude = latitude;
 		this.longtitude = longtitude;
+		this.locationTime = locationTime;
 	}
 
-	public String getUserObjectId() {
-		return userObjectId;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	public void setUserObjectId(String userObjectId) {
-		this.userObjectId = userObjectId;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
 	public String getUsername() {
@@ -49,6 +53,14 @@ public class LocationMenList implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public double getLatitude() {
@@ -65,6 +77,14 @@ public class LocationMenList implements Serializable {
 
 	public void setLongtitude(double longtitude) {
 		this.longtitude = longtitude;
+	}
+
+	public String getLocationTime() {
+		return locationTime;
+	}
+
+	public void setLocationTime(String locationTime) {
+		this.locationTime = locationTime;
 	}
 
 }

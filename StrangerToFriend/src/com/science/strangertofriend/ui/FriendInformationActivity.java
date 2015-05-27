@@ -2,6 +2,8 @@ package com.science.strangertofriend.ui;
 
 import java.util.List;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import android.annotation.SuppressLint;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -13,12 +15,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.science.strangertofriend.R;
+import com.science.strangertofriend.utils.Utils;
 import com.science.strangertofriend.widget.DampView;
 
 /**
@@ -85,10 +90,29 @@ public class FriendInformationActivity extends BaseActivity {
 
 	private void initData() {
 
-		mUsername.setText(getIntent().getStringExtra("username"));
+		String friendUsername = getIntent().getStringExtra("username");
+		mUsername.setText(friendUsername);
+		mUserAcount.setText(getIntent().getStringExtra("email"));
+
+		switch (getIntent().getStringExtra("gender")) {
+		case "男":
+			mGender.setImageDrawable(getResources().getDrawable(
+					R.drawable.user_boy));
+			break;
+
+		case "女":
+			mGender.setImageDrawable(getResources().getDrawable(
+					R.drawable.user_girl));
+			break;
+		}
+
+		// 用户头像(大图)
+		AVQuery<AVObject> queryAvater = new AVQuery<AVObject>("Gender");
+		queryAvater.whereEqualTo("username", friendUsername);
+		queryAvater.findInBackground(findGenderCallback(this, mAvatar));
 
 		AVQuery<AVObject> query = new AVQuery<AVObject>("UserInformation");
-		query.whereEqualTo("username", getIntent().getStringExtra("username"));
+		query.whereEqualTo("username", friendUsername);
 		query.findInBackground(new FindCallback<AVObject>() {
 			public void done(List<AVObject> avObjects, AVException e) {
 				if (e == null) {
@@ -102,6 +126,61 @@ public class FriendInformationActivity extends BaseActivity {
 				}
 			}
 		});
+
+		// 查找好友距离
+		findLocation(AVUser.getCurrentUser().getUsername(), friendUsername);
+
+	}
+
+	private void findLocation(final String currentUser,
+			final String friendUsername) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					double lat1 = 0, lng1 = 0, lat2 = 0, lng2 = 0;
+					String locationTime = null;
+					AVQuery<AVObject> queryLocation = new AVQuery<AVObject>(
+							"MyLocation");
+					queryLocation.whereEqualTo("username", currentUser);
+					queryLocation.orderByDescending("updatedAt");// 按照时间降序
+					queryLocation.setLimit(1);// 最大1个
+					List<AVObject> placeList1 = queryLocation.find();
+					for (AVObject avo : placeList1) {
+
+						lat1 = avo.getAVGeoPoint("locationPoint").getLatitude();
+						lng1 = avo.getAVGeoPoint("locationPoint")
+								.getLongitude();
+					}
+					queryLocation.whereEqualTo("username", friendUsername);
+					queryLocation.orderByDescending("updatedAt");// 按照时间降序
+					queryLocation.setLimit(1);// 最大1个
+					List<AVObject> placeList2 = queryLocation.find();
+					for (AVObject avo : placeList2) {
+
+						lat2 = avo.getAVGeoPoint("locationPoint").getLatitude();
+						lng2 = avo.getAVGeoPoint("locationPoint")
+								.getLongitude();
+						locationTime = new PrettyTime().format(avo
+								.getUpdatedAt());
+					}
+					double distance = Utils.DistanceOfTwoPoints(lat1, lng1,
+							lat2, lng2);
+					Message msg = new Message();
+					msg.what = 2;
+					// 这三句可以传递数据
+					Bundle data = new Bundle();
+					data.putString("distance",
+							Utils.getPrettyDistance(distance));// distance是标签,handleMessage中使用
+					data.putString("locationTime", locationTime);// locationTime是标签,handleMessage中使用
+					msg.setData(data);
+					mFriendHandler.sendMessage(msg);
+				} catch (AVException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	@SuppressLint("HandlerLeak")
@@ -111,31 +190,38 @@ public class FriendInformationActivity extends BaseActivity {
 			case 1:
 				showOldInformation((List<AVObject>) msg.obj);
 				break;
+
+			case 2:
+				showPosition(msg.getData().getString("distance"), msg.getData()
+						.getString("locationTime"));
+				break;
 			default:
 				break;
 			}
 		}
 	};
 
+	private void showPosition(final String distance, final String locationTime) {
+
+		mUserPosition.setText(distance);
+		mUserPosition.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				new SweetAlertDialog(FriendInformationActivity.this,
+						SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+						.setTitleText("最近登录时间")
+						.setContentText(locationTime + "\n" + distance)
+						.setCustomImage(R.drawable.recent_location).show();
+			}
+		});
+	}
+
 	// 显示已填写内容
 	private void showOldInformation(List<AVObject> responseList) {
 		if (responseList != null && responseList.size() != 0) {
-			switch (responseList.get(responseList.size() - 1).getString(
-					"gender")) {
-			case "男":
-				mGender.setImageDrawable(getResources().getDrawable(
-						R.drawable.user_boy));
-				break;
-
-			case "女":
-				mGender.setImageDrawable(getResources().getDrawable(
-						R.drawable.user_girl));
-				break;
-			}
 			mMyStatement.setText(responseList.get(responseList.size() - 1)
 					.getString("personalStatement"));
-			mUserAcount.setText(responseList.get(responseList.size() - 1)
-					.getString("email"));
 			mUserBirth.setText(responseList.get(responseList.size() - 1)
 					.getString("birth"));
 			mUserHome.setText(responseList.get(responseList.size() - 1)
@@ -144,6 +230,11 @@ public class FriendInformationActivity extends BaseActivity {
 					.getString("inlove"));
 			mUserConstellation.setText(responseList
 					.get(responseList.size() - 1).getString("constellation"));
+		} else {
+			mUserBirth.setText("未完善");
+			mUserHome.setText("未完善");
+			mUserInlove.setText("未完善");
+			mUserConstellation.setText("未完善");
 		}
 	}
 

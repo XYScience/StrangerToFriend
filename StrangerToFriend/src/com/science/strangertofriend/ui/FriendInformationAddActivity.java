@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SendCallback;
+import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
@@ -44,18 +46,6 @@ import com.science.strangertofriend.widget.DampView;
  */
 
 public class FriendInformationAddActivity extends BaseActivity {
-
-	/**
-	 * 第三方应用Master Secret，修改为正确的值
-	 */
-	private static final String MASTERSECRET = "LkJJyZCzgJAlYOpgSlzz62";
-	// SDK参数，会自动从Manifest文件中读取，第三方无需修改下列变量，请修改AndroidManifest.xml文件中相应的meta-data信息。
-	// 修改方式参见个推SDK文档
-	private String appkey = "";
-	private String appsecret = "";
-	private String appid = "";
-	private SimpleDateFormat formatter = null;
-	private Date curDate = null;
 
 	private ImageView mUserBackgroundImg;
 	private ImageView mBackImg;
@@ -84,8 +74,6 @@ public class FriendInformationAddActivity extends BaseActivity {
 
 		initView();
 		initData();
-		// 个推推送初始化
-		// initPush();
 		initListener();
 
 	}
@@ -115,7 +103,19 @@ public class FriendInformationAddActivity extends BaseActivity {
 	private void initData() {
 
 		mUsername.setText(getIntent().getStringExtra("receiveUser"));
-		mUserPosition.setText(getIntent().getIntExtra("distance", 0) + "m");
+		mUserAcount.setText(getIntent().getStringExtra("email"));
+		mUserPosition.setText(getIntent().getStringExtra("distance"));
+		switch (getIntent().getStringExtra("gender").toString()) {
+		case "男":
+			mGender.setImageDrawable(getResources().getDrawable(
+					R.drawable.user_boy));
+			break;
+
+		case "女":
+			mGender.setImageDrawable(getResources().getDrawable(
+					R.drawable.user_girl));
+			break;
+		}
 
 		// 查找好友头像
 		AVQuery<AVObject> queryGender = new AVQuery<AVObject>("Gender");
@@ -159,22 +159,10 @@ public class FriendInformationAddActivity extends BaseActivity {
 	// 显示已填写内容
 	private void showOldInformation(List<AVObject> responseList) {
 		if (responseList != null && responseList.size() != 0) {
-			switch (responseList.get(responseList.size() - 1).getString(
-					"gender")) {
-			case "男":
-				mGender.setImageDrawable(getResources().getDrawable(
-						R.drawable.user_boy));
-				break;
-
-			case "女":
-				mGender.setImageDrawable(getResources().getDrawable(
-						R.drawable.user_girl));
-				break;
-			}
 			mMyStatement.setText(responseList.get(responseList.size() - 1)
 					.getString("personalStatement"));
-			mUserAcount.setText(responseList.get(responseList.size() - 1)
-					.getString("email"));
+			// mUserAcount.setText(responseList.get(responseList.size() - 1)
+			// .getString("email"));
 			mUserBirth.setText(responseList.get(responseList.size() - 1)
 					.getString("birth"));
 			mUserHome.setText(responseList.get(responseList.size() - 1)
@@ -183,6 +171,12 @@ public class FriendInformationAddActivity extends BaseActivity {
 					.getString("inlove"));
 			mUserConstellation.setText(responseList
 					.get(responseList.size() - 1).getString("constellation"));
+		} else {
+			mMyStatement.setText("未完善");
+			mUserBirth.setText("未完善");
+			mUserHome.setText("未完善");
+			mUserInlove.setText("未完善");
+			mUserConstellation.setText("未完善");
 		}
 	}
 
@@ -201,6 +195,24 @@ public class FriendInformationAddActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				addFriend();
+			}
+		});
+
+		mUserPosition.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (mUserPosition.getText().toString() != null) {
+					new SweetAlertDialog(FriendInformationAddActivity.this,
+							SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+							.setTitleText("最近登录时间")
+							.setContentText(
+									getIntent().getStringExtra("locationTime")
+											+ "\n"
+											+ mUserPosition.getText()
+													.toString())
+							.setCustomImage(R.drawable.recent_location).show();
+				}
 			}
 		});
 
@@ -334,7 +346,10 @@ public class FriendInformationAddActivity extends BaseActivity {
 			public void done(List<AVObject> list, AVException arg1) {
 				if (list != null && list.size() != 0) {
 					findFriendAvaterUrl(receiveUser, sendUsername,
-							list.get(list.size() - 1).getObjectId(), 1);
+							list.get(list.size() - 1).getObjectId(),
+							list.get(list.size() - 1).getString("email"), list
+									.get(list.size() - 1).getString("gender"),
+							1);
 				}
 			}
 		});
@@ -347,14 +362,20 @@ public class FriendInformationAddActivity extends BaseActivity {
 			public void done(List<AVObject> list, AVException arg1) {
 				if (list != null && list.size() != 0) {
 					findFriendAvaterUrl(receiveUser, sendUsername,
-							list.get(list.size() - 1).getObjectId(), 2);
+							list.get(list.size() - 1).getObjectId(),
+							list.get(list.size() - 1).getString("email"), list
+									.get(list.size() - 1).getString("gender"),
+							2);
 				}
 			}
 		});
 	}
 
+	boolean flag = true;
+
 	private void findFriendAvaterUrl(final String receiveUser,
-			final String sendUsername, final String objId, final int id) {
+			final String sendUsername, final String objId, final String email,
+			final String gender, final int id) {
 
 		new Thread(new Runnable() {
 
@@ -377,26 +398,34 @@ public class FriendInformationAddActivity extends BaseActivity {
 				// Retrieving the file
 				switch (id) {
 				case 1:
-					AVFile imageFileFriend = (AVFile) avObj.get("gender");
+					AVFile imageFileFriend = (AVFile) avObj.get("avater");
 					String avaterUrlFriend = imageFileFriend.getThumbnailUrl(
-							false, 150, 150);
+							false, 120, 120);
 					// 保存消息
 					AVService.messageList(receiveUser, avaterUrlFriend,
-							sendUsername, sendTime, receiveUser + "已添加您为好友");
+							sendUsername, sendTime, receiveUser + "已成为我的好友");
 					// 保存好友通讯录
 					AVService.addressList(receiveUser, sendUsername,
-							avaterUrlFriend, sendTime);
+							avaterUrlFriend, email, gender, sendTime);
 					break;
 
 				case 2:
-					AVFile imageFileCurrent = (AVFile) avObj.get("gender");
+					AVFile imageFileCurrent = (AVFile) avObj.get("avater");
 					String avaterUrlCurrent = imageFileCurrent.getThumbnailUrl(
-							false, 150, 150);
+							false, 120, 120);
 					AVService.messageList(sendUsername, avaterUrlCurrent,
-							receiveUser, sendTime, sendUsername + "已添加您为好友");
+							receiveUser, sendTime, sendUsername + "已成为我的好友");
 					AVService.addressList(sendUsername, receiveUser,
-							avaterUrlCurrent, sendTime);
+							avaterUrlCurrent, email, gender, sendTime);
 					break;
+				}
+
+				if (flag) {
+					Intent intent = new Intent(
+							FriendInformationAddActivity.this,
+							MainActivity.class);
+					startActivity(intent);
+					flag = false;
 				}
 
 			}

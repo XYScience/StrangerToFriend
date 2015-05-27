@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -92,7 +91,7 @@ public class LoginActivity extends BaseActivity {
 				Intent intent = new Intent(LoginActivity.this,
 						RegisterActivity.class);
 				startActivity(intent);
-				LoginActivity.this.finish();
+				// LoginActivity.this.finish();
 			}
 		});
 		mLoginButton.setOnClickListener(new LoginListener());
@@ -180,12 +179,13 @@ public class LoginActivity extends BaseActivity {
 				new LogInCallback() {
 					public void done(AVUser user, AVException e) {
 						if (user != null) {
+
 							mMyDialog.successDialog("µÇÂ½³É¹¦!");
 							Intent mainIntent = new Intent(LoginActivity.this,
 									MainActivity.class);
-							mainIntent.putExtra("avater",
-									((BitmapDrawable) mCameraAvatar
-											.getDrawable()).getBitmap());
+							// mainIntent.putExtra("avater",
+							// ((BitmapDrawable) mCameraAvatar
+							// .getDrawable()).getBitmap());
 							startActivity(mainIntent);
 							LoginActivity.this.finish();
 						} else {

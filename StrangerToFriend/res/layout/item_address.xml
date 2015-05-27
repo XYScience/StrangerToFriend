@@ -31,8 +31,8 @@
             android:layout_centerVertical="true"
             android:contentDescription="@null"
             android:src="@drawable/chat_default_user_avatar"
-            app:border_color="#808080"
-            app:border_width="2dp" />
+            app:border_color="#fff"
+            app:border_width="0dp" />
 
         <TextView
             android:id="@+id/title"

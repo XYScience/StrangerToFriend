@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -196,7 +197,7 @@ public class RegisterActivity extends BaseActivity {
 				if (e == null) {
 					mMyDialog.successDialog("注册成功!");
 					AVService.uploadImage(mUsernameString, mEmailString,
-							avaterUrl);
+							avaterUrl, gender);
 
 					Intent mainIntent = new Intent(RegisterActivity.this,
 							MainActivity.class);
@@ -425,5 +426,14 @@ public class RegisterActivity extends BaseActivity {
 			// "正在上传图片，请稍候...");
 			// new Thread(uploadImageRunnable).start();
 		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			RegisterActivity.this.finish();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
