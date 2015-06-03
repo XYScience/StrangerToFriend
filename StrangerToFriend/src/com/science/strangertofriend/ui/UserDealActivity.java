@@ -5,7 +5,6 @@ import java.io.InputStream;
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -71,12 +70,4 @@ public class UserDealActivity extends BaseActivity {
 		tintManager.setTintColor(Color.parseColor("#f698b2"));
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			UserDealActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 }

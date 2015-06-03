@@ -2,7 +2,6 @@ package com.science.strangertofriend.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -83,12 +82,4 @@ public class ForgetPasswordActivity extends BaseActivity {
 		}
 	};
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			ForgetPasswordActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 }

@@ -20,8 +20,8 @@ public final class R {
 		public static final int spinSpeed = 0x7f0100bb;
 	}
 	public static final class string {
-		public static final int app_name = 0x7f0b0010;
-		public static final int default_progressbar = 0x7f0b003c;
+		public static final int app_name = 0x7f080000;
+		public static final int default_progressbar = 0x7f08003c;
 	}
 	public static final class styleable {
 		public static final int[] ProgressWheel = { 0x7f0100b7, 0x7f0100b8, 0x7f0100b9, 0x7f0100ba, 0x7f0100bb, 0x7f0100bc, 0x7f0100bd, 0x7f0100be, 0x7f0100bf, 0x7f0100c0 };

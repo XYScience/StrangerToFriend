@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -219,15 +218,6 @@ public class AlterActivity extends BaseActivity {
 						}
 					}
 				});
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			AlterActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 }

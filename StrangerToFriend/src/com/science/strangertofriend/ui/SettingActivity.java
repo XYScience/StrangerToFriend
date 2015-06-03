@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -259,14 +258,5 @@ public class SettingActivity extends BaseActivity {
 		tintManager.setNavigationBarTintEnabled(true);
 		// 设置一个颜色给系统栏
 		tintManager.setTintColor(Color.parseColor("#f698b2"));
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			SettingActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 }

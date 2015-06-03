@@ -27,8 +27,9 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.science.strangertofriend.AppContext;
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.R;
-import com.science.strangertofriend.utils.AppContext;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,6 +63,8 @@ public class BaseActivity extends Activity {
 
 		// 沉浸式状态栏设置
 		initSystemBar();
+		// 将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 	}
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
@@ -215,34 +218,11 @@ public class BaseActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			exit();
+			BaseActivity.this.finish();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
-	private void exit() {
-		if (!isExit) {
-			isExit = true;
-			Toast.makeText(getApplicationContext(), "再按一次退出程序",
-					Toast.LENGTH_SHORT).show();
-			// 利用handler延迟发送更改状态信息
-			mHandler.sendEmptyMessageDelayed(0, 2000);
-		} else {
-			finish();
-			System.exit(0);
-		}
-	}
-
-	@SuppressLint("HandlerLeak")
-	Handler mHandler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			isExit = false;
-		}
-	};
 
 	// LayoutParams laParams = (LayoutParams)
 	// mCameraAvatar

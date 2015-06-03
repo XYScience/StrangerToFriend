@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,11 +45,11 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.science.strangertofriend.AppContext;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.bean.LocationMenList;
 import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
-import com.science.strangertofriend.utils.AppContext;
 import com.science.strangertofriend.utils.Utils;
 
 /**
@@ -437,12 +436,4 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		mMapView.onPause();
 	}
 
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			ShowNearMenMapActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
-	}
 }

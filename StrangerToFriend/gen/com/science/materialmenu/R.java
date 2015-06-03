@@ -8,8 +8,8 @@ package com.science.materialmenu;
 
 public final class R {
 	public static final class dimen {
-		public static final int activity_horizontal_margin = 0x7f080042;
-		public static final int activity_vertical_margin = 0x7f080043;
+		public static final int activity_horizontal_margin = 0x7f070042;
+		public static final int activity_vertical_margin = 0x7f070043;
 	}
 	public static final class drawable {
 		public static final int ic_launcher = 0x7f020110;
@@ -20,12 +20,12 @@ public final class R {
 		public static final int main = 0x7f0d0000;
 	}
 	public static final class string {
-		public static final int action_settings = 0x7f0b003b;
-		public static final int app_name = 0x7f0b0010;
-		public static final int hello_world = 0x7f0b003a;
+		public static final int action_settings = 0x7f08003b;
+		public static final int app_name = 0x7f080000;
+		public static final int hello_world = 0x7f08003a;
 	}
 	public static final class style {
-		public static final int AppBaseTheme = 0x7f0c0105;
-		public static final int AppTheme = 0x7f0c00f8;
+		public static final int AppBaseTheme = 0x7f090105;
+		public static final int AppTheme = 0x7f090101;
 	}
 }

@@ -10,7 +10,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -247,15 +246,6 @@ public class FriendInformationActivity extends BaseActivity {
 				FriendInformationActivity.this.finish();
 			}
 		});
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			FriendInformationActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 
 }

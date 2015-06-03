@@ -49,7 +49,6 @@ import com.science.strangertofriend.fragment.ShakeFragment;
 import com.science.strangertofriend.fragment.UserFragment;
 import com.science.strangertofriend.ui.AlterActivity;
 import com.science.strangertofriend.ui.SettingActivity;
-import com.science.strangertofriend.utils.AppContext;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
@@ -104,6 +103,9 @@ public class MainActivity extends ActionBarActivity implements
 		// avos用户反馈系统,在用户打开App时，通知用户新的反馈回复
 		FeedbackAgent agent = new FeedbackAgent(MainActivity.this);
 		agent.sync();
+
+		// 将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 
 		// 跟踪统计应用的打开情况
 		AVAnalytics.trackAppOpened(getIntent());
@@ -536,8 +538,9 @@ public class MainActivity extends ActionBarActivity implements
 			// 利用handler延迟发送更改状态信息
 			mHandler.sendEmptyMessageDelayed(0, 2000);
 		} else {
-			MainActivity.this.finish();
-			System.exit(0);
+			// finish();
+			// System.exit(0);
+			AppManager.getAppManager().AppExit(MainActivity.this);
 		}
 	}
 

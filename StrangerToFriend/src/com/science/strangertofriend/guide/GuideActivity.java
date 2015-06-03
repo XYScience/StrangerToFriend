@@ -18,6 +18,7 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.ui.BaseActivity;
 import com.science.strangertofriend.ui.WelcomeActivity;
@@ -51,6 +52,9 @@ public class GuideActivity extends BaseActivity implements OnTouchListener {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.guide);
+
+		// 将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 
 		SharedPreferences settingPreferences = getSharedPreferences(
 				"WelcomeActivity", 0);

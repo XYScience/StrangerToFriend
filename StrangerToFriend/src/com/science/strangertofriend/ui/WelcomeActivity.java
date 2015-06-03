@@ -11,6 +11,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 
 import com.avos.avoscloud.AVUser;
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.guide.GuideActivity;
@@ -32,6 +33,9 @@ public class WelcomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// 将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 
 		SharedPreferences settingPreferences = getSharedPreferences(
 				"WelcomeActivity", 0);

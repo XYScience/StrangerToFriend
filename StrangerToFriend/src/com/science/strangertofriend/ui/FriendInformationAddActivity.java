@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,8 +29,10 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SendCallback;
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
+import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
 
@@ -425,20 +426,18 @@ public class FriendInformationAddActivity extends BaseActivity {
 							FriendInformationAddActivity.this,
 							MainActivity.class);
 					startActivity(intent);
+					AppManager.getAppManager().finishActivity(
+							MainActivity.class);
+					AppManager.getAppManager().finishActivity(
+							ShowNearMenMapActivity.class);
+					AppManager.getAppManager().finishActivity(
+							PuzzleActivity.class);
+					FriendInformationAddActivity.this.finish();
 					flag = false;
 				}
 
 			}
 
 		}).start();
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			FriendInformationAddActivity.this.finish();
-			return false;
-		}
-		return super.onKeyDown(keyCode, event);
 	}
 }

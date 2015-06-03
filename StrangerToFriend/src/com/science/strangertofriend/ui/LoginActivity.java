@@ -3,9 +3,13 @@ package com.science.strangertofriend.ui;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -20,6 +24,7 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.widget.MyDialog;
@@ -44,6 +49,8 @@ public class LoginActivity extends BaseActivity {
 	private TextView mForgetPassword, mRegisterNow;
 	private String mUsernameString, mPasswordString;
 	private MyDialog mMyDialog;
+	// 定义一个变量，来标识是否退出
+	private static boolean isExit = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -211,5 +218,38 @@ public class LoginActivity extends BaseActivity {
 		}
 
 	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			exit();
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void exit() {
+		if (!isExit) {
+			isExit = true;
+			Toast.makeText(getApplicationContext(), "再按一次退出程序",
+					Toast.LENGTH_SHORT).show();
+			// 利用handler延迟发送更改状态信息
+			mHandler.sendEmptyMessageDelayed(0, 2000);
+		} else {
+			// finish();
+			// System.exit(0);
+			AppManager.getAppManager().AppExit(this);
+		}
+	}
+
+	@SuppressLint("HandlerLeak")
+	Handler mHandler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			isExit = false;
+		}
+	};
 
 }

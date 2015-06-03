@@ -32,6 +32,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.avos.avoscloud.AVUser;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.game.puzzle.GamePintuLayout.GamePintuListener;
 import com.science.strangertofriend.ui.FriendInformationAddActivity;
@@ -90,6 +91,8 @@ public class PuzzleActivity extends ActionBarActivity implements
 
 		setContentView(R.layout.game_puzzle);
 
+		// 将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 		// 沉浸式状态栏设置
 		initSystemBar();
 		initView();

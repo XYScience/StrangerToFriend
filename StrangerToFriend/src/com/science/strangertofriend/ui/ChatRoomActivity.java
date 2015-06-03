@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.MainActivity;
 
 /**
@@ -28,6 +29,8 @@ public class ChatRoomActivity extends ChatActivity {
 		super.onCreate(savedInstanceState);
 		addLocationBtn.setVisibility(View.VISIBLE);
 		// addLocationBtn.setVisibility(View.GONE);
+		// 将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 	}
 
 	@Override
