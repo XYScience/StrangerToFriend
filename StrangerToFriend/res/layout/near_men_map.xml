@@ -5,33 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <FrameLayout
+    <com.science.strangertofriend.widget.RevealLayout
+        android:id="@+id/reveal_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="#b29ce3" >
 
-        <com.baidu.mapapi.map.MapView
-            android:id="@+id/bmapView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:clickable="true" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <com.science.strangertofriend.widget.RippleView
-            android:id="@+id/camera_avatar_rippleView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            ripple:rv_type="simpleRipple"
-            ripple:rv_zoom="false" >
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/bmapView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:clickable="true" />
 
-            <ImageView
-                android:id="@+id/map_location"
+            <com.science.strangertofriend.widget.RippleView
+                android:id="@+id/camera_avatar_rippleView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/my_location"
-                android:contentDescription="@null" />
-        </com.science.strangertofriend.widget.RippleView>
-    </FrameLayout>
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                ripple:rv_type="simpleRipple"
+                ripple:rv_zoom="false" >
+
+                <ImageView
+                    android:id="@+id/map_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/my_location"
+                    android:contentDescription="@null" />
+            </com.science.strangertofriend.widget.RippleView>
+            
+            <FrameLayout
+                android:id="@+id/map_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </com.science.strangertofriend.widget.RevealLayout>
 
 </RelativeLayout>

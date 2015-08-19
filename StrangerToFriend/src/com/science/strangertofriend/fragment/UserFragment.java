@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,11 +35,14 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.science.strangertofriend.R;
+import com.science.strangertofriend.ui.ActivityInvitationActivity;
 import com.science.strangertofriend.ui.AlterActivity;
 import com.science.strangertofriend.ui.LoginActivity;
+import com.science.strangertofriend.ui.RankingActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
 
@@ -60,11 +65,20 @@ public class UserFragment extends Fragment implements ScreenShotable {
 	private ImageView mUserBackgroundImg;
 	private View mRootView;
 
+	// 定义共享优先数据及基础字段
+	private String MY_SIGN_IN = "MY_SIGN_IN";
+	private String TODAT_DATA = "TODAT_DATA";
+	private String SIGN_TIMES = "SIGN_TIMES";// 签到次数
+	private String mCurrentDate;
+
 	private CircleImageView mAvatar;
 	private TextView mUsername;
 	private ImageView mGender;
 	private TextView mMyStatement;
 	private TextView mUserAcount;
+	private TextView mDailySignTimes;
+	private ImageView mSignImg;
+	private ImageView mActivityInvitation;
 	private TextView mUserPosition;
 	private TextView mUserBirth;
 	private TextView mUserHome;
@@ -90,6 +104,7 @@ public class UserFragment extends Fragment implements ScreenShotable {
 		// 初始化
 		initView();
 		initData();
+		initSign();
 		initListener();
 
 		return mRootView;
@@ -107,6 +122,11 @@ public class UserFragment extends Fragment implements ScreenShotable {
 		mGender = (ImageView) mRootView.findViewById(R.id.gender);
 		mMyStatement = (TextView) mRootView.findViewById(R.id.my_sign);
 		mUserAcount = (TextView) mRootView.findViewById(R.id.user_acount);
+		mDailySignTimes = (TextView) mRootView
+				.findViewById(R.id.daily_sign_times);
+		mSignImg = (ImageView) mRootView.findViewById(R.id.daily_sign_img);
+		mActivityInvitation = (ImageView) mRootView
+				.findViewById(R.id.activity_invitation_img);
 		mUserPosition = (TextView) mRootView.findViewById(R.id.user_position);
 		mUserBirth = (TextView) mRootView.findViewById(R.id.user_birth_content);
 		mUserHome = (TextView) mRootView.findViewById(R.id.user_home_content);
@@ -174,6 +194,27 @@ public class UserFragment extends Fragment implements ScreenShotable {
 			}
 		});
 
+	}
+
+	private void initSign() {
+		// 读取共享数据
+		SharedPreferences sp = getActivity()
+				.getSharedPreferences(MY_SIGN_IN, 0);
+
+		Time t = new Time();
+		t.setToNow();
+		int lastmonth = t.month + 1;
+		mCurrentDate = t.year + "年" + lastmonth + "月" + t.monthDay + "日";
+
+		final String signDate = sp.getString(TODAT_DATA, "").toString();
+		final int signTimes = sp.getInt(SIGN_TIMES, 0);
+		mDailySignTimes.setText(signTimes + "");
+
+		if (signDate.equals(mCurrentDate) == true) {
+			mSignImg.setImageResource(R.drawable.sign);
+		} else {
+			mSignImg.setImageResource(R.drawable.unsign);
+		}
 	}
 
 	// 查找回调
@@ -344,12 +385,69 @@ public class UserFragment extends Fragment implements ScreenShotable {
 			}
 		});
 
+		mSignImg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				final SharedPreferences sp = getActivity()
+						.getSharedPreferences(MY_SIGN_IN, 0);
+				if (sp.getString(TODAT_DATA, "").toString()
+						.equals(mCurrentDate) == true) {
+					Toast.makeText(getActivity(), "今日已签到！", Toast.LENGTH_SHORT)
+							.show();
+				} else {
+					sp.edit().putString(TODAT_DATA, mCurrentDate).commit();
+					sp.edit().putInt(SIGN_TIMES, sp.getInt(SIGN_TIMES, 0) + 1)
+							.commit();
+					mSignImg.setImageResource(R.drawable.sign);
+					AVService.dailySign(AVUser.getCurrentUser().getUsername(),
+							sp.getInt(SIGN_TIMES, 0) + 1, mCurrentDate,
+							mUserPosition.getText().toString(),
+							new SaveCallback() {
+								@Override
+								public void done(AVException e) {
+									if (e == null) {
+										new SweetAlertDialog(getActivity(),
+												SweetAlertDialog.SUCCESS_TYPE)
+												.setTitleText("签到成功！").show();
+										mDailySignTimes.setText(sp.getInt(
+												SIGN_TIMES, 0) + "");
+									} else {
+										Toast.makeText(getActivity(),
+												"非常抱歉，提交出错！", Toast.LENGTH_LONG)
+												.show();
+									}
+								}
+							});
+				}
+			}
+		});
+
+		mActivityInvitation.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(),
+						ActivityInvitationActivity.class);
+				startActivity(intent);
+			}
+		});
+
 		// 退出登录
 		mLogout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				logoutDialog();
+			}
+		});
+
+		mDailySignTimes.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), RankingActivity.class);
+				startActivity(intent);
 			}
 		});
 	}

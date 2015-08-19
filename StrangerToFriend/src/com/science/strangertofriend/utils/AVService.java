@@ -170,16 +170,27 @@ public class AVService {
 			String gender, String birth, String hometown, String inlove,
 			String constellation, String personalStatement,
 			SaveCallback saveCallback) {
-		AVObject doing = new AVObject("UserInformation");
-		doing.put("username", username);
-		doing.put("email", email);
-		doing.put("gender", gender);
-		doing.put("birth", birth);
-		doing.put("hometown", hometown);
-		doing.put("inlove", inlove);
-		doing.put("constellation", constellation);
-		doing.put("personalStatement", personalStatement);
-		doing.saveInBackground(saveCallback);
+		AVObject userInformation = new AVObject("UserInformation");
+		userInformation.put("username", username);
+		userInformation.put("email", email);
+		userInformation.put("gender", gender);
+		userInformation.put("birth", birth);
+		userInformation.put("hometown", hometown);
+		userInformation.put("inlove", inlove);
+		userInformation.put("constellation", constellation);
+		userInformation.put("personalStatement", personalStatement);
+		userInformation.saveInBackground(saveCallback);
+	}
+
+	// APP每天签到
+	public static void dailySign(String username, int signTimes,
+			String signDate, String signPosition, SaveCallback saveCallback) {
+		AVObject userInformation = new AVObject("Sign");
+		userInformation.put("username", username);
+		userInformation.put("signTimes", signTimes);
+		userInformation.put("signTime", signDate);
+		userInformation.put("signPosition", signPosition);
+		userInformation.saveInBackground(saveCallback);
 	}
 
 	// 退出登录

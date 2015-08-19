@@ -10,9 +10,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -24,6 +26,7 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.utils.AVService;
+import com.science.strangertofriend.widget.RevealLayout;
 
 /**
  * @description 更改资料
@@ -37,6 +40,8 @@ import com.science.strangertofriend.utils.AVService;
 
 public class AlterActivity extends BaseActivity {
 
+	private RevealLayout mRevealLayout;
+	private RelativeLayout mLayout;
 	private ImageView mBackImg;
 	private TextView mTitle;
 	private EditText mBirth, mHometown, mInLove, mConstellation, mMyStatement;
@@ -69,6 +74,10 @@ public class AlterActivity extends BaseActivity {
 	}
 
 	private void initView() {
+
+		mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
+		mLayout = (RelativeLayout) findViewById(R.id.layout);
+		mLayout.setBackgroundColor(Color.WHITE);
 
 		mBackImg = (ImageView) findViewById(R.id.back_img);
 		mTitle = (TextView) findViewById(R.id.title);
@@ -124,6 +133,29 @@ public class AlterActivity extends BaseActivity {
 	}
 
 	private void initListener() {
+
+		mRevealLayout.setContentShown(false);
+		mRevealLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onGlobalLayout() {
+						mRevealLayout.getViewTreeObserver()
+								.removeGlobalOnLayoutListener(this);
+						mRevealLayout.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mRevealLayout.show(2000);
+							}
+						}, 50);
+					}
+				});
+		mRevealLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 
 		// 左上角退出当前activity
 		mBackImg.setOnClickListener(new OnClickListener() {

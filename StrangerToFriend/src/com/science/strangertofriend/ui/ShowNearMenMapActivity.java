@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +53,7 @@ import com.science.strangertofriend.bean.LocationMenList;
 import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.utils.Utils;
+import com.science.strangertofriend.widget.RevealLayout;
 
 /**
  * @description 地图显示附近的人
@@ -66,6 +69,8 @@ public class ShowNearMenMapActivity extends BaseActivity {
 
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap;
+	private RevealLayout mRevealLayout;
+	private FrameLayout mMapLayout;
 
 	private Context context;
 	private String mUserEmail, mUsername, mGender;
@@ -100,14 +105,36 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		this.context = this;
 
 		initComponent();
-
+		initListener();
 		// 初始化定位
 		initLocation();
-
 		initMarker();
-
 		setMarkerClickListener();
+	}
 
+	private void initListener() {
+		mRevealLayout.setContentShown(false);
+		mRevealLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onGlobalLayout() {
+						mRevealLayout.getViewTreeObserver()
+								.removeGlobalOnLayoutListener(this);
+						mRevealLayout.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mRevealLayout.show(2000);
+							}
+						}, 50);
+					}
+				});
+		mRevealLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 	}
 
 	private void initComponent() {
@@ -119,8 +146,10 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		mBaiduMap.setMapStatus(mapStatusUpdate);
 		// 获取定位我的位置的图标
 		mMapLocation = (ImageView) findViewById(R.id.map_location);
-
 		mLocationMenList = new ArrayList<LocationMenList>();
+		mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
+		mMapLayout = (FrameLayout) findViewById(R.id.map_layout);
+		mMapLayout.setBackgroundColor(Color.TRANSPARENT);
 
 		AVUser currentUser = AVUser.getCurrentUser();
 		if (currentUser != null) {
@@ -419,6 +448,7 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		if (!mLocationClient.isStarted()) {
 			mLocationClient.start();
 		}
+		mLocationClient.requestLocation();
 	}
 
 	@Override

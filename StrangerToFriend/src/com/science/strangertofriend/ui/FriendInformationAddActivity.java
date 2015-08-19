@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -29,12 +32,11 @@ import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SendCallback;
-import com.science.strangertofriend.AppManager;
 import com.science.strangertofriend.MainActivity;
 import com.science.strangertofriend.R;
-import com.science.strangertofriend.game.puzzle.PuzzleActivity;
 import com.science.strangertofriend.utils.AVService;
 import com.science.strangertofriend.widget.DampView;
+import com.science.strangertofriend.widget.RevealLayout;
 
 /**
  * @description 解密游戏后好友界面
@@ -50,6 +52,8 @@ public class FriendInformationAddActivity extends BaseActivity {
 
 	private ImageView mUserBackgroundImg;
 	private ImageView mBackImg;
+	private RevealLayout mRevealLayout;
+	private RelativeLayout mLayout;
 
 	private ImageView mAvatar;
 	private TextView mUsername;
@@ -86,6 +90,10 @@ public class FriendInformationAddActivity extends BaseActivity {
 		mUserBackgroundImg = (ImageView) findViewById(R.id.user_background_img);
 		DampView view = (DampView) findViewById(R.id.dampview);
 		view.setImageView(mUserBackgroundImg);
+
+		mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
+		mLayout = (RelativeLayout) findViewById(R.id.user_container);
+		mLayout.setBackgroundColor(Color.WHITE);
 
 		mBackImg = (ImageView) findViewById(R.id.back);
 		mAvatar = (ImageView) findViewById(R.id.avatar);
@@ -182,6 +190,29 @@ public class FriendInformationAddActivity extends BaseActivity {
 	}
 
 	private void initListener() {
+
+		mRevealLayout.setContentShown(false);
+		mRevealLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onGlobalLayout() {
+						mRevealLayout.getViewTreeObserver()
+								.removeGlobalOnLayoutListener(this);
+						mRevealLayout.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mRevealLayout.show(2000);
+							}
+						}, 50);
+					}
+				});
+		mRevealLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 
 		mBackImg.setOnClickListener(new OnClickListener() {
 
@@ -426,12 +457,12 @@ public class FriendInformationAddActivity extends BaseActivity {
 							FriendInformationAddActivity.this,
 							MainActivity.class);
 					startActivity(intent);
-					AppManager.getAppManager().finishActivity(
-							MainActivity.class);
-					AppManager.getAppManager().finishActivity(
-							ShowNearMenMapActivity.class);
-					AppManager.getAppManager().finishActivity(
-							PuzzleActivity.class);
+					// AppManager.getAppManager().finishActivity(
+					// MainActivity.class);
+					// AppManager.getAppManager().finishActivity(
+					// ShowNearMenMapActivity.class);
+					// AppManager.getAppManager().finishActivity(
+					// PuzzleActivity.class);
 					FriendInformationAddActivity.this.finish();
 					flag = false;
 				}

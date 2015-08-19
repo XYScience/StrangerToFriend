@@ -60,11 +60,12 @@ public class MessageListAdapter extends BaseAdapter {
 		viewHolder.time.setText((String) mMessageList.get(position).get(
 				"requestTime"));// 获取消息的接收时间
 
+		@SuppressWarnings("deprecation")
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 				.showStubImage(R.drawable.default_load)
 				.showImageForEmptyUri(R.drawable.default_load)
 				.showImageOnFail(R.drawable.default_load).cacheInMemory(true)
-				.cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
+				.cacheOnDisk(true).bitmapConfig(Bitmap.Config.RGB_565).build();
 		ImageLoader.getInstance().displayImage(
 				(String) mMessageList.get(position).get("urlAvater"),
 				viewHolder.avater, options);

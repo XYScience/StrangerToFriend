@@ -39,6 +39,8 @@
     <string name="add_friend">加好友</string>
     <string name="user_name">昵称</string>
     <string name="user_number">我的账号</string>
+    <string name="daily_sign">每日签到</string>
+    <string name="activity_invitation">活动邀请</string>
     <string name="user_message">个人信息</string>
     <string name="user_position">位置</string>
     <string name="user_birth">出生</string>

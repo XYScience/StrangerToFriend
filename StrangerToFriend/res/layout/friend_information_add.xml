@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.codetail.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.science.strangertofriend.widget.RevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res/com.science.strangertofriend"
     xmlns:ripple="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/reveal_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <RelativeLayout
         android:id="@+id/user_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff" >
+        android:layout_height="match_parent" >
 
         <com.science.strangertofriend.widget.DampView
             android:id="@+id/dampview"
@@ -39,7 +39,8 @@
                     <ImageView
                         android:id="@+id/back"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"                        android:background="@drawable/scanner_back_img"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/scanner_back_img"
                         android:contentDescription="@null"
                         android:minHeight="55dp"
                         android:minWidth="55dp"
@@ -352,4 +353,4 @@
         </com.science.strangertofriend.widget.DampView>
     </RelativeLayout>
 
-</io.codetail.widget.RevealFrameLayout>
+</com.science.strangertofriend.widget.RevealLayout>

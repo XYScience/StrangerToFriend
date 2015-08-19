@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -17,6 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.science.strangertofriend.R;
 import com.science.strangertofriend.guide.GuideActivity;
+import com.science.strangertofriend.widget.RevealLayout;
 
 /**
  * @description 设置界面
@@ -30,6 +33,8 @@ import com.science.strangertofriend.guide.GuideActivity;
 
 public class SettingActivity extends BaseActivity {
 
+	private RevealLayout mRevealLayout;
+	private RelativeLayout mLayout;
 	private ImageView mBackImg;
 	private TextView mTitle;
 	private TableRow mNumberSafe, mNumberBound, mMessageTip, mSetClearCache,
@@ -58,9 +63,36 @@ public class SettingActivity extends BaseActivity {
 		mSetVersion = (TableRow) findViewById(R.id.set_version);
 		mUserDeal = (TableRow) findViewById(R.id.user_deal);
 		mAboutUs = (TableRow) findViewById(R.id.about_us);
+
+		mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
+		mLayout = (RelativeLayout) findViewById(R.id.layout);
+		mLayout.setBackgroundColor(Color.WHITE);
 	}
 
 	private void initListener() {
+
+		mRevealLayout.setContentShown(false);
+		mRevealLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onGlobalLayout() {
+						mRevealLayout.getViewTreeObserver()
+								.removeGlobalOnLayoutListener(this);
+						mRevealLayout.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mRevealLayout.show(2000);
+							}
+						}, 50);
+					}
+				});
+		mRevealLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 
 		// 左上角退出当前activity
 		mBackImg.setOnClickListener(new OnClickListener() {

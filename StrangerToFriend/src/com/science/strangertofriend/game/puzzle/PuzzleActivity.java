@@ -23,9 +23,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -37,6 +39,7 @@ import com.science.strangertofriend.R;
 import com.science.strangertofriend.game.puzzle.GamePintuLayout.GamePintuListener;
 import com.science.strangertofriend.ui.FriendInformationAddActivity;
 import com.science.strangertofriend.utils.FileUtil;
+import com.science.strangertofriend.widget.RevealLayout;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
@@ -62,6 +65,8 @@ public class PuzzleActivity extends ActionBarActivity implements
 
 	private GamePintuLayout mGamePintuLayout;
 	private TextView mTime;
+	private RevealLayout mRevealLayout;
+	private RelativeLayout mLayout;
 
 	private ImageView mBackImg;
 	private TextView mTitle;
@@ -125,6 +130,10 @@ public class PuzzleActivity extends ActionBarActivity implements
 			mOriginalImage.setImageResource(gameBitmapBoy[mGamePicture]);
 			break;
 		}
+
+		mRevealLayout = (RevealLayout) findViewById(R.id.reveal_layout);
+		mLayout = (RelativeLayout) findViewById(R.id.layout);
+		mLayout.setBackgroundColor(Color.WHITE);
 
 		// 上下文菜单
 		mFragmentManager = getSupportFragmentManager();
@@ -196,6 +205,28 @@ public class PuzzleActivity extends ActionBarActivity implements
 			}
 		});
 
+		mRevealLayout.setContentShown(false);
+		mRevealLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@SuppressWarnings("deprecation")
+					@Override
+					public void onGlobalLayout() {
+						mRevealLayout.getViewTreeObserver()
+								.removeGlobalOnLayoutListener(this);
+						mRevealLayout.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mRevealLayout.show(2000);
+							}
+						}, 50);
+					}
+				});
+		mRevealLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
 	}
 
 	private void gameStart() {
