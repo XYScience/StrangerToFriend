@@ -102,4 +102,16 @@ public class Utils {
 		return getString(fileInputStream);
 	}
 
+	private static long lastClickTime;
+
+	public static boolean isFastDoubleShake() {
+		long time = System.currentTimeMillis();
+		long timeD = time - lastClickTime;
+		if (0 < timeD && timeD < 2000) {
+			lastClickTime = time;
+			return true;
+		}
+		return false;
+	}
+
 }

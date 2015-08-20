@@ -123,11 +123,21 @@ public class ShakeFragment extends Fragment implements ScreenShotable {
 							}
 						}.start();
 						mVibrator.cancel();
-						mShakeListener.start();
 					}
 				}, 2000);
+
+				// if (!Utils.isFastDoubleShake()) {
+				// mShakeListener.start();
+				// }
 			}
 		});
+	}
+
+	// ∑¿÷π¡Ω¥Œ“°“ª“°
+	@Override
+	public void onStart() {
+		super.onStart();
+		mShakeListener.start();
 	}
 
 	@SuppressWarnings("deprecation")

@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
@@ -141,6 +142,12 @@ public class ShowNearMenMapActivity extends BaseActivity {
 		// 获取地图控件引用
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
+		// 隐藏百度logo
+		View child = mMapView.getChildAt(1);
+		if (child != null
+				&& (child instanceof ImageView || child instanceof ZoomControls)) {
+			child.setVisibility(View.INVISIBLE);
+		}
 		// 地图比例200m
 		MapStatusUpdate mapStatusUpdate = MapStatusUpdateFactory.zoomTo(16.0f);
 		mBaiduMap.setMapStatus(mapStatusUpdate);

@@ -401,7 +401,7 @@ public class UserFragment extends Fragment implements ScreenShotable {
 							.commit();
 					mSignImg.setImageResource(R.drawable.sign);
 					AVService.dailySign(AVUser.getCurrentUser().getUsername(),
-							sp.getInt(SIGN_TIMES, 0) + 1, mCurrentDate,
+							sp.getInt(SIGN_TIMES, 0), mCurrentDate,
 							mUserPosition.getText().toString(),
 							new SaveCallback() {
 								@Override
